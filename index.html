@@ -124,6 +124,42 @@ body.lock{overflow:hidden;}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
     /* sfondo a griglia di puntini: solo sezione Appartamenti */
     #apartments{background-color:var(--paper);background-image:radial-gradient(rgba(44,47,49,0.20) 1px, transparent 1px);background-size:22px 22px;background-position:center top;}
+  
+    /* --- ricerca disponibilità / prenotazione --- */
+    .bk-stage{display:none;width:100%;}
+    .bk-stage.on{display:block;}
+    .bk-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
+    @media(max-width:680px){.bk-cards{grid-template-columns:1fr;}}
+    .bk-card{position:relative;border:1px solid var(--line-2);border-radius:16px;padding:20px;background:var(--surface);cursor:pointer;transition:border-color .15s,background .15s;}
+    .bk-card:hover{border-color:var(--faint);}
+    .bk-card.sel{border-color:var(--accent);background:var(--accent-soft);}
+    .bk-card.dis{opacity:.55;cursor:not-allowed;}
+    .bk-card h3{font-family:var(--font);font-weight:600;font-size:1.15rem;}
+    .bk-card .cap{font-size:.85rem;color:var(--muted);margin-top:4px;}
+    .bk-card .price{margin-top:12px;font-size:1.05rem;font-weight:600;}
+    .bk-card .price small{font-weight:500;color:var(--muted);}
+    .bk-card .na{margin-top:12px;font-size:.82rem;color:var(--faint);}
+    .bk-card .pick{position:absolute;top:16px;right:16px;width:22px;height:22px;border:1.5px solid var(--line-2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;color:var(--paper);}
+    .bk-card.sel .pick{background:var(--accent);border-color:var(--accent);}
+    .bk-summary{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;}
+    .bk-summary .lines{font-size:.94rem;color:var(--muted);line-height:1.7;}
+    .bk-summary .lines .st{font-weight:600;color:var(--ink);margin-bottom:6px;}
+    .bk-summary .lines b{color:var(--ink);font-weight:600;}
+    .bk-summary .hint{color:var(--accent);font-size:.9rem;font-weight:500;width:100%;margin-top:4px;}
+    .bk-summary .right{text-align:right;}
+    .bk-summary .tot{font-family:var(--font);font-weight:600;font-size:1.4rem;margin-bottom:10px;}
+    .bk-act{font-family:var(--font);font-size:1rem;font-weight:600;color:var(--paper);background:var(--ink);border:none;border-radius:999px;padding:14px 30px;cursor:pointer;transition:opacity .15s;}
+    .bk-act:hover{opacity:.88;}
+    .bk-act:disabled{opacity:.35;cursor:not-allowed;}
+    .bk-recap{margin-top:22px;border:1px solid var(--line-2);border-radius:18px;padding:clamp(20px,3vw,30px);background:var(--surface);max-width:560px;}
+    .bk-recap h3{font-family:var(--font);font-weight:600;font-size:1.4rem;}
+    .bk-recap .subt{color:var(--muted);font-size:.9rem;margin:6px 0 16px;line-height:1.5;}
+    .bk-recap .row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-top:1px solid var(--line);font-size:.95rem;}
+    .bk-recap .row .lbl{color:var(--muted);}
+    .bk-recap .row.tot{border-top:1.5px solid var(--ink);margin-top:6px;font-family:var(--font);font-weight:600;font-size:1.2rem;}
+    .bk-recap .acts{margin-top:22px;display:flex;gap:18px;align-items:center;}
+    .bk-back{background:none;border:none;color:var(--muted);font-family:var(--font);font-size:.95rem;cursor:pointer;}
+    .bk-back:hover{color:var(--ink);}
   </style>
 </head>
 <body>
@@ -175,10 +211,11 @@ body.lock{overflow:hidden;}
   <div class="booking pad" id="booking">
     <div class="bk-field"><label data-i18n="b_in">Arrival</label><input type="date" id="bIn"/></div>
     <div class="bk-field"><label data-i18n="b_out">Departure</label><input type="date" id="bOut"/></div>
-    <div class="bk-field"><label data-i18n="b_guests">Guests</label><select id="bGuests"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div>
+    <div class="bk-field"><label data-i18n="b_guests">Guests</label><select id="bGuests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
     <button class="bk-go" id="bGo" data-i18n="b_go">Check availability</button>
     <div class="bk-result" id="bResult"></div>
   </div>
+  <div class="bk-stage pad" id="bStage"></div>
 
   <!-- Apartments -->
   <section class="section pad" id="apartments">
@@ -216,30 +253,103 @@ body.lock{overflow:hidden;}
 
 <script>
 const I18N={
- en:{hero_h1:"Stay in the neighbourhood that reinvented Matera.",hero_sub:"Maestranze Urban Apartments is in Rione Spine Bianche — comfortable homes with free parking, a short walk from the Sassi and the centre. Book here for our lowest price, guaranteed only on this site.",b_in:"Arrival",b_out:"Departure",b_guests:"Guests",b_go:"Check availability",a_label:"The apartments",a_meta1:"2 bedrooms · 2 double beds · living room with kitchen · bathroom · 65 m²",a_meta2:"1 bedroom · 1 double bed · living room with kitchen · bathroom · balcony · 55 m² + 10 m² balcony",a_desc1:"A bright, comfortable apartment in the heart of Spine Bianche, for up to four guests. Free parking at the door, a few minutes' walk from the Sassi and the centre.",a_desc2:"An urban retreat for two, essential and contemporary, set in the 1950s architecture of the neighbourhood. Quiet, comfortable, well connected.",a_cta:"Check dates",p_title:"Spine Bianche, the city-laboratory.",p_text:"In the 1950s, after the Sassi were cleared, Matera reinvented itself on the plain. Born of the study commission promoted by Adriano Olivetti and designed by Carlo Aymonino's group, Spine Bianche is one of the finest examples of Italian neorealist architecture — and today a calm, characterful place to stay, with free parking and everything a short walk away.",f_tag:"Urban apartments in Rione Spine Bianche, Matera. Book direct, stay better.",f_contact:"Contact",f_apts:"Apartments",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · All rights reserved.",m_apts:"Apartments",m_place:"The neighbourhood",p_link:"Discover the neighbourhood",m_book:"Book",m_contact:"Contact",res_ok:"Great — {n} night(s) for {g} guest(s). Live availability and instant payment are coming online shortly; for now we'll confirm your dates within a few hours.",res_err:"Please choose an arrival and a later departure date."},
- it:{hero_h1:"Soggiorna nel quartiere che ha reinventato Matera.",hero_sub:"Maestranze Urban Apartments è nel Rione Spine Bianche: case comode con parcheggio gratuito, a pochi passi dai Sassi e dal centro. Prenota qui per il prezzo più basso, garantito solo su questo sito.",b_in:"Arrivo",b_out:"Partenza",b_guests:"Ospiti",b_go:"Verifica disponibilità",a_label:"Gli appartamenti",a_meta1:"2 camere · 2 letti matrimoniali · soggiorno con cucina · bagno · 65 m²",a_meta2:"1 camera · 1 letto matrimoniale · soggiorno con cucina · bagno · balcone · 55 m² + 10 m² di balcone",a_desc1:"Un appartamento luminoso e comodo nel cuore di Spine Bianche, fino a quattro ospiti. Parcheggio gratuito sotto casa, a pochi minuti a piedi dai Sassi e dal centro.",a_desc2:"Un rifugio urbano per due, essenziale e contemporaneo, nell'architettura anni '50 del quartiere. Silenzioso, comodo, ben collegato.",a_cta:"Verifica date",p_title:"Spine Bianche, la città-laboratorio.",p_text:"Negli anni Cinquanta, sgomberati i Sassi, Matera si reinventa sul piano. Nato dalla commissione di studio promossa da Adriano Olivetti e progettato dal gruppo di Carlo Aymonino, Spine Bianche è uno degli esempi più belli del neorealismo architettonico italiano — e oggi un luogo tranquillo e pieno di carattere dove soggiornare, con parcheggio gratuito e tutto a due passi.",f_tag:"Urban apartments nel Rione Spine Bianche, Matera. Prenota diretto, soggiorna meglio.",f_contact:"Contatti",f_apts:"Appartamenti",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · Tutti i diritti riservati.",m_apts:"Appartamenti",m_place:"Il quartiere",p_link:"Scopri il quartiere",m_book:"Prenota",m_contact:"Contatti",res_ok:"Perfetto — {n} notte/i per {g} ospite/i. Disponibilità in tempo reale e pagamento immediato in arrivo; per ora confermiamo le tue date entro poche ore.",res_err:"Scegli una data di arrivo e una di partenza successiva."},
- de:{hero_h1:"Wohnen Sie im Viertel, das Matera neu erfand.",hero_sub:"Maestranze Urban Apartments liegt im Rione Spine Bianche — komfortable Wohnungen mit kostenlosem Parkplatz, wenige Gehminuten von den Sassi und vom Zentrum. Buchen Sie hier zum niedrigsten Preis, garantiert nur auf dieser Website.",b_in:"Anreise",b_out:"Abreise",b_guests:"Gäste",b_go:"Verfügbarkeit prüfen",a_label:"Die Wohnungen",a_meta1:"2 Schlafzimmer · 2 Doppelbetten · Wohnraum mit Küche · Bad · 65 m²",a_meta2:"1 Schlafzimmer · 1 Doppelbett · Wohnraum mit Küche · Bad · Balkon · 55 m² + 10 m² Balkon",a_desc1:"Eine helle, komfortable Wohnung im Herzen von Spine Bianche, für bis zu vier Gäste. Kostenloser Parkplatz vor der Tür, wenige Gehminuten von den Sassi und vom Zentrum.",a_desc2:"Ein urbaner Rückzugsort für zwei, reduziert und zeitgemäß, in der Architektur der 1950er des Viertels. Ruhig, komfortabel, gut angebunden.",a_cta:"Daten prüfen",p_title:"Spine Bianche, das Stadt-Laboratorium.",p_text:"In den 1950ern, nach der Räumung der Sassi, erfand sich Matera in der Ebene neu. Aus der von Adriano Olivetti geförderten Studienkommission entstanden und von Carlo Aymoninos Gruppe entworfen, ist Spine Bianche eines der schönsten Beispiele des italienischen Neorealismus — und heute ein ruhiger, charaktervoller Ort zum Wohnen, mit kostenlosem Parkplatz und allem in Gehweite.",f_tag:"Urban apartments im Rione Spine Bianche, Matera. Direkt buchen, besser wohnen.",f_contact:"Kontakt",f_apts:"Wohnungen",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · Alle Rechte vorbehalten.",m_apts:"Wohnungen",m_place:"Das Viertel",p_link:"Das Viertel entdecken",m_book:"Buchen",m_contact:"Kontakt",res_ok:"Sehr gut — {n} Nacht/Nächte für {g} Gäste. Echtzeit-Verfügbarkeit und Sofortzahlung folgen bald; vorerst bestätigen wir Ihre Daten innerhalb weniger Stunden.",res_err:"Bitte wählen Sie ein Anreise- und ein späteres Abreisedatum."},
- fr:{hero_h1:"Séjournez dans le quartier qui a réinventé Matera.",hero_sub:"Maestranze Urban Apartments se trouve dans le Rione Spine Bianche — des logements confortables avec parking gratuit, à quelques pas des Sassi et du centre. Réservez ici au prix le plus bas, garanti uniquement sur ce site.",b_in:"Arrivée",b_out:"Départ",b_guests:"Voyageurs",b_go:"Vérifier les disponibilités",a_label:"Les appartements",a_meta1:"2 chambres · 2 lits doubles · séjour avec cuisine · salle de bain · 65 m²",a_meta2:"1 chambre · 1 lit double · séjour avec cuisine · salle de bain · balcon · 55 m² + 10 m² de balcon",a_desc1:"Un appartement lumineux et confortable au cœur de Spine Bianche, jusqu'à quatre voyageurs. Parking gratuit en bas, à quelques minutes à pied des Sassi et du centre.",a_desc2:"Un refuge urbain pour deux, épuré et contemporain, dans l'architecture des années 1950 du quartier. Calme, confortable, bien desservi.",a_cta:"Vérifier les dates",p_title:"Spine Bianche, la ville-laboratoire.",p_text:"Dans les années 1950, après l'évacuation des Sassi, Matera s'est réinventée sur le plateau. Né de la commission d'étude promue par Adriano Olivetti et conçu par le groupe de Carlo Aymonino, Spine Bianche est l'un des plus beaux exemples du néoréalisme architectural italien — et aujourd'hui un lieu calme et plein de caractère où séjourner, avec parking gratuit et tout à deux pas.",f_tag:"Urban apartments dans le Rione Spine Bianche, Matera. Réservez en direct, séjournez mieux.",f_contact:"Contact",f_apts:"Appartements",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · Tous droits réservés.",m_apts:"Appartements",m_place:"Le quartier",p_link:"Découvrir le quartier",m_book:"Réserver",m_contact:"Contact",res_ok:"Parfait — {n} nuit(s) pour {g} voyageur(s). Disponibilité en temps réel et paiement instantané bientôt; pour l'instant nous confirmons vos dates sous quelques heures.",res_err:"Veuillez choisir une date d'arrivée et une date de départ ultérieure."}
+ en:{hero_h1:"Stay in the neighbourhood that reinvented Matera.",hero_sub:"Maestranze Urban Apartments is in Rione Spine Bianche — comfortable homes with free parking, a short walk from the Sassi and the centre. Book here for our lowest price, guaranteed only on this site.",b_in:"Arrival",b_out:"Departure",b_guests:"Guests",b_go:"Search",a_label:"The apartments",a_meta1:"2 bedrooms · 2 double beds · living room with kitchen · bathroom · 65 m²",a_meta2:"1 bedroom · 1 double bed · living room with kitchen · bathroom · balcony · 55 m² + 10 m² balcony",a_desc1:"A bright, comfortable apartment in the heart of Spine Bianche, for up to four guests. Free parking at the door, a few minutes' walk from the Sassi and the centre.",a_desc2:"An urban retreat for two, essential and contemporary, set in the 1950s architecture of the neighbourhood. Quiet, comfortable, well connected.",a_cta:"Check dates",p_title:"Spine Bianche, the city-laboratory.",p_text:"In the 1950s, after the Sassi were cleared, Matera reinvented itself on the plain. Born of the study commission promoted by Adriano Olivetti and designed by Carlo Aymonino's group, Spine Bianche is one of the finest examples of Italian neorealist architecture — and today a calm, characterful place to stay, with free parking and everything a short walk away.",f_tag:"Urban apartments in Rione Spine Bianche, Matera. Book direct, stay better.",f_contact:"Contact",f_apts:"Apartments",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · All rights reserved.",m_apts:"Apartments",m_place:"The neighbourhood",p_link:"Discover the neighbourhood",m_book:"Book",m_contact:"Contact",res_ok:"Great — {n} night(s) for {g} guest(s). Live availability and instant payment are coming online shortly; for now we'll confirm your dates within a few hours.",res_err:"Please choose an arrival and a later departure date."},
+ it:{hero_h1:"Soggiorna nel quartiere che ha reinventato Matera.",hero_sub:"Maestranze Urban Apartments è nel Rione Spine Bianche: case comode con parcheggio gratuito, a pochi passi dai Sassi e dal centro. Prenota qui per il prezzo più basso, garantito solo su questo sito.",b_in:"Arrivo",b_out:"Partenza",b_guests:"Ospiti",b_go:"Cerca",a_label:"Gli appartamenti",a_meta1:"2 camere · 2 letti matrimoniali · soggiorno con cucina · bagno · 65 m²",a_meta2:"1 camera · 1 letto matrimoniale · soggiorno con cucina · bagno · balcone · 55 m² + 10 m² di balcone",a_desc1:"Un appartamento luminoso e comodo nel cuore di Spine Bianche, fino a quattro ospiti. Parcheggio gratuito sotto casa, a pochi minuti a piedi dai Sassi e dal centro.",a_desc2:"Un rifugio urbano per due, essenziale e contemporaneo, nell'architettura anni '50 del quartiere. Silenzioso, comodo, ben collegato.",a_cta:"Verifica date",p_title:"Spine Bianche, la città-laboratorio.",p_text:"Negli anni Cinquanta, sgomberati i Sassi, Matera si reinventa sul piano. Nato dalla commissione di studio promossa da Adriano Olivetti e progettato dal gruppo di Carlo Aymonino, Spine Bianche è uno degli esempi più belli del neorealismo architettonico italiano — e oggi un luogo tranquillo e pieno di carattere dove soggiornare, con parcheggio gratuito e tutto a due passi.",f_tag:"Urban apartments nel Rione Spine Bianche, Matera. Prenota diretto, soggiorna meglio.",f_contact:"Contatti",f_apts:"Appartamenti",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · Tutti i diritti riservati.",m_apts:"Appartamenti",m_place:"Il quartiere",p_link:"Scopri il quartiere",m_book:"Prenota",m_contact:"Contatti",res_ok:"Perfetto — {n} notte/i per {g} ospite/i. Disponibilità in tempo reale e pagamento immediato in arrivo; per ora confermiamo le tue date entro poche ore.",res_err:"Scegli una data di arrivo e una di partenza successiva."},
+ de:{hero_h1:"Wohnen Sie im Viertel, das Matera neu erfand.",hero_sub:"Maestranze Urban Apartments liegt im Rione Spine Bianche — komfortable Wohnungen mit kostenlosem Parkplatz, wenige Gehminuten von den Sassi und vom Zentrum. Buchen Sie hier zum niedrigsten Preis, garantiert nur auf dieser Website.",b_in:"Anreise",b_out:"Abreise",b_guests:"Gäste",b_go:"Suchen",a_label:"Die Wohnungen",a_meta1:"2 Schlafzimmer · 2 Doppelbetten · Wohnraum mit Küche · Bad · 65 m²",a_meta2:"1 Schlafzimmer · 1 Doppelbett · Wohnraum mit Küche · Bad · Balkon · 55 m² + 10 m² Balkon",a_desc1:"Eine helle, komfortable Wohnung im Herzen von Spine Bianche, für bis zu vier Gäste. Kostenloser Parkplatz vor der Tür, wenige Gehminuten von den Sassi und vom Zentrum.",a_desc2:"Ein urbaner Rückzugsort für zwei, reduziert und zeitgemäß, in der Architektur der 1950er des Viertels. Ruhig, komfortabel, gut angebunden.",a_cta:"Daten prüfen",p_title:"Spine Bianche, das Stadt-Laboratorium.",p_text:"In den 1950ern, nach der Räumung der Sassi, erfand sich Matera in der Ebene neu. Aus der von Adriano Olivetti geförderten Studienkommission entstanden und von Carlo Aymoninos Gruppe entworfen, ist Spine Bianche eines der schönsten Beispiele des italienischen Neorealismus — und heute ein ruhiger, charaktervoller Ort zum Wohnen, mit kostenlosem Parkplatz und allem in Gehweite.",f_tag:"Urban apartments im Rione Spine Bianche, Matera. Direkt buchen, besser wohnen.",f_contact:"Kontakt",f_apts:"Wohnungen",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · Alle Rechte vorbehalten.",m_apts:"Wohnungen",m_place:"Das Viertel",p_link:"Das Viertel entdecken",m_book:"Buchen",m_contact:"Kontakt",res_ok:"Sehr gut — {n} Nacht/Nächte für {g} Gäste. Echtzeit-Verfügbarkeit und Sofortzahlung folgen bald; vorerst bestätigen wir Ihre Daten innerhalb weniger Stunden.",res_err:"Bitte wählen Sie ein Anreise- und ein späteres Abreisedatum."},
+ fr:{hero_h1:"Séjournez dans le quartier qui a réinventé Matera.",hero_sub:"Maestranze Urban Apartments se trouve dans le Rione Spine Bianche — des logements confortables avec parking gratuit, à quelques pas des Sassi et du centre. Réservez ici au prix le plus bas, garanti uniquement sur ce site.",b_in:"Arrivée",b_out:"Départ",b_guests:"Voyageurs",b_go:"Rechercher",a_label:"Les appartements",a_meta1:"2 chambres · 2 lits doubles · séjour avec cuisine · salle de bain · 65 m²",a_meta2:"1 chambre · 1 lit double · séjour avec cuisine · salle de bain · balcon · 55 m² + 10 m² de balcon",a_desc1:"Un appartement lumineux et confortable au cœur de Spine Bianche, jusqu'à quatre voyageurs. Parking gratuit en bas, à quelques minutes à pied des Sassi et du centre.",a_desc2:"Un refuge urbain pour deux, épuré et contemporain, dans l'architecture des années 1950 du quartier. Calme, confortable, bien desservi.",a_cta:"Vérifier les dates",p_title:"Spine Bianche, la ville-laboratoire.",p_text:"Dans les années 1950, après l'évacuation des Sassi, Matera s'est réinventée sur le plateau. Né de la commission d'étude promue par Adriano Olivetti et conçu par le groupe de Carlo Aymonino, Spine Bianche est l'un des plus beaux exemples du néoréalisme architectural italien — et aujourd'hui un lieu calme et plein de caractère où séjourner, avec parking gratuit et tout à deux pas.",f_tag:"Urban apartments dans le Rione Spine Bianche, Matera. Réservez en direct, séjournez mieux.",f_contact:"Contact",f_apts:"Appartements",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · Tous droits réservés.",m_apts:"Appartements",m_place:"Le quartier",p_link:"Découvrir le quartier",m_book:"Réserver",m_contact:"Contact",res_ok:"Parfait — {n} nuit(s) pour {g} voyageur(s). Disponibilité en temps réel et paiement instantané bientôt; pour l'instant nous confirmons vos dates sous quelques heures.",res_err:"Veuillez choisir une date d'arrivée et une date de départ ultérieure."}
 };
 let lang='en';
 function setLang(l){
  lang=I18N[l]?l:'en';document.documentElement.lang=lang;
  document.querySelectorAll('.menu-lang button').forEach((b,i)=>b.classList.toggle('active',['en','it','de','fr'][i]===lang));
  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(I18N[lang][k]!=null)el.textContent=I18N[lang][k];});
+ if(window.__bkRerender)window.__bkRerender();
  
 }
 
 
-// Booking stub
+// === Ricerca disponibilità + prenotazione ===
+const API_URL='https://maestranze.app.n8n.cloud/webhook/disponibilita';
+const APTS=[
+ {key:'carpentiera',apt:1,name:'Maestranze Carpentiera',cap:4,base:90,extra:15},
+ {key:'bidello',apt:2,name:'Maestranze Bidello',cap:2,base:75,extra:0}
+];
+const BK={
+ en:{checking:'Checking availability…',none:'No availability for these dates.',needboth:'For {g} guests you need both apartments, but they are not both free on these dates.',unavail:'Not available on these dates',perNight:'/night',from:'from',night:'night',nights:'nights',upto:'up to {c} guests',sel_title:'Your selection',needmore:'Add another apartment — {m} more guest(s) needed.',total:'Total',book:'Book',recap_title:'Booking summary',dates:'Dates',guests:'Guests',pay:'Proceed to payment',back:'Change',soon:'Online payment is being activated — this is the summary of your booking.'},
+ it:{checking:'Controllo disponibilità…',none:'Nessuna disponibilità per queste date.',needboth:'Per {g} ospiti servono entrambi gli appartamenti, ma non sono entrambi liberi in queste date.',unavail:'Non disponibile in queste date',perNight:'/notte',from:'da',night:'notte',nights:'notti',upto:'fino a {c} ospiti',sel_title:'La tua selezione',needmore:'Aggiungi un altro appartamento — servono ancora {m} ospite/i.',total:'Totale',book:'Prenota',recap_title:'Riepilogo prenotazione',dates:'Date',guests:'Ospiti',pay:'Procedi al pagamento',back:'Modifica',soon:'Il pagamento online è in attivazione — questo è il riepilogo della tua prenotazione.'},
+ de:{checking:'Verfügbarkeit wird geprüft…',none:'Keine Verfügbarkeit für diese Daten.',needboth:'Für {g} Gäste benötigen Sie beide Wohnungen, die an diesen Daten nicht beide frei sind.',unavail:'An diesen Daten nicht verfügbar',perNight:'/Nacht',from:'ab',night:'Nacht',nights:'Nächte',upto:'bis zu {c} Gäste',sel_title:'Ihre Auswahl',needmore:'Weitere Wohnung hinzufügen — noch {m} Gäste nötig.',total:'Gesamt',book:'Buchen',recap_title:'Buchungsübersicht',dates:'Daten',guests:'Gäste',pay:'Zur Zahlung',back:'Ändern',soon:'Online-Zahlung wird aktiviert — dies ist die Übersicht Ihrer Buchung.'},
+ fr:{checking:'Vérification des disponibilités…',none:'Aucune disponibilité pour ces dates.',needboth:'Pour {g} voyageurs il faut les deux appartements, mais ils ne sont pas tous deux libres à ces dates.',unavail:'Non disponible à ces dates',perNight:'/nuit',from:'à partir de',night:'nuit',nights:'nuits',upto:"jusqu'à {c} voyageurs",sel_title:'Votre sélection',needmore:'Ajoutez un autre appartement — encore {m} voyageur(s).',total:'Total',book:'Réserver',recap_title:'Récapitulatif',dates:'Dates',guests:'Voyageurs',pay:'Procéder au paiement',back:'Modifier',soon:"Le paiement en ligne est en cours d'activation — voici le récapitulatif de votre réservation."}
+};
+function bt(k){return (BK[lang]||BK.en)[k];}
+function eur(n){return '€'+n;}
 const todayISO=new Date().toISOString().slice(0,10);
-const bIn=document.getElementById('bIn'),bOut=document.getElementById('bOut');
+const bIn=document.getElementById('bIn'),bOut=document.getElementById('bOut'),bResult=document.getElementById('bResult'),bStage=document.getElementById('bStage');
 bIn.min=todayISO;bOut.min=todayISO;
 bIn.addEventListener('change',()=>{if(bIn.value){const x=new Date(bIn.value);x.setDate(x.getDate()+1);bOut.min=x.toISOString().slice(0,10);if(bOut.value&&bOut.value<=bIn.value)bOut.value='';}});
-document.getElementById('bGo').addEventListener('click',()=>{const r=document.getElementById('bResult'),ci=bIn.value,co=bOut.value,g=document.getElementById('bGuests').value;
- if(!ci||!co||new Date(co)<=new Date(ci)){r.style.display='block';r.textContent=I18N[lang].res_err;return;}
- const n=Math.round((new Date(co)-new Date(ci))/86400000);r.style.display='block';r.textContent=I18N[lang].res_ok.replace('{n}',n).replace('{g}',g);
- // HOOK fase 3: disponibilità reale (Supabase/iCal). HOOK fase 4: Stripe. HOOK fase 6: check-in.
-});
+function nightsBetween(ci,co){return Math.round((new Date(co)-new Date(ci))/86400000);}
+function nightly(a,people){return a.base+Math.max(0,people-2)*a.extra;}
+function capacity(keys){return keys.reduce((s,k)=>s+APTS.find(x=>x.key===k).cap,0);}
+function splitPeople(keys,P){let rem=P,res={};['bidello','carpentiera'].forEach(k=>{if(keys.indexOf(k)>=0){const a=APTS.find(x=>x.key===k);const take=Math.max(0,Math.min(a.cap,rem));res[k]=take;rem-=take;}});return res;}
+function subsetTotal(keys,P,nights){const sp=splitPeople(keys,P);let t=0;keys.forEach(k=>{t+=nightly(APTS.find(x=>x.key===k),sp[k]||0);});return t*nights;}
+function cheapest(avail,P,nights){const subs=[],n=avail.length;for(let m=1;m<(1<<n);m++){const s=[];for(let i=0;i<n;i++)if(m&(1<<i))s.push(avail[i]);if(capacity(s)>=P)subs.push(s);}subs.sort((a,b)=>subsetTotal(a,P,nights)-subsetTotal(b,P,nights)||a.length-b.length);return subs[0]||[];}
+function nlabel(n){return n+' '+(n===1?bt('night'):bt('nights'));}
+function fmtDate(d){try{return new Date(d).toLocaleDateString(lang,{day:'2-digit',month:'short',year:'numeric'});}catch(e){return d;}}
+let state=null;
+
+async function search(){
+ bStage.classList.remove('on');bStage.innerHTML='';
+ const ci=bIn.value,co=bOut.value,P=+document.getElementById('bGuests').value;
+ if(!ci||!co||new Date(co)<=new Date(ci)){bResult.style.display='block';bResult.style.color='#b3261e';bResult.textContent=I18N[lang].res_err;return;}
+ bResult.style.display='block';bResult.style.color='var(--muted)';bResult.textContent=bt('checking');
+ const nights=nightsBetween(ci,co);
+ let res;
+ try{res=await Promise.all(APTS.map(a=>fetch(API_URL+'?apt='+a.apt+'&checkin='+ci+'&checkout='+co).then(r=>r.json()).then(j=>({key:a.key,ok:!!j.disponibile})).catch(()=>({key:a.key,ok:false}))));}
+ catch(e){bResult.style.color='#b3261e';bResult.textContent=bt('none');return;}
+ const avail=res.filter(r=>r.ok).map(r=>r.key);
+ if(capacity(avail)<P){bResult.style.display='block';bResult.style.color='var(--ink)';bResult.textContent=(P>4&&avail.length<APTS.length)?bt('needboth').replace('{g}',P):bt('none');return;}
+ bResult.style.display='none';
+ state={ci,co,nights,P,avail,sel:cheapest(avail,P,nights),view:'results'};
+ render();
+}
+
+function render(){
+ if(!state){bStage.classList.remove('on');bStage.innerHTML='';return;}
+ bStage.classList.add('on');
+ if(state.view==='recap'){renderRecap();return;}
+ const {nights,P,avail,sel}=state;
+ let html='<div class="bk-cards">';
+ APTS.forEach(a=>{const isA=avail.indexOf(a.key)>=0,isS=sel.indexOf(a.key)>=0;
+  html+='<div class="bk-card'+(isS?' sel':'')+(isA?'':' dis')+'" data-k="'+a.key+'"><div class="pick">'+(isS?'✓':'')+'</div>';
+  html+='<h3>'+a.name+'</h3><div class="cap">'+bt('upto').replace('{c}',a.cap)+'</div>';
+  html+=isA?('<div class="price"><small>'+bt('from')+' </small>'+eur(a.base)+'<small> '+bt('perNight')+'</small></div>'):('<div class="na">'+bt('unavail')+'</div>');
+  html+='</div>';});
+ html+='</div>';
+ const cap=capacity(sel),enough=cap>=P,sp=splitPeople(sel,P),total=subsetTotal(sel,P,nights);
+ let lines=sel.map(k=>{const a=APTS.find(x=>x.key===k);return '<div><b>'+a.name+'</b> · '+eur(nightly(a,sp[k]||0))+' × '+nlabel(nights)+'</div>';}).join('');
+ html+='<div class="bk-summary"><div class="lines"><div class="st">'+bt('sel_title')+'</div>'+lines+(enough?'':'<div class="hint">'+bt('needmore').replace('{m}',P-cap)+'</div>')+'</div>';
+ html+='<div class="right"><div class="tot">'+eur(total)+'</div><button class="bk-act" id="bBook"'+(enough?'':' disabled')+'>'+bt('book')+'</button></div></div>';
+ bStage.innerHTML=html;
+ bStage.querySelectorAll('.bk-card').forEach(c=>{if(c.classList.contains('dis'))return;c.addEventListener('click',()=>{const k=c.getAttribute('data-k'),i=state.sel.indexOf(k);if(i>=0)state.sel.splice(i,1);else state.sel.push(k);render();});});
+ const bk=document.getElementById('bBook');if(bk)bk.addEventListener('click',()=>{state.view='recap';render();});
+}
+
+function renderRecap(){
+ const {ci,co,nights,P,sel}=state,sp=splitPeople(sel,P);let rows='',total=0;
+ sel.forEach(k=>{const a=APTS.find(x=>x.key===k),sub=nightly(a,sp[k]||0)*nights;total+=sub;rows+='<div class="row"><span class="lbl">'+a.name+'</span><span>'+eur(nightly(a,sp[k]||0))+' × '+nlabel(nights)+' = '+eur(sub)+'</span></div>';});
+ let html='<div class="bk-recap"><h3>'+bt('recap_title')+'</h3><div class="subt">'+bt('soon')+'</div>';
+ html+='<div class="row"><span class="lbl">'+bt('dates')+'</span><span>'+fmtDate(ci)+' → '+fmtDate(co)+' · '+nlabel(nights)+'</span></div>';
+ html+='<div class="row"><span class="lbl">'+bt('guests')+'</span><span>'+P+'</span></div>'+rows;
+ html+='<div class="row tot"><span>'+bt('total')+'</span><span>'+eur(total)+'</span></div>';
+ html+='<div class="acts"><button class="bk-act" id="bPay">'+bt('pay')+'</button><button class="bk-back" id="bBack">'+bt('back')+'</button></div>';
+ html+='<div id="payNote" style="margin-top:12px;font-size:.85rem;color:var(--muted)"></div></div>';
+ bStage.innerHTML=html;
+ document.getElementById('bBack').addEventListener('click',()=>{state.view='results';render();});
+ document.getElementById('bPay').addEventListener('click',()=>{document.getElementById('payNote').textContent=bt('soon');}); // HOOK pagamento Stripe
+}
+
+document.getElementById('bGo').addEventListener('click',search);
+window.__bkRerender=function(){if(state)render();};
+
 
 // Menu
 (function(){const btn=document.getElementById('menuBtn'),ov=document.getElementById('menuOverlay');
