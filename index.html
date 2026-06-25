@@ -126,8 +126,15 @@ body.lock{overflow:hidden;}
     #apartments{background-color:var(--paper);background-image:radial-gradient(rgba(44,47,49,0.20) 1px, transparent 1px);background-size:22px 22px;background-position:center top;}
   
     /* --- ricerca disponibilità / prenotazione --- */
-    .bk-stage{display:none;width:100%;}
-    .bk-stage.on{display:block;}
+    .bk-stage{width:100%;}
+    .bk-modal{position:fixed;inset:0;z-index:120;display:none;align-items:flex-start;justify-content:center;padding:clamp(14px,5vh,60px) 14px;background:rgba(251,251,249,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overflow-y:auto;}
+    .bk-modal.on{display:flex;}
+    .bk-panel{position:relative;width:100%;max-width:720px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;padding:clamp(24px,4vw,40px);box-shadow:0 30px 80px rgba(23,25,28,.18);}
+    .bk-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border:none;border-radius:50%;background:var(--paper);color:var(--ink);font-size:1.4rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+    .bk-close:hover{background:var(--line);}
+    .bk-msg{font-size:1rem;color:var(--muted);padding:12px 2px;line-height:1.6;}
+    .bk-head{font-family:var(--font);font-weight:600;font-size:1.25rem;letter-spacing:-.01em;}
+    .bk-head-sub{color:var(--muted);font-size:.9rem;margin-top:4px;}
     .bk-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
     @media(max-width:680px){.bk-cards{grid-template-columns:1fr;}}
     .bk-card{position:relative;border:1px solid var(--line-2);border-radius:16px;padding:20px;background:var(--surface);cursor:pointer;transition:border-color .15s,background .15s;}
@@ -215,7 +222,12 @@ body.lock{overflow:hidden;}
     <button class="bk-go" id="bGo" data-i18n="b_go">Check availability</button>
     <div class="bk-result" id="bResult"></div>
   </div>
-  <div class="bk-stage pad" id="bStage"></div>
+  <div class="bk-modal" id="bModal" aria-hidden="true">
+    <div class="bk-panel" role="dialog" aria-modal="true">
+      <button class="bk-close" id="bClose" aria-label="Close">×</button>
+      <div class="bk-stage" id="bStage"></div>
+    </div>
+  </div>
 
   <!-- Apartments -->
   <section class="section pad" id="apartments">
@@ -283,7 +295,7 @@ const BK={
 function bt(k){return (BK[lang]||BK.en)[k];}
 function eur(n){return '€'+n;}
 const todayISO=new Date().toISOString().slice(0,10);
-const bIn=document.getElementById('bIn'),bOut=document.getElementById('bOut'),bResult=document.getElementById('bResult'),bStage=document.getElementById('bStage');
+const bIn=document.getElementById('bIn'),bOut=document.getElementById('bOut'),bResult=document.getElementById('bResult'),bStage=document.getElementById('bStage'),bModal=document.getElementById('bModal');
 bIn.min=todayISO;bOut.min=todayISO;
 bIn.addEventListener('change',()=>{if(bIn.value){const x=new Date(bIn.value);x.setDate(x.getDate()+1);bOut.min=x.toISOString().slice(0,10);if(bOut.value&&bOut.value<=bIn.value)bOut.value='';}});
 function nightsBetween(ci,co){return Math.round((new Date(co)-new Date(ci))/86400000);}
@@ -296,28 +308,29 @@ function nlabel(n){return n+' '+(n===1?bt('night'):bt('nights'));}
 function fmtDate(d){try{return new Date(d).toLocaleDateString(lang,{day:'2-digit',month:'short',year:'numeric'});}catch(e){return d;}}
 let state=null;
 
+function openModal(){bModal.classList.add('on');bModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+function closeModal(){bModal.classList.remove('on');bModal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
 async function search(){
- bStage.classList.remove('on');bStage.innerHTML='';
  const ci=bIn.value,co=bOut.value,P=+document.getElementById('bGuests').value;
  if(!ci||!co||new Date(co)<=new Date(ci)){bResult.style.display='block';bResult.style.color='#b3261e';bResult.textContent=I18N[lang].res_err;return;}
- bResult.style.display='block';bResult.style.color='var(--muted)';bResult.textContent=bt('checking');
+ bResult.style.display='none';openModal();
+ bStage.innerHTML='<div class="bk-msg">'+bt('checking')+'</div>';
  const nights=nightsBetween(ci,co);
  let res;
  try{res=await Promise.all(APTS.map(a=>fetch(API_URL+'?apt='+a.apt+'&checkin='+ci+'&checkout='+co).then(r=>r.json()).then(j=>({key:a.key,ok:!!j.disponibile})).catch(()=>({key:a.key,ok:false}))));}
- catch(e){bResult.style.color='#b3261e';bResult.textContent=bt('none');return;}
+ catch(e){bStage.innerHTML='<div class="bk-msg">'+bt('none')+'</div>';return;}
  const avail=res.filter(r=>r.ok).map(r=>r.key);
- if(capacity(avail)<P){bResult.style.display='block';bResult.style.color='var(--ink)';bResult.textContent=(P>4&&avail.length<APTS.length)?bt('needboth').replace('{g}',P):bt('none');return;}
- bResult.style.display='none';
+ if(capacity(avail)<P){bStage.innerHTML='<div class="bk-msg">'+((P>4&&avail.length<APTS.length)?bt('needboth').replace('{g}',P):bt('none'))+'</div>';return;}
  state={ci,co,nights,P,avail,sel:cheapest(avail,P,nights),view:'results'};
  render();
 }
 
 function render(){
- if(!state){bStage.classList.remove('on');bStage.innerHTML='';return;}
- bStage.classList.add('on');
+ if(!state)return;
  if(state.view==='recap'){renderRecap();return;}
- const {nights,P,avail,sel}=state;
- let html='<div class="bk-cards">';
+ const {ci,co,nights,P,avail,sel}=state;
+ let html='<div class="bk-head">'+fmtDate(ci)+' \u2192 '+fmtDate(co)+'</div><div class="bk-head-sub">'+nlabel(nights)+' \u00b7 '+P+' '+bt('guests')+'</div>';
+ html+='<div class="bk-cards">';
  APTS.forEach(a=>{const isA=avail.indexOf(a.key)>=0,isS=sel.indexOf(a.key)>=0;
   html+='<div class="bk-card'+(isS?' sel':'')+(isA?'':' dis')+'" data-k="'+a.key+'"><div class="pick">'+(isS?'✓':'')+'</div>';
   html+='<h3>'+a.name+'</h3><div class="cap">'+bt('upto').replace('{c}',a.cap)+'</div>';
@@ -348,7 +361,10 @@ function renderRecap(){
 }
 
 document.getElementById('bGo').addEventListener('click',search);
-window.__bkRerender=function(){if(state)render();};
+document.getElementById('bClose').addEventListener('click',closeModal);
+bModal.addEventListener('click',e=>{if(e.target===bModal)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&bModal.classList.contains('on'))closeModal();});
+window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render();};
 
 
 // Menu
