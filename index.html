@@ -196,16 +196,19 @@ body.lock{overflow:hidden;}
     /* lava redorange dietro il titolo hero, sotto vetro per leggibilità */
     .hero{position:relative;isolation:isolate;}
     .hero h1,.hero .hero-sub{position:relative;z-index:2;}
-    .hero-lava{position:absolute;inset:0;z-index:0;overflow:hidden;filter:url(#goo);}
-    .hero-lava .blob{position:absolute;border-radius:50%;will-change:transform;}
-    .hero-lava .b1{width:46%;height:62%;left:-4%;top:18%;background:radial-gradient(circle at 36% 28%,rgba(255,236,210,.95),#ff7a3d 34%,#ff3d2e 68%,#c81d11);animation:lavaA 26s ease-in-out infinite;}
-    .hero-lava .b2{width:40%;height:70%;left:26%;top:10%;background:radial-gradient(circle at 40% 30%,rgba(255,228,200,.95),#ff6a35 34%,#ff2e22 70%,#b81810);animation:lavaB 32s ease-in-out infinite;}
-    .hero-lava .b3{width:38%;height:60%;left:52%;top:22%;background:radial-gradient(circle at 34% 28%,rgba(255,238,214,.95),#ff8a45 34%,#ff4326 70%,#c4200f);animation:lavaC 29s ease-in-out infinite;}
-    .hero-lava .b4{width:34%;height:64%;left:74%;top:14%;background:radial-gradient(circle at 40% 30%,rgba(255,232,205,.95),#ff6b35 34%,#ff331f 70%,#bf1a0d);animation:lavaD 35s ease-in-out infinite;}
-    @keyframes lavaA{0%{transform:translate(0,14%) scale(1);}50%{transform:translate(7%,-26%) scale(1.22);}100%{transform:translate(0,14%) scale(1);}}
-    @keyframes lavaB{0%{transform:translate(0,-12%) scale(1.1);}50%{transform:translate(-6%,22%) scale(.82);}100%{transform:translate(0,-12%) scale(1.1);}}
-    @keyframes lavaC{0%{transform:translate(0,18%) scale(.95);}50%{transform:translate(6%,-22%) scale(1.2);}100%{transform:translate(0,18%) scale(.95);}}
-    @keyframes lavaD{0%{transform:translate(0,-10%) scale(1.05);}50%{transform:translate(-7%,24%) scale(.8);}100%{transform:translate(0,-10%) scale(1.05);}}
+    .hero-lava{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;}
+    .hero-lava .blob{position:absolute;border-radius:50%;background:rgba(251,251,249,.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 10px 30px rgba(255,255,255,.5),inset 0 -14px 34px rgba(120,120,130,.10);will-change:transform,border-radius;}
+    .hero-lava .water-base{position:absolute;inset:0;background:rgba(251,251,249,.08);backdrop-filter:blur(2.5px);-webkit-backdrop-filter:blur(2.5px);}
+    .hero-lava .b1{width:60%;height:96%;left:-10%;top:2%;animation:lavaA 30s ease-in-out infinite,morphA 24s ease-in-out infinite;}
+    .hero-lava .b2{width:58%;height:100%;left:20%;top:-4%;animation:lavaB 36s ease-in-out infinite,morphB 26s ease-in-out infinite;}
+    .hero-lava .b3{width:56%;height:94%;left:46%;top:4%;animation:lavaC 33s ease-in-out infinite,morphA 22s ease-in-out infinite;}
+    .hero-lava .b4{width:54%;height:100%;left:66%;top:-2%;animation:lavaD 38s ease-in-out infinite,morphB 25s ease-in-out infinite;}
+    @keyframes lavaA{0%{transform:translate(0,6%) scale(1.02);}50%{transform:translate(4%,-10%) scale(1.12);}100%{transform:translate(0,6%) scale(1.02);}}
+    @keyframes lavaB{0%{transform:translate(0,-6%) scale(1.08);}50%{transform:translate(-4%,9%) scale(.94);}100%{transform:translate(0,-6%) scale(1.08);}}
+    @keyframes lavaC{0%{transform:translate(0,7%) scale(.98);}50%{transform:translate(3%,-9%) scale(1.1);}100%{transform:translate(0,7%) scale(.98);}}
+    @keyframes lavaD{0%{transform:translate(0,-5%) scale(1.04);}50%{transform:translate(-4%,10%) scale(.92);}100%{transform:translate(0,-5%) scale(1.04);}}
+    @keyframes morphA{0%{border-radius:58% 42% 55% 45% / 52% 58% 42% 48%;}50%{border-radius:45% 55% 48% 52% / 58% 45% 55% 42%;}100%{border-radius:58% 42% 55% 45% / 52% 58% 42% 48%;}}
+    @keyframes morphB{0%{border-radius:50% 50% 45% 55% / 55% 48% 52% 45%;}50%{border-radius:42% 58% 55% 45% / 45% 55% 45% 58%;}100%{border-radius:50% 50% 45% 55% / 55% 48% 52% 45%;}}
     @media(prefers-reduced-motion:reduce){.hero-lava .blob{animation:none;}}
   </style>
 </head>
@@ -250,7 +253,7 @@ body.lock{overflow:hidden;}
 <main>
   <!-- Hero -->
   <section class="hero pad">
-    <div class="hero-lava" aria-hidden="true"><svg width="0" height="0" style="position:absolute"><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -11" result="goo"/><feBlend in="SourceGraphic" in2="goo"/></filter></svg><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span></div>
+    <div class="hero-lava" aria-hidden="true"><span class="water-base"></span><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span></div>
     <h1 data-i18n="hero_h1">Stay in the neighbourhood that reinvented Matera.</h1>
     <p class="hero-sub" data-i18n="hero_sub">Maestranze Urban Apartments is in Rione Spine Bianche — comfortable homes with free parking, a short walk from the Sassi and the centre. Book here for our lowest price, guaranteed only on this site.</p>
   </section>
