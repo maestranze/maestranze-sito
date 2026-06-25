@@ -129,7 +129,7 @@ body.lock{overflow:hidden;}
     .bk-stage{width:100%;}
     .bk-modal{position:fixed;inset:0;z-index:120;display:none;align-items:flex-start;justify-content:center;padding:clamp(16px,4vh,48px) clamp(16px,4vw,48px);background:rgba(251,251,249,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overflow-y:auto;}
     .bk-modal.on{display:flex;}
-    .bk-panel{position:relative;width:100%;max-width:1100px;min-height:calc(100vh - clamp(32px,8vh,96px));min-height:calc(100dvh - clamp(32px,8vh,96px));background-color:var(--paper);background-image:radial-gradient(rgba(44,47,49,0.20) 1px, transparent 1px);background-size:22px 22px;border:1px solid var(--line-2);border-radius:22px;padding:clamp(28px,4vw,48px);box-shadow:0 18px 50px rgba(23,25,28,.12);}
+    .bk-panel{position:relative;width:100%;max-width:1100px;min-height:calc(100vh - clamp(32px,8vh,96px));min-height:calc(100dvh - clamp(32px,8vh,96px));background-color:var(--paper);background-image:radial-gradient(rgba(44,47,49,0.20) 1px, transparent 1px);background-size:22px 22px;border:1px solid var(--ink);border-radius:22px;padding:clamp(28px,4vw,48px);box-shadow:0 18px 50px rgba(23,25,28,.12);}
     .bk-close{position:absolute;top:16px;right:20px;width:60px;height:60px;border:none;background:none;color:var(--ink);font-size:3.4rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .4s cubic-bezier(.4,0,.2,1),color .15s;}
     .bk-close:hover{color:var(--accent);}
     .bk-close.spun{transform:rotate(180deg);}
@@ -139,9 +139,9 @@ body.lock{overflow:hidden;}
     .bk-head-sub{color:var(--muted);font-size:.9rem;margin-top:4px;}
     .bk-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
     @media(max-width:680px){.bk-cards{grid-template-columns:1fr;}}
-    .bk-card{position:relative;border:1px solid var(--line-2);border-radius:16px;padding:20px;background:var(--surface);cursor:pointer;transition:border-color .15s,background .15s;}
+    .bk-card{position:relative;border:1px solid var(--line-2);border-radius:16px;padding:20px;background:transparent;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
     .bk-card:hover{border-color:var(--faint);}
-    .bk-card.sel{border-color:var(--accent);background:var(--accent-soft);}
+    .bk-card.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);}
     .bk-card.dis{opacity:.55;cursor:not-allowed;}
     .bk-card h3{font-family:var(--font);font-weight:600;font-size:1.15rem;}
     .bk-card .cap{font-size:.85rem;color:var(--muted);margin-top:4px;}
@@ -160,7 +160,9 @@ body.lock{overflow:hidden;}
     .bk-act{font-family:var(--font);font-size:1rem;font-weight:600;color:var(--paper);background:var(--ink);border:none;border-radius:999px;padding:14px 30px;cursor:pointer;transition:opacity .15s;}
     .bk-act:hover{opacity:.88;}
     .bk-act:disabled{opacity:.35;cursor:not-allowed;}
-    .bk-recap{margin-top:22px;border:1px solid var(--line-2);border-radius:18px;padding:clamp(20px,3vw,30px);background:var(--surface);max-width:560px;}
+    .bk-recap{margin-top:6px;padding:0;max-width:560px;}
+    .bk-backtop{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--muted);font-family:var(--font);font-size:.95rem;cursor:pointer;margin-bottom:16px;padding:0;}
+    .bk-backtop:hover{color:var(--ink);}
     .bk-recap h3{font-family:var(--font);font-weight:600;font-size:1.4rem;}
     .bk-recap .subt{color:var(--muted);font-size:.9rem;margin:6px 0 16px;line-height:1.5;}
     .bk-recap .row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-top:1px solid var(--line);font-size:.95rem;}
@@ -289,10 +291,10 @@ const APTS=[
  {key:'bidello',apt:2,name:'Maestranze Bidello',cap:2,base:75,extra:0}
 ];
 const BK={
- en:{checking:'Checking availability…',none:'No availability for these dates.',needboth:'For {g} guests you need both apartments, but they are not both free on these dates.',unavail:'Not available on these dates',perNight:'/night',from:'from',night:'night',nights:'nights',upto:'up to {c} guests',sel_title:'Your selection',needmore:'Add another apartment — {m} more guest(s) needed.',total:'Total',book:'Book',recap_title:'Booking summary',dates:'Dates',guests:'Guests',pay:'Proceed to payment',back:'Change',soon:'Online payment is being activated — this is the summary of your booking.'},
- it:{checking:'Controllo disponibilità…',none:'Nessuna disponibilità per queste date.',needboth:'Per {g} ospiti servono entrambi gli appartamenti, ma non sono entrambi liberi in queste date.',unavail:'Non disponibile in queste date',perNight:'/notte',from:'da',night:'notte',nights:'notti',upto:'fino a {c} ospiti',sel_title:'La tua selezione',needmore:'Aggiungi un altro appartamento — servono ancora {m} ospite/i.',total:'Totale',book:'Prenota',recap_title:'Riepilogo prenotazione',dates:'Date',guests:'Ospiti',pay:'Procedi al pagamento',back:'Modifica',soon:'Il pagamento online è in attivazione — questo è il riepilogo della tua prenotazione.'},
- de:{checking:'Verfügbarkeit wird geprüft…',none:'Keine Verfügbarkeit für diese Daten.',needboth:'Für {g} Gäste benötigen Sie beide Wohnungen, die an diesen Daten nicht beide frei sind.',unavail:'An diesen Daten nicht verfügbar',perNight:'/Nacht',from:'ab',night:'Nacht',nights:'Nächte',upto:'bis zu {c} Gäste',sel_title:'Ihre Auswahl',needmore:'Weitere Wohnung hinzufügen — noch {m} Gäste nötig.',total:'Gesamt',book:'Buchen',recap_title:'Buchungsübersicht',dates:'Daten',guests:'Gäste',pay:'Zur Zahlung',back:'Ändern',soon:'Online-Zahlung wird aktiviert — dies ist die Übersicht Ihrer Buchung.'},
- fr:{checking:'Vérification des disponibilités…',none:'Aucune disponibilité pour ces dates.',needboth:'Pour {g} voyageurs il faut les deux appartements, mais ils ne sont pas tous deux libres à ces dates.',unavail:'Non disponible à ces dates',perNight:'/nuit',from:'à partir de',night:'nuit',nights:'nuits',upto:"jusqu'à {c} voyageurs",sel_title:'Votre sélection',needmore:'Ajoutez un autre appartement — encore {m} voyageur(s).',total:'Total',book:'Réserver',recap_title:'Récapitulatif',dates:'Dates',guests:'Voyageurs',pay:'Procéder au paiement',back:'Modifier',soon:"Le paiement en ligne est en cours d'activation — voici le récapitulatif de votre réservation."}
+ en:{checking:'Checking availability…',none:'No availability for these dates.',needboth:'For {g} guests you need both apartments, but they are not both free on these dates.',unavail:'Not available on these dates',perNight:'/night',from:'from',night:'night',nights:'nights',upto:'up to {c} guests',sel_title:'Your selection',needmore:'Add another apartment — {m} more guest(s) needed.',total:'Total',book:'Book',recap_title:'Booking summary',dates:'Dates',guests:'Guests',pay:'Proceed to payment',back:'Back',soon:'Online payment is being activated — this is the summary of your booking.'},
+ it:{checking:'Controllo disponibilità…',none:'Nessuna disponibilità per queste date.',needboth:'Per {g} ospiti servono entrambi gli appartamenti, ma non sono entrambi liberi in queste date.',unavail:'Non disponibile in queste date',perNight:'/notte',from:'da',night:'notte',nights:'notti',upto:'fino a {c} ospiti',sel_title:'La tua selezione',needmore:'Aggiungi un altro appartamento — servono ancora {m} ospite/i.',total:'Totale',book:'Prenota',recap_title:'Riepilogo prenotazione',dates:'Date',guests:'Ospiti',pay:'Procedi al pagamento',back:'Indietro',soon:'Il pagamento online è in attivazione — questo è il riepilogo della tua prenotazione.'},
+ de:{checking:'Verfügbarkeit wird geprüft…',none:'Keine Verfügbarkeit für diese Daten.',needboth:'Für {g} Gäste benötigen Sie beide Wohnungen, die an diesen Daten nicht beide frei sind.',unavail:'An diesen Daten nicht verfügbar',perNight:'/Nacht',from:'ab',night:'Nacht',nights:'Nächte',upto:'bis zu {c} Gäste',sel_title:'Ihre Auswahl',needmore:'Weitere Wohnung hinzufügen — noch {m} Gäste nötig.',total:'Gesamt',book:'Buchen',recap_title:'Buchungsübersicht',dates:'Daten',guests:'Gäste',pay:'Zur Zahlung',back:'Zurück',soon:'Online-Zahlung wird aktiviert — dies ist die Übersicht Ihrer Buchung.'},
+ fr:{checking:'Vérification des disponibilités…',none:'Aucune disponibilité pour ces dates.',needboth:'Pour {g} voyageurs il faut les deux appartements, mais ils ne sont pas tous deux libres à ces dates.',unavail:'Non disponible à ces dates',perNight:'/nuit',from:'à partir de',night:'nuit',nights:'nuits',upto:"jusqu'à {c} voyageurs",sel_title:'Votre sélection',needmore:'Ajoutez un autre appartement — encore {m} voyageur(s).',total:'Total',book:'Réserver',recap_title:'Récapitulatif',dates:'Dates',guests:'Voyageurs',pay:'Procéder au paiement',back:'Retour',soon:"Le paiement en ligne est en cours d'activation — voici le récapitulatif de votre réservation."}
 };
 function bt(k){return (BK[lang]||BK.en)[k];}
 function eur(n){return '€'+n;}
@@ -352,11 +354,11 @@ function render(){
 function renderRecap(){
  const {ci,co,nights,P,sel}=state,sp=splitPeople(sel,P);let rows='',total=0;
  sel.forEach(k=>{const a=APTS.find(x=>x.key===k),sub=nightly(a,sp[k]||0)*nights;total+=sub;rows+='<div class="row"><span class="lbl">'+a.name+'</span><span>'+eur(nightly(a,sp[k]||0))+' × '+nlabel(nights)+' = '+eur(sub)+'</span></div>';});
- let html='<div class="bk-recap"><h3>'+bt('recap_title')+'</h3><div class="subt">'+bt('soon')+'</div>';
+ let html='<div class="bk-recap"><button class="bk-backtop" id="bBack">\u2190 '+bt('back')+'</button><h3>'+bt('recap_title')+'</h3><div class="subt">'+bt('soon')+'</div>';
  html+='<div class="row"><span class="lbl">'+bt('dates')+'</span><span>'+fmtDate(ci)+' → '+fmtDate(co)+' · '+nlabel(nights)+'</span></div>';
  html+='<div class="row"><span class="lbl">'+bt('guests')+'</span><span>'+P+'</span></div>'+rows;
  html+='<div class="row tot"><span>'+bt('total')+'</span><span>'+eur(total)+'</span></div>';
- html+='<div class="acts"><button class="bk-act" id="bPay">'+bt('pay')+'</button><button class="bk-back" id="bBack">'+bt('back')+'</button></div>';
+ html+='<div class="acts"><button class="bk-act" id="bPay">'+bt('pay')+'</button></div>';
  html+='<div id="payNote" style="margin-top:12px;font-size:.85rem;color:var(--muted)"></div></div>';
  bStage.innerHTML=html;
  document.getElementById('bBack').addEventListener('click',()=>{state.view='results';render();});
