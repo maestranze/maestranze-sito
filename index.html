@@ -127,11 +127,12 @@ body.lock{overflow:hidden;}
   
     /* --- ricerca disponibilità / prenotazione --- */
     .bk-stage{width:100%;}
-    .bk-modal{position:fixed;inset:0;z-index:120;display:none;align-items:flex-start;justify-content:center;padding:clamp(14px,5vh,60px) 14px;background:rgba(251,251,249,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overflow-y:auto;}
+    .bk-modal{position:fixed;inset:0;z-index:120;display:none;align-items:flex-start;justify-content:center;padding:clamp(14px,5vh,60px) 14px;background-color:var(--paper);background-image:radial-gradient(rgba(44,47,49,0.20) 1px, transparent 1px);background-size:22px 22px;overflow-y:auto;}
     .bk-modal.on{display:flex;}
-    .bk-panel{position:relative;width:100%;max-width:720px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;padding:clamp(24px,4vw,40px);box-shadow:0 30px 80px rgba(23,25,28,.18);}
-    .bk-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border:none;border-radius:50%;background:var(--paper);color:var(--ink);font-size:1.4rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
-    .bk-close:hover{background:var(--line);}
+    .bk-panel{position:relative;width:100%;max-width:720px;background:rgba(251,251,249,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--line-2);border-radius:22px;padding:clamp(24px,4vw,40px);box-shadow:0 18px 50px rgba(23,25,28,.10);}
+    .bk-close{position:absolute;top:14px;right:16px;width:34px;height:34px;border:none;background:none;color:var(--ink);font-size:1.7rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .35s cubic-bezier(.4,0,.2,1),color .15s;}
+    .bk-close:hover{color:var(--accent);}
+    .bk-close.spun{transform:rotate(180deg);}
     .bk-msg{font-size:1rem;color:var(--muted);padding:12px 2px;line-height:1.6;}
     .bk-head{font-family:var(--font);font-weight:600;font-size:1.25rem;letter-spacing:-.01em;}
     .bk-head-sub{color:var(--muted);font-size:.9rem;margin-top:4px;}
@@ -308,8 +309,9 @@ function nlabel(n){return n+' '+(n===1?bt('night'):bt('nights'));}
 function fmtDate(d){try{return new Date(d).toLocaleDateString(lang,{day:'2-digit',month:'short',year:'numeric'});}catch(e){return d;}}
 let state=null;
 
-function openModal(){bModal.classList.add('on');bModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+function openModal(){var x=document.getElementById('bClose');if(x)x.classList.remove('spun');bModal.classList.add('on');bModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
 function closeModal(){bModal.classList.remove('on');bModal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+function spinClose(){var x=document.getElementById('bClose');if(x)x.classList.add('spun');setTimeout(closeModal,320);}
 async function search(){
  const ci=bIn.value,co=bOut.value,P=+document.getElementById('bGuests').value;
  if(!ci||!co||new Date(co)<=new Date(ci)){bResult.style.display='block';bResult.style.color='#b3261e';bResult.textContent=I18N[lang].res_err;return;}
@@ -361,7 +363,7 @@ function renderRecap(){
 }
 
 document.getElementById('bGo').addEventListener('click',search);
-document.getElementById('bClose').addEventListener('click',closeModal);
+document.getElementById('bClose').addEventListener('click',spinClose);
 bModal.addEventListener('click',e=>{if(e.target===bModal)closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&bModal.classList.contains('on'))closeModal();});
 window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render();};
