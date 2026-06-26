@@ -13,7 +13,8 @@ html{font-size:16px;scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
 body{font-family:var(--font);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;}
 a{color:inherit;}
 .pad{padding-left:clamp(16px,4vw,44px);padding-right:clamp(16px,4vw,44px);}
-.site-header{position:sticky;top:0;z-index:50;background:rgba(251,251,249,.86);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px clamp(16px,4vw,44px);}
+.site-header{position:-webkit-sticky;position:sticky;top:0;z-index:50;background:transparent;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px clamp(16px,4vw,44px);}
+.site-header::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(251,251,249,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
 .brand{display:flex;align-items:center;text-decoration:none;}
 .brand .brand-logo{height:30px;width:auto;display:block;}
 .nav-pill{display:flex;align-items:center;gap:2px;border:1px solid var(--line-2);border-radius:999px;padding:5px 5px 5px 7px;background:var(--surface);}
@@ -27,13 +28,16 @@ a{color:inherit;}
 .nav-cta{font-size:.95rem;font-weight:600;text-decoration:none;color:var(--paper);background:var(--ink);padding:10px 18px;border-radius:999px;transition:opacity .15s;}
 .nav-cta:hover{opacity:.88;}
 @media(max-width:760px){.nav-link{display:none;}}
-.menu-overlay{position:fixed;inset:0;z-index:200;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:0;pointer-events:none;transition:opacity .35s;}
+.menu-overlay{position:fixed;inset:0;z-index:200;background:rgba(251,251,249,0.68);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:0;pointer-events:none;transition:opacity .35s ease;}
 .menu-overlay.open{opacity:1;pointer-events:auto;}
 .menu-overlay a{font-family:var(--font);font-weight:600;font-size:clamp(1.9rem,7vw,2.8rem);letter-spacing:-.02em;color:var(--ink);text-decoration:none;padding:6px 0;}
 .menu-overlay a:hover{color:var(--accent);}
 .menu-lang{margin-top:34px;display:flex;gap:6px;}
 .menu-lang button{font-family:var(--font);font-size:.8rem;font-weight:500;padding:6px 12px;border:none;border-radius:999px;background:transparent;color:var(--faint);cursor:pointer;}
 .menu-lang button.active{background:var(--ink);color:var(--paper);}
+.menu-close{position:absolute;top:16px;right:16px;width:56px;height:56px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);transition:transform .2s ease;}
+.menu-close:hover{transform:rotate(90deg);}
+.menu-close svg{width:36px;height:36px;}
 .eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);}
 .hero{padding-top:clamp(36px,7vw,84px);padding-bottom:clamp(24px,4vw,46px);}
 .hero h1{font-family:var(--font);font-weight:600;font-size:clamp(2.5rem,9vw,6.6rem);line-height:.97;letter-spacing:-.03em;max-width:15ch;margin-top:16px;}
@@ -80,7 +84,20 @@ figure.shot figcaption{margin-top:9px;font-size:.82rem;color:var(--muted);line-h
 .foot-col a:hover{color:var(--ink);}
 .foot-legal{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:.76rem;color:var(--faint);}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-</style>
+
+    /* cursore personalizzato: cerchio vuoto -> pallino nero sui cliccabili */
+    #cursorDot{display:none;}
+    @media (hover:hover) and (pointer:fine){
+      body{cursor:none;}
+      a,button,select,input,textarea,label,summary,[role="button"],[onclick],.clickable{cursor:none;}
+      #cursorDot{display:block;position:fixed;top:0;left:0;z-index:2147483647;pointer-events:none;width:32px;height:32px;border:2px solid #FF5A1F;border-radius:50%;background:transparent;transition:width .2s ease,height .2s ease,background-color .2s ease,border-width .2s ease,opacity .25s ease;will-change:transform;opacity:0;}
+      #cursorDot.is-dot{width:14px;height:14px;background:#FF5A1F;border-width:0;}
+    }
+    /* effetto liquido WebGL sull'H1 */
+    .hero h1.gl-text{color:transparent;}
+    .gl-text{color:transparent;}
+    .hero-gl-canvas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+  </style>
 </head>
 <body>
 <header class="site-header">
@@ -92,6 +109,7 @@ figure.shot figcaption{margin-top:9px;font-size:.82rem;color:var(--muted);line-h
   </nav>
 </header>
 <nav class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <button class="menu-close" id="menuClose" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <a href="index.html#apartments" data-i18n="m_apts">Apartments</a>
   <a href="index.html#booking" data-i18n="m_book">Book</a>
   <a href="quartiere.html" data-i18n="m_place">The neighbourhood</a>
@@ -166,7 +184,7 @@ figure.shot figcaption{margin-top:9px;font-size:.82rem;color:var(--muted);line-h
 <footer class="site-footer pad" id="contact">
   <div class="foot-top">
     <div class="foot-brand"><svg class="brand-logo" viewBox="130 64 1405 262" role="img" aria-label="Maestranze"><path fill="#2C2F31" transform="translate(243.20,193.90) scale(1.21) translate(-243.20,-193.90)" d="M212.9,254.4c-1.6-1.1-2.2-1.4-3.6-2.7l-0.5,0.5c2.3,2.7,4.2,3.6,4.2,7.1v34.1H154V136.2  c0-23.1,18.7-41.7,41.7-41.7s41.7,18.7,41.7,41.7c0,0,0,54,0,54c0,1.3,0.1,2.6,0.4,3.9c0.3,1.2,0.7,2.4,1.2,3.6  c0.5,1.1,1.2,2.2,1.9,3.2c0.7,1,1.6,1.9,2.5,2.7c0.9,0.8,1.9,1.6,3,2.2c0.8,0.5,2.6,1.3,2.6,1.3s0-9.7,0-12.1c0-2.2,0-4.4,0-6.6  c0-2.8,0-5.6,0-8.4c0-3.2,0-6.3,0-9.5c0-3.2,0-6.4,0-9.7c0-3,0-6,0-9.1c0-2.6,0-5.1,0-7.7c0-1.8,0-3.6,0-5.4c0-0.8,0-1.6,0-2.4  c0,0,0,0,0-0.1c0-23.1,18.7-41.7,41.7-41.7c23.1,0,41.7,18.7,41.7,41.7v54c0,22.3-9.4,42.3-24.6,56.4v46.8h-58.9c0,0,0-26.4,0-26.4  C235.8,265.9,223.5,261.4,212.9,254.4z M254,136.2h73.7c0-20.3-16.5-36.8-36.8-36.8S254,115.9,254,136.2 M303.1,141.1h-24.6  c0,6.8,5.5,12.3,12.3,12.3C297.6,153.4,303.1,147.9,303.1,141.1z M308,185.3h19.6v-44.2c0,0-19.6,0-19.6,0V185.3 M254,208.2  c0.5,0,1,0.1,1.6,0.1c10,0,18.1-8.1,18.1-18.1v-49.1c0,0-19.6,0-19.6,0L254,208.2L254,208.2z M158.9,141.1v147.3H208v-37.6h0  c-17.9-14.1-29.5-36-29.5-60.6v-4.9v-44.2H158.9z M183.5,141.1c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3H183.5 M303.1,244.4  v-54.2c0,0-24.6,0-24.6,0c0,12.7-10.3,23-23,23c-0.5,0-1.1,0-1.6-0.1h0v49.2h0c0.5,0,1.1,0,1.6,0  C273.8,262.3,290.4,255.6,303.1,244.4L303.1,244.4z M212.9,190.2v58.1h0c10.3,7.6,22.7,12.5,36.1,13.7l0,0v-49.8h0  c-9.5-2.8-16.5-11.6-16.5-22H212.9z M212.9,141.1v44.2h19.6v-44.2H212.9 M195.8,99.4c-20.3,0-36.8,16.5-36.8,36.8h73.7  C232.6,115.9,216.1,99.4,195.8,99.4z M308,239.7L308,239.7c12.2-12.9,19.6-30.3,19.6-49.5H308v45c0,3.6-1.8,4.9-4.2,7.6l0.5,0.5  C305.7,242,306.4,241.3,308,239.7L308,239.7z M183.6,157.9l-0.1,27.5H208l0-28.6c0.1-0.9,0.5-1.8,0.8-2.7c0.3-0.7,0.5-1.4,0.9-2.1  c0.2-0.4,1.1-1.7,0.5-2c-0.2-0.1-0.5-0.2-0.6,0.1c-0.4,1.1-0.9,2-1.5,3c-2.4,3.8-7.5,5.2-12.3,5.2c-4.7,0-9-1.9-12.2-5  c-1.4-1.4-2.2-2-3.6-3.4l-0.5,0.5C181.8,153.1,183.6,154.3,183.6,157.9z M307.1,150.4l-0.5-0.5c-1.4,1.3-2.3,2-3.6,3.4  c-3.1,3.1-7.4,5-12.2,5c-4.8,0-9.9-1.4-12.3-5.2c-0.6-1-1.2-1.9-1.5-3c-0.1-0.3-0.4-0.3-0.6-0.1c-0.6,0.3,0.3,1.6,0.5,2  c0.3,0.7,0.6,1.4,0.9,2.1c0.3,0.8,0.8,1.8,0.8,2.7l0,28.6h24.6l-0.1-27.5C303,154.3,304.8,153.1,307.1,150.4z M303.1,255.3  c0-3.6,1.8-4.4,4.2-7.1l-0.5-0.5c-1.4,1.3-2,1.8-3.6,3.1h0h0c-13.1,10.3-29.6,16.4-47.5,16.4c-0.5,0-1.1,0-1.6,0h0v21.2h49.1  L303.1,255.3z M208,240c0-10.8,0-49.7,0-49.7h-24.6c0,21.6,9.5,41,24.6,54.2h0l0,0l0,0c1.8,1.7,2,1.8,3.7,3.3l0.5-0.5  C209.8,244.6,208,243.5,208,240z"/><g fill="#2C2F31" stroke="#2C2F31" stroke-width="0.7548" stroke-miterlimit="10"><path d="M569.6,206.4v80.1h-20.3v-75.7c0-20.3-12.2-24.9-24.5-24.9H523c-12.2,0-24.5,7.8-24.5,29.5l0.2,71.1h-20.3   v-75.7c0-20.3-12.2-24.9-24.5-24.9h-1.8c-12.2,0-24.5,7.8-24.5,29.5v71.1h-20.3V171.1h21v0.5c0,6.9-5.8,18.2-9.9,29.8l2.8,0.9   l0.5-1.4c9.2-27.7,23.5-32.5,38.6-32.5c16.4,0,29.1,8.3,29.1,21.7c0,3.2-0.2,6.7-1.6,10.4l3,0.7c6.2-24,24.2-32.8,42-32.8   C546.5,168.3,569.6,175.2,569.6,206.4z"/><path d="M585.5,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C610.4,289.3,585.5,269.9,585.5,229z M642.5,272   c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9H642.5z"/><path d="M817,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.2,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C796.5,168.3,817,191.4,817,228.3z M795.6,216.8   c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H795.6z"/><path d="M876.6,272.2c14.3,0,25.4-6,25.4-16.9c0-9.5-6.7-14.5-20.1-17.8l-22.6-5.3c-19.6-4.6-27.5-15.5-27.5-30.7   c0-21,18.9-33.2,44.1-33.2c26.3,0,45.9,15.9,46.6,40.6h-21.5c-1.2-16.9-14.1-23.5-26.1-23.5c-13.4,0-22.2,5.8-22.2,15.5   c0,6.5,3.2,12.5,14.5,15l23.8,5.5c19.2,4.4,31.9,14.5,31.9,32.3c0,22.4-17.5,35.6-46.4,35.6c-34.6,0-49.6-22.2-49.9-42.9H848   C848.9,262,860.4,272.2,876.6,272.2z"/><path d="M988.1,267.8v17.8c-4.4,1.4-7.6,2.3-14.1,2.3c-21.7,0-28.9-14.1-28.9-35.3v-64.6h-16.6v-16.9h14.3   c6.5,0,8.5,0,17.3,2.1l0.5-2.5c-10.6-2.8-15.5-7.2-15.5-16.9v-14.1h20.5v10.6c0,13.4,1.2,20.8,15.9,20.8h4.4v16.9h-20.5v66.3   c0,8.8,2.3,15,12,15C979.8,269.2,983.7,269,988.1,267.8z"/><path d="M1050.9,191.9c-16.4,0.2-24.7,7.6-24.7,29.8v64.9h-20.3V171.1h20.3v0.5c0,9.7-3.7,18.9-8.3,29.8l2.8,0.9   c12.5-29.8,26.3-31.2,44.3-31.2h3.9l-0.2,22.6C1062.4,192.6,1055.7,191.9,1050.9,191.9z"/><path d="M1069.4,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C1094.3,289.3,1069.4,269.9,1069.4,229z    M1126.4,272c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9   H1126.4z"/><path d="M1221.5,171.1v1.6c0,7.8-6.5,19.4-9.9,28.6l2.8,0.9c8.5-23.1,24.7-33.9,44.6-33.9c18.9,0,40.6,6.9,40.6,39   v79.2h-20.3v-76.2c0-17.8-11.3-24.5-27.2-24.5h-0.5c-16.4,0-30.7,9.9-30.7,27.9v72.7h-20.3V171.1H1221.5z"/><path d="M1404.1,171.1v16.6l-52.9,64.2c-7.2,8.5-9.2,12-21.2,16.4l0.9,2.5c7.8-1.4,12.2-1.4,19.6-1.4l57.5-0.2v17.3   h-95.3v-16.4l49.4-60.3c9.2-11.3,18.7-21.7,23.8-27l-1.6-1.8l-1.6,1.4c-5.5,4.8-9.7,5.8-18.7,5.8l-47.3,0.5v-17.5H1404.1z"/><path d="M1519.5,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.3,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C1499,168.3,1519.5,191.4,1519.5,228.3z    M1498,216.8c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H1498z"/></g></svg><p class="foot-tag" data-i18n="f_tag">Urban apartments in Rione Spine Bianche, Matera. Book direct, stay better.</p></div>
-    <div class="foot-col"><h4 data-i18n="f_contact">Contact</h4><a href="mailto:ciao@maestranze.it">ciao@maestranze.it</a><a href="tel:+39000000000">+39 000 000 000</a><p>Matera, Italia</p></div>
+    <div class="foot-col"><h4 data-i18n="f_contact">Contact</h4><a href="mailto:lemaestranzematera@gmail.com">lemaestranzematera@gmail.com</a><a href="https://wa.me/393517652975" target="_blank" rel="noopener">WhatsApp +39 351 765 2975</a><p>Matera, Italia</p></div>
     <div class="foot-col"><h4 data-i18n="f_apts">Apartments</h4><a href="index.html#apartments">Carpentiera</a><a href="index.html#apartments">Bidello</a><a href="index.html#booking" data-i18n="m_book">Book</a></div>
   </div>
   <div class="foot-legal" data-i18n="f_legal">© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · All rights reserved.</div>
@@ -191,17 +209,159 @@ c_title:"Fai di Spine Bianche la tua base a Matera.",c_btn:"Verifica disponibili
 f_tag:"Urban apartments nel Rione Spine Bianche, Matera. Prenota diretto, soggiorna meglio.",f_contact:"Contatti",f_apts:"Appartamenti",f_legal:"© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · Tutti i diritti riservati."};
 const I18N={en:EN,it:IT,de:EN,fr:EN};
 let lang='it';
-function setLang(l){lang=I18N[l]?l:'it';document.documentElement.lang=lang;
+function setLang(l){lang=I18N[l]?l:'it';document.documentElement.lang=lang;try{localStorage.setItem('lang',lang);}catch(e){}
  document.querySelectorAll('.menu-lang button').forEach((b,i)=>b.classList.toggle('active',['en','it','de','fr'][i]===lang));
  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');const t=I18N[lang][k];if(t!=null){if(el.querySelector('cite')){el.childNodes[0].nodeValue=t;}else{el.textContent=t;}}});
  // re-apply cite text
- const c=document.querySelector('.pullquote cite');if(c)c.textContent=I18N[lang].st_qc;
+ const c=document.querySelector('.pullquote cite');if(c)c.textContent=I18N[lang].st_qc;if(window.__heroGL)window.__heroGL();
 }
 (function(){const btn=document.getElementById('menuBtn'),ov=document.getElementById('menuOverlay');
  function t(f){const o=(f!==undefined)?f:!btn.classList.contains('open');btn.classList.toggle('open',o);ov.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);ov.setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':'';}
- btn.addEventListener('click',()=>t());ov.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>t(false)));
+ btn.addEventListener('click',()=>t());ov.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>t(false)));const cb=document.getElementById('menuClose');if(cb)cb.addEventListener('click',()=>t(false));
  document.addEventListener('keydown',e=>{if(e.key==='Escape')t(false);});})();
-setLang('it');
+
+// === Cursore personalizzato ===
+(function(){
+ if(!window.matchMedia||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+ var dot=document.createElement('div');dot.id='cursorDot';document.body.appendChild(dot);
+ var x=innerWidth/2,y=innerHeight/2,tx=x,ty=y,shown=false;
+ var sel='a,button,select,input,textarea,label,summary,[role=\'button\'],[onclick],.clickable';
+ window.addEventListener('mousemove',function(e){
+  tx=e.clientX;ty=e.clientY;
+  dot.style.opacity='1';
+  var t=e.target&&e.target.closest?e.target.closest(sel):null;
+  dot.classList.toggle('is-dot',!!t);
+ },{passive:true});
+ (function loop(){x+=(tx-x)*0.25;y+=(ty-y)*0.25;dot.style.transform='translate('+x+'px,'+y+'px) translate(-50%,-50%)';requestAnimationFrame(loop);})();
+})();
+
+// === Distorsione liquida WebGL su titoli (hero + sezioni) ===
+(function(){
+ var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce)return;
+ var useMouse=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
+ var builds=[];
+ function liquid(el, mode, radD){
+  var N=12, LIFE=0.5, RAD=(radD||0.13), STR=0.038;
+  if(!useMouse){ RAD=0.26; STR=0.050; }
+  if(getComputedStyle(el).position==='static') el.style.position='relative';
+  var glcan=document.createElement('canvas'); glcan.className='hero-gl-canvas';
+  el.appendChild(glcan);
+  var gl=glcan.getContext('webgl',{alpha:true,premultipliedAlpha:false,antialias:true})||glcan.getContext('experimental-webgl',{alpha:true,premultipliedAlpha:false});
+  if(!gl){ glcan.remove(); return; }
+  var tcan=document.createElement('canvas'), tctx=tcan.getContext('2d');
+  var VS='attribute vec2 a;varying vec2 vUv;void main(){vUv=a*0.5+0.5;gl_Position=vec4(a,0.0,1.0);}';
+  var FS=''+
+  '#define N 12\n'+
+  'precision mediump float;varying vec2 vUv;uniform sampler2D uTex;uniform vec2 uRes;uniform int uN;'+
+  'uniform vec2 uPts[N];uniform float uAge[N];uniform vec2 uVel[N];uniform float uR;uniform float uStr;uniform float uTime;'+
+  'const vec3 VIOLET=vec3(1.00,0.36,0.06);const vec3 INDIGO=vec3(0.45,0.10,0.02);'+
+  'void main(){float asp=uRes.x/uRes.y;vec2 p=vUv;p.x*=asp;vec2 disp=vec2(0.0);float inf=0.0;'+
+  'for(int i=0;i<N;i++){if(i>=uN)break;vec2 c=uPts[i];c.x*=asp;float d=distance(p,c);'+
+  'float fa=smoothstep(uR,0.0,d)*uAge[i];inf+=fa;vec2 dir=normalize(p-c+1e-4);'+
+  'disp+=fa*(uVel[i]*0.8 - dir*0.16)*uStr;'+
+  'disp+=fa*0.004*vec2(sin(vUv.y*38.0+uTime*3.0),cos(vUv.x*38.0+uTime*2.5));}'+
+  'inf=clamp(inf,0.0,1.0);vec2 uv=vUv+disp;vec4 col=texture2D(uTex,uv);'+
+  'vec3 tint=mix(VIOLET,INDIGO,smoothstep(0.0,1.0,1.0-inf));'+
+  'vec3 rgb=mix(col.rgb,tint,inf*col.a);gl_FragColor=vec4(rgb,col.a);}';
+  function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o;}
+  var prog=gl.createProgram();
+  gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
+  gl.bindAttribLocation(prog,0,'a');gl.linkProgram(prog);
+  if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){ glcan.remove(); return; }
+  gl.useProgram(prog);
+  var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+  var tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+  var uTex=gl.getUniformLocation(prog,'uTex'),uRes=gl.getUniformLocation(prog,'uRes'),
+  uN=gl.getUniformLocation(prog,'uN'),uPts=gl.getUniformLocation(prog,'uPts'),
+  uAge=gl.getUniformLocation(prog,'uAge'),uVel=gl.getUniformLocation(prog,'uVel'),
+  uR=gl.getUniformLocation(prog,'uR'),uStr=gl.getUniformLocation(prog,'uStr'),
+  uTime=gl.getUniformLocation(prog,'uTime');
+  gl.uniform1i(uTex,0);
+  var dpr=1,RES=[1,1];
+  function tt(w,ttf){ if(ttf==='uppercase')return w.toUpperCase(); if(ttf==='lowercase')return w.toLowerCase(); if(ttf==='capitalize')return w.replace(/\b\w/g,function(c){return c.toUpperCase();}); return w; }
+  function buildTexture(){
+   try{
+    var txt=el.textContent, words=txt.split(' ');
+    glcan.remove();
+    el.textContent='';
+    words.forEach(function(w,i){ if(i>0)el.appendChild(document.createTextNode(' ')); if(w==='')return; var sp=document.createElement('span'); sp.className='wd'; sp.textContent=w; el.appendChild(sp); });
+    el.appendChild(glcan);
+    var hr=el.getBoundingClientRect(); var W=Math.max(1,Math.round(hr.width)), H=Math.max(1,Math.round(hr.height));
+    dpr=Math.min(2, window.devicePixelRatio||1);
+    tcan.width=Math.round(W*dpr); tcan.height=Math.round(H*dpr);
+    var cs=getComputedStyle(el); var fs=parseFloat(cs.fontSize)||48; var ttf=cs.textTransform;
+    var ink=(getComputedStyle(document.documentElement).getPropertyValue('--ink')||'').trim()||'#17191C';
+    tctx.setTransform(1,0,0,1,0,0); tctx.clearRect(0,0,tcan.width,tcan.height); tctx.scale(dpr,dpr);
+    tctx.fillStyle=ink; tctx.textBaseline='middle'; tctx.textAlign='left';
+    tctx.font=(cs.fontStyle||'normal')+' '+(cs.fontWeight||'400')+' '+fs+'px '+(cs.fontFamily||'sans-serif');
+    try{ tctx.letterSpacing=(cs.letterSpacing&&cs.letterSpacing!=='normal')?cs.letterSpacing:'0px'; }catch(e){}
+    var ws=el.querySelectorAll('.wd');
+    for(var i=0;i<ws.length;i++){ var r=ws[i].getBoundingClientRect(); tctx.fillText(tt(ws[i].textContent,ttf), r.left-hr.left, (r.top-hr.top)+r.height/2); }
+    glcan.width=tcan.width; glcan.height=tcan.height; glcan.style.width=W+'px'; glcan.style.height=H+'px';
+    gl.viewport(0,0,glcan.width,glcan.height);
+    gl.bindTexture(gl.TEXTURE_2D,tex);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,tcan);
+    RES=[glcan.width,glcan.height];
+    if(!el.classList.contains('gl-text'))el.classList.add('gl-text');
+   }catch(err){ el.classList.remove('gl-text'); }
+  }
+  var trail=[], pending=null, lastUv=null;
+  function pushPt(u,v,vx,vy){ trail.unshift({u:u,v:v,vx:vx,vy:vy,age:1}); if(trail.length>N)trail.length=N; }
+  function fromClient(cx,cy){ var hr=el.getBoundingClientRect(); return {u:(cx-hr.left)/hr.width, v:1-(cy-hr.top)/hr.height}; }
+  window.addEventListener('mousemove',function(e){ var q=fromClient(e.clientX,e.clientY); if(q.u>=-0.12&&q.u<=1.12&&q.v>=-0.2&&q.v<=1.2){ var vx=lastUv?q.u-lastUv.u:0, vy=lastUv?q.v-lastUv.v:0; pending={u:q.u,v:q.v,vx:vx,vy:vy}; lastUv=q; } else { lastUv=null; } },{passive:true});
+  window.addEventListener('touchmove',function(e){ if(!e.touches||!e.touches[0])return; var t=e.touches[0]; var q=fromClient(t.clientX,t.clientY); if(q.u>=-0.12&&q.u<=1.12&&q.v>=-0.2&&q.v<=1.2){ var vx=lastUv?q.u-lastUv.u:0, vy=lastUv?q.v-lastUv.v:0; pending={u:q.u,v:q.v,vx:vx,vy:vy}; lastUv=q; } },{passive:true});
+  var lastSweepUv=null, lastRow=-1;
+  function scrollVirtual(){
+   var rect=el.getBoundingClientRect(), vh=window.innerHeight||1;
+   if(rect.bottom<0||rect.top>vh) return;
+   var y=window.pageYOffset||document.documentElement.scrollTop||0;
+   var cs=getComputedStyle(el), fs=parseFloat(cs.fontSize)||48, lh=parseFloat(cs.lineHeight); if(!isFinite(lh)||lh<=0)lh=fs*0.95;
+   var rows=Math.max(1,Math.round(rect.height/lh)), p;
+   if(mode==='top'){ var range=Math.max(130, rect.height*1.15); p=Math.max(0,Math.min(1, y/range)); }
+   else { p=Math.max(0,Math.min(1,(vh*0.82 - rect.top)/(vh*0.45))); }
+   var t=p*rows, row=Math.floor(Math.min(rows-1e-3,t)), fr=t-row;
+   var u=fr, v=1-(row+0.5)/rows;
+   if(lastSweepUv && row===lastRow){ var du=u-lastSweepUv.u; var steps=Math.min(8,Math.max(1,Math.round(Math.abs(du)*14))); for(var st=1;st<=steps;st++){ var k=st/steps; pushPt(lastSweepUv.u+du*k, v, du/steps, 0); } } else { pushPt(u,v,0,0); }
+   lastSweepUv={u:u,v:v}; lastRow=row;
+  }
+  if(!useMouse){ window.addEventListener('scroll',scrollVirtual,{passive:true}); }
+  var PTS=new Float32Array(N*2), AGE=new Float32Array(N), VEL=new Float32Array(N*2), lastT=performance.now();
+  function frame(now){
+   var dt=Math.min(0.05,(now-lastT)/1000); lastT=now;
+   if(pending){ pushPt(pending.u,pending.v,pending.vx,pending.vy); pending=null; }
+   for(var i=trail.length-1;i>=0;i--){ trail[i].age-=dt/LIFE; if(trail[i].age<=0)trail.splice(i,1); }
+   var n=trail.length;
+   for(var j=0;j<n;j++){ PTS[j*2]=trail[j].u; PTS[j*2+1]=trail[j].v; AGE[j]=trail[j].age; VEL[j*2]=trail[j].vx; VEL[j*2+1]=trail[j].vy; }
+   gl.useProgram(prog);
+   gl.uniform1i(uN,n); gl.uniform2fv(uPts,PTS); gl.uniform1fv(uAge,AGE); gl.uniform2fv(uVel,VEL);
+   gl.uniform2f(uRes,RES[0],RES[1]); gl.uniform1f(uTime,now/1000); gl.uniform1f(uR,RAD); gl.uniform1f(uStr,STR);
+   gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex);
+   gl.bindBuffer(gl.ARRAY_BUFFER,buf); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+   gl.drawArrays(gl.TRIANGLES,0,6);
+   requestAnimationFrame(frame);
+  }
+  var rt; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(buildTexture,160); });
+  if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(buildTexture); }
+  builds.push(buildTexture);
+  buildTexture();
+  requestAnimationFrame(frame);
+ }
+ var targets=[];var _h=document.querySelector('.hero h1');if(_h)targets.push([_h,'top',0.13]);document.querySelectorAll('.sec-head h2').forEach(function(el){targets.push([el,'enter',0.20]);});var _c=document.querySelector('h2[data-i18n="c_title"]');if(_c)targets.push([_c,'enter',0.20]);
+ targets.forEach(function(t){ if(t[0]) liquid(t[0],t[1],t[2]); });
+ window.__heroGL=function(){ builds.forEach(function(fn){ try{fn();}catch(e){} }); };
+})();
+
+setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(e){}var t=(navigator.language||'it').slice(0,2);return({it:'it',de:'de',fr:'fr',en:'en'})[t]||'it';})());
 </script>
 </body>
 </html>
