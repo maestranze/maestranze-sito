@@ -503,8 +503,8 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
  if(reduce)return;
  var useMouse=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
  var builds=[];
- function liquid(el, mode){
-  var N=12, LIFE=0.5, RAD=0.13, STR=0.038;
+ function liquid(el, mode, radD){
+  var N=12, LIFE=0.5, RAD=(radD||0.13), STR=0.038;
   if(!useMouse){ RAD=0.26; STR=0.050; }
   if(getComputedStyle(el).position==='static') el.style.position='relative';
   var glcan=document.createElement('canvas'); glcan.className='hero-gl-canvas';
@@ -618,8 +618,8 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
   buildTexture();
   requestAnimationFrame(frame);
  }
- var targets=[[document.querySelector('.hero h1'),'top'],[document.querySelector('h2[data-i18n="a_label"]'),'enter'],[document.querySelector('h2[data-i18n="p_title"]'),'enter']];
- targets.forEach(function(t){ if(t[0]) liquid(t[0],t[1]); });
+ var targets=[[document.querySelector('.hero h1'),'top',0.13],[document.querySelector('h2[data-i18n="a_label"]'),'enter',0.20],[document.querySelector('h2[data-i18n="p_title"]'),'enter',0.20]];
+ targets.forEach(function(t){ if(t[0]) liquid(t[0],t[1],t[2]); });
  window.__heroGL=function(){ builds.forEach(function(fn){ try{fn();}catch(e){} }); };
 })();
 
