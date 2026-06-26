@@ -493,7 +493,7 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
  if(!h1)return;
  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(reduce)return;
- var N=18, LIFE=0.9, RAD=0.12, STR=0.065;
+ var N=12, LIFE=0.5, RAD=0.10, STR=0.038;
  var glcan=document.createElement('canvas'); glcan.className='hero-gl-canvas';
  h1.appendChild(glcan);
  var gl=glcan.getContext('webgl',{alpha:true,premultipliedAlpha:false,antialias:true})||glcan.getContext('experimental-webgl',{alpha:true,premultipliedAlpha:false});
@@ -501,15 +501,15 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
  var tcan=document.createElement('canvas'), tctx=tcan.getContext('2d');
  var VS='attribute vec2 a;varying vec2 vUv;void main(){vUv=a*0.5+0.5;gl_Position=vec4(a,0.0,1.0);}';
  var FS=''+
- '#define N 18\n'+
+ '#define N 12\n'+
  'precision mediump float;varying vec2 vUv;uniform sampler2D uTex;uniform vec2 uRes;uniform int uN;'+
  'uniform vec2 uPts[N];uniform float uAge[N];uniform vec2 uVel[N];uniform float uR;uniform float uStr;uniform float uTime;'+
  'const vec3 VIOLET=vec3(1.00,0.36,0.06);const vec3 INDIGO=vec3(0.45,0.10,0.02);'+
  'void main(){float asp=uRes.x/uRes.y;vec2 p=vUv;p.x*=asp;vec2 disp=vec2(0.0);float inf=0.0;'+
  'for(int i=0;i<N;i++){if(i>=uN)break;vec2 c=uPts[i];c.x*=asp;float d=distance(p,c);'+
  'float fa=smoothstep(uR,0.0,d)*uAge[i];inf+=fa;vec2 dir=normalize(p-c+1e-4);'+
- 'disp+=fa*(uVel[i]*2.3 - dir*0.18)*uStr;'+
- 'disp+=fa*0.010*vec2(sin(vUv.y*38.0+uTime*3.0),cos(vUv.x*38.0+uTime*2.5));}'+
+ 'disp+=fa*(uVel[i]*0.8 - dir*0.16)*uStr;'+
+ 'disp+=fa*0.004*vec2(sin(vUv.y*38.0+uTime*3.0),cos(vUv.x*38.0+uTime*2.5));}'+
  'inf=clamp(inf,0.0,1.0);vec2 uv=vUv+disp;vec4 col=texture2D(uTex,uv);'+
  'vec3 tint=mix(VIOLET,INDIGO,smoothstep(0.0,1.0,1.0-inf));'+
  'vec3 rgb=mix(col.rgb,tint,inf*col.a);gl_FragColor=vec4(rgb,col.a);}';
@@ -571,13 +571,13 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
  var lastScrollUv=null;
  function scrollVirtual(){
   var hr=h1.getBoundingClientRect(), vh=window.innerHeight||1;
-  var p=(vh-hr.top)/(vh+hr.height); p=Math.max(0,Math.min(1,p));
-  var cs=getComputedStyle(h1), fs=parseFloat(cs.fontSize)||48, lh=fs*0.95;
+  var p=(vh*0.9-hr.top)/(vh*0.8); p=Math.max(0,Math.min(1,p));
+  var cs=getComputedStyle(h1), fs=parseFloat(cs.fontSize)||48, lh=parseFloat(cs.lineHeight); if(!isFinite(lh)||lh<=0)lh=fs*0.95;
   var rows=Math.max(1,Math.round(hr.height/lh));
   var t=p*rows, row=Math.floor(Math.min(rows-1e-3,t)), fr=t-row;
   var dir=(row%2===0)?fr:(1-fr);
   var u=dir, v=(row+0.5)/rows;
-  if(lastScrollUv){ var vx=u-lastScrollUv.u, vy=v-lastScrollUv.v; if(Math.abs(vx)+Math.abs(vy)>0.0008) pushPt(u,v,vx,vy); }
+  if(lastScrollUv){ var du=u-lastScrollUv.u, dv=v-lastScrollUv.v; var steps=Math.min(6,Math.max(1,Math.round((Math.abs(du)+Math.abs(dv))*12))); for(var s=1;s<=steps;s++){ var k=s/steps; pushPt(lastScrollUv.u+du*k,lastScrollUv.v+dv*k,du/steps,dv/steps); } } else { pushPt(u,v,0,0); }
   lastScrollUv={u:u,v:v};
  }
  if(!useMouse){ window.addEventListener('scroll',scrollVirtual,{passive:true}); }
