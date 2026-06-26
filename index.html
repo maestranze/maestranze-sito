@@ -201,8 +201,8 @@ body.lock{overflow:hidden;}
     @media (hover:hover) and (pointer:fine){
       body{cursor:none;}
       a,button,select,input,textarea,label,summary,[role="button"],[onclick],.clickable{cursor:none;}
-      #cursorDot{display:block;position:fixed;top:0;left:0;z-index:9998;pointer-events:none;width:32px;height:32px;border:2px solid var(--ink);border-radius:50%;background:transparent;transition:width .2s ease,height .2s ease,background-color .2s ease,border-width .2s ease,opacity .25s ease;will-change:transform;opacity:0;}
-      #cursorDot.is-dot{width:14px;height:14px;background:var(--ink);border-width:0;}
+      #cursorDot{display:block;position:fixed;top:0;left:0;z-index:9998;pointer-events:none;width:32px;height:32px;border:2px solid #FF5A1F;border-radius:50%;background:transparent;transition:width .2s ease,height .2s ease,background-color .2s ease,border-width .2s ease,opacity .25s ease;will-change:transform;opacity:0;}
+      #cursorDot.is-dot{width:14px;height:14px;background:#FF5A1F;border-width:0;}
     }
     /* effetto liquido WebGL sull'H1 */
     .hero h1.gl-text{color:transparent;}
@@ -504,7 +504,7 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
  '#define N 18\n'+
  'precision mediump float;varying vec2 vUv;uniform sampler2D uTex;uniform vec2 uRes;uniform int uN;'+
  'uniform vec2 uPts[N];uniform float uAge[N];uniform vec2 uVel[N];uniform float uR;uniform float uStr;uniform float uTime;'+
- 'const vec3 VIOLET=vec3(0.36,0.16,0.96);const vec3 INDIGO=vec3(0.09,0.03,0.20);'+
+ 'const vec3 VIOLET=vec3(1.00,0.36,0.06);const vec3 INDIGO=vec3(0.45,0.10,0.02);'+
  'void main(){float asp=uRes.x/uRes.y;vec2 p=vUv;p.x*=asp;vec2 disp=vec2(0.0);float inf=0.0;'+
  'for(int i=0;i<N;i++){if(i>=uN)break;vec2 c=uPts[i];c.x*=asp;float d=distance(p,c);'+
  'float fa=smoothstep(uR,0.0,d)*uAge[i];inf+=fa;vec2 dir=normalize(p-c+1e-4);'+
@@ -538,8 +538,10 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
  function buildTexture(){
   try{
    var txt=h1.textContent, words=txt.split(' ');
+   glcan.remove();
    h1.textContent='';
    words.forEach(function(w,i){ if(i>0)h1.appendChild(document.createTextNode(' ')); if(w==='')return; var s=document.createElement('span'); s.className='wd'; s.textContent=w; h1.appendChild(s); });
+   h1.appendChild(glcan);
    var hr=h1.getBoundingClientRect(); var W=Math.max(1,Math.round(hr.width)), H=Math.max(1,Math.round(hr.height));
    dpr=Math.min(2, window.devicePixelRatio||1);
    tcan.width=Math.round(W*dpr); tcan.height=Math.round(H*dpr);
