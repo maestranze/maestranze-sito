@@ -565,20 +565,23 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
  var useMouse=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
  var trail=[], pending=null, lastUv=null;
  function pushPt(u,v,vx,vy){ trail.unshift({u:u,v:v,vx:vx,vy:vy,age:1}); if(trail.length>N)trail.length=N; }
- function fromClient(cx,cy){ var hr=h1.getBoundingClientRect(); return {u:(cx-hr.left)/hr.width, v:(cy-hr.top)/hr.height}; }
+ function fromClient(cx,cy){ var hr=h1.getBoundingClientRect(); return {u:(cx-hr.left)/hr.width, v:1-(cy-hr.top)/hr.height}; }
  window.addEventListener('mousemove',function(e){ var q=fromClient(e.clientX,e.clientY); if(q.u>=-0.12&&q.u<=1.12&&q.v>=-0.2&&q.v<=1.2){ var vx=lastUv?q.u-lastUv.u:0, vy=lastUv?q.v-lastUv.v:0; pending={u:q.u,v:q.v,vx:vx,vy:vy}; lastUv=q; } else { lastUv=null; } },{passive:true});
  window.addEventListener('touchmove',function(e){ if(!e.touches||!e.touches[0])return; var t=e.touches[0]; var q=fromClient(t.clientX,t.clientY); if(q.u>=-0.12&&q.u<=1.12&&q.v>=-0.2&&q.v<=1.2){ var vx=lastUv?q.u-lastUv.u:0, vy=lastUv?q.v-lastUv.v:0; pending={u:q.u,v:q.v,vx:vx,vy:vy}; lastUv=q; } },{passive:true});
- var lastScrollUv=null;
+ var sweepPos=0, lastScrollY=(window.pageYOffset||document.documentElement.scrollTop||0), lastSweepUv=null;
  function scrollVirtual(){
+  var y=window.pageYOffset||document.documentElement.scrollTop||0, dy=y-lastScrollY; lastScrollY=y;
   var hr=h1.getBoundingClientRect(), vh=window.innerHeight||1;
-  var p=(vh*0.9-hr.top)/(vh*0.8); p=Math.max(0,Math.min(1,p));
+  if(hr.bottom<0||hr.top>vh)return;
   var cs=getComputedStyle(h1), fs=parseFloat(cs.fontSize)||48, lh=parseFloat(cs.lineHeight); if(!isFinite(lh)||lh<=0)lh=fs*0.95;
   var rows=Math.max(1,Math.round(hr.height/lh));
-  var t=p*rows, row=Math.floor(Math.min(rows-1e-3,t)), fr=t-row;
+  var SENS=rows/(vh*0.6);
+  sweepPos=Math.max(0,Math.min(rows, sweepPos+dy*SENS));
+  var t=sweepPos, row=Math.floor(Math.min(rows-1e-3,t)), fr=t-row;
   var dir=(row%2===0)?fr:(1-fr);
-  var u=dir, v=(row+0.5)/rows;
-  if(lastScrollUv){ var du=u-lastScrollUv.u, dv=v-lastScrollUv.v; var steps=Math.min(6,Math.max(1,Math.round((Math.abs(du)+Math.abs(dv))*12))); for(var s=1;s<=steps;s++){ var k=s/steps; pushPt(lastScrollUv.u+du*k,lastScrollUv.v+dv*k,du/steps,dv/steps); } } else { pushPt(u,v,0,0); }
-  lastScrollUv={u:u,v:v};
+  var u=dir, v=1-(row+0.5)/rows;
+  if(lastSweepUv){ var du=u-lastSweepUv.u, dv=v-lastSweepUv.v; var steps=Math.min(8,Math.max(1,Math.round((Math.abs(du)+Math.abs(dv))*14))); for(var st=1;st<=steps;st++){ var k=st/steps; pushPt(lastSweepUv.u+du*k,lastSweepUv.v+dv*k,du/steps,dv/steps); } }
+  lastSweepUv={u:u,v:v};
  }
  if(!useMouse){ window.addEventListener('scroll',scrollVirtual,{passive:true}); }
  var PTS=new Float32Array(N*2), AGE=new Float32Array(N), VEL=new Float32Array(N*2), lastT=performance.now();
