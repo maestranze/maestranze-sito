@@ -115,8 +115,12 @@ figure.shot figcaption{margin-top:9px;font-size:.82rem;color:var(--muted);line-h
 .frame .tag{position:relative;z-index:1;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#5c5c58;background:rgba(255,255,255,.85);border-radius:5px;padding:4px 8px;}
 .hscroll figure.shot figcaption{margin-top:10px;font-size:.84rem;color:var(--muted);line-height:1.4;}
   
-.comicpage{max-width:740px;margin:0 auto;}
-.comicpage img{width:100%;height:auto;display:block;}
+.comic{display:flex;flex-direction:column;gap:14px;max-width:880px;margin:0 auto;}
+.crow{display:flex;gap:14px;align-items:flex-start;}
+.cp{display:block;border:1.5px solid #111;background:#fff;height:auto;max-width:100%;}
+.crow.two>.cp{min-width:0;width:0;}
+.crow:not(.two)>.cp{width:100%;}
+@media(max-width:640px){.crow{flex-direction:column;}.crow.two>.cp{flex:none!important;width:100%;}}
   </style>
 </head>
 <body>
@@ -149,8 +153,12 @@ figure.shot figcaption{margin-top:9px;font-size:.82rem;color:var(--muted);line-h
   <section class="section pad gridbg">
     <div class="sec-head"><h2 data-i18n="b_head">Why stay here.</h2></div>
     <hr class="rule"/>
-    <div class="comicpage">
-      <img src="fumetto.png" alt="Maestranze · una coppia sceglie di prenotare a Spine Bianche (fumetto)" loading="lazy"/>
+    <div class="comic">
+      <div class="crow two"><img class="cp" src="cp1.png" alt="" loading="lazy" style="flex:413"><img class="cp" src="cp2.png" alt="" loading="lazy" style="flex:371"></div>
+      <div class="crow"><img class="cp" src="cp3.png" alt="" loading="lazy" style="flex:795"></div>
+      <div class="crow two"><img class="cp" src="cp4.png" alt="" loading="lazy" style="flex:543"><img class="cp" src="cp5.png" alt="" loading="lazy" style="flex:228"></div>
+      <div class="crow two"><img class="cp" src="cp6.png" alt="" loading="lazy" style="flex:408"><img class="cp" src="cp7.png" alt="" loading="lazy" style="flex:382"></div>
+      <div class="crow two"><img class="cp" src="cp8.png" alt="" loading="lazy" style="flex:417"><img class="cp" src="cp9.png" alt="" loading="lazy" style="flex:369"></div>
     </div>
   </section>
 
