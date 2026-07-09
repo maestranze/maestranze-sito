@@ -63,12 +63,11 @@ a{color:inherit;}
 .intro p{margin-top:clamp(18px,2.4vw,30px);font-size:clamp(1rem,1.6vw,1.25rem);line-height:1.5;color:var(--muted);max-width:40em;}
 
 /* Selettore a tendina categorie */
-.filter-wrap{position:relative;padding:20px clamp(16px,4vw,44px) 14px;display:flex;}
+.filter-wrap{position:relative;z-index:80;padding:20px clamp(16px,4vw,44px) 14px;display:flex;}
 .filter-btn{display:flex;align-items:center;gap:10px;font-family:var(--font);font-size:.88rem;font-weight:600;padding:11px 16px;border-radius:999px;border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;}
 .filter-btn svg{width:15px;height:15px;stroke:var(--muted);transition:transform .2s;}
 .filter-btn.open svg{transform:rotate(180deg);}
-.filter-count{background:var(--ink);color:var(--paper);font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 8px;}
-.filter-panel{position:absolute;top:100%;left:clamp(16px,4vw,44px);margin-top:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.12);padding:8px;min-width:260px;z-index:60;display:none;}
+.filter-panel{position:absolute;top:100%;left:clamp(16px,4vw,44px);margin-top:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:8px;min-width:260px;z-index:200;display:none;}
 .filter-panel.open{display:block;}
 .filter-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:.86rem;font-weight:500;}
 .filter-row:hover{background:var(--paper);}
@@ -77,17 +76,36 @@ a{color:inherit;}
 .filter-actions{display:flex;gap:6px;padding:6px 6px 2px;border-top:1px solid var(--line);margin-top:6px;}
 .filter-actions button{flex:1;font-family:var(--font);font-size:.76rem;font-weight:600;padding:7px;border-radius:8px;border:1px solid var(--line-2);background:var(--paper);cursor:pointer;color:var(--muted);}
 
-.map-wrap{position:relative;margin:0 clamp(16px,4vw,44px) clamp(24px,4vw,40px);border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.map-wrap{position:relative;margin:0 clamp(16px,4vw,44px) clamp(24px,4vw,40px);border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:margin .2s,border-radius .2s;}
+.map-wrap.is-fullscreen{margin:0;border-radius:0;border:none;}
 #map{height:min(72vh,640px);width:100%;background:var(--line);}
+.map-wrap.is-fullscreen #map{height:100vh;}
 #map .leaflet-tile-pane{filter:grayscale(100%) contrast(1.05) brightness(1.02);}
-.locate-btn{position:absolute;bottom:16px;right:16px;z-index:400;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);}
-.locate-btn svg{width:22px;height:22px;stroke:var(--ink);}
-.locate-btn.active svg{stroke:var(--accent);}
 
-/* pittogrammi */
-.poi-pin{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);}
-.poi-pin svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
-.home-badge{width:32px;height:32px;border-radius:9px;background:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.35);background-image:url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2222%22%20fill%3D%22%2317191C%22%2F%3E%3Cg%20transform%3D%22translate%28-34.287%20-37.000%29%20scale%280.20461%29%22%3E%3Cpath%20d%3D%22M504.17072%2C500.29486v66.63531h-83.9895v-37.63629v0.00079%0A%09c-18.93558-1.58124-36.50473-7.97058-51.48297-17.94357h0.00034v55.57907h-83.98947V342.95825%0A%09c0-32.85684%2C26.63571-59.49255%2C59.49252-59.49255s59.49255%2C26.63571%2C59.49255%2C59.49255v76.99036%0A%09c0%2C10.9335%2C6.81656%2C20.27493%2C16.43167%2C24.00629h0.05536V342.95825c0-32.85684%2C26.63574-59.49255%2C59.49255-59.49255%0A%09s59.49255%2C26.63571%2C59.49255%2C59.49255v76.99036c0%2C31.72849-13.46625%2C60.31174-34.99509%2C80.34625H504.17072z%20M427.18033%2C342.95825%0A%09h104.98685c0-28.99133-23.50208-52.49344-52.49341-52.49344C450.68246%2C290.46481%2C427.18033%2C313.96692%2C427.18033%2C342.95825%0A%09%20M497.17157%2C349.95737h-34.99561c0%2C9.66379%2C7.83405%2C17.4978%2C17.4978%2C17.4978%0A%09C489.33755%2C367.45517%2C497.17157%2C359.62115%2C497.17157%2C349.95737z%20M504.17072%2C412.94949h27.99646v-62.99213c0%2C0-27.99643%2C0-27.99646%2C0%0A%09V412.94949%20M497.17157%2C412.94949V367.1015l0.00024-0.00009c-4.44626%2C4.53751-10.64337%2C7.35291-17.49805%2C7.35291%0A%09c-6.85464%2C0-13.05173-2.81537-17.49799-7.35284l0.00018%2C0.00009v45.84793H497.17157z%20M427.18024%2C445.5925%0A%09c0.74316%2C0.06451%2C1.49539%2C0.09744%2C2.25528%2C0.09744c14.21652%2C0%2C25.74133-11.52481%2C25.74133-25.74133v-69.99124%0A%09c0.00003%2C0-27.99652%2C0-27.99652%2C0v95.63513H427.18024z%20M291.70822%2C349.95737v209.97372h69.99124v-53.64825h-0.00079%0A%09c-25.56985-20.08975-41.99396-51.29398-41.99396-86.33423v-6.99911v-62.99213H291.70822z%20M326.70383%2C349.95737%0A%09c0%2C9.66379%2C7.83405%2C17.4978%2C17.4978%2C17.4978c9.66379%2C0%2C17.49783-7.83401%2C17.49783-17.4978H326.70383%20M368.69858%2C349.95737%0A%09%20M504.17172%2C490.43515c17.35641-18.39612%2C27.99545-43.19888%2C27.99545-70.48654h-27.99646v70.48654H504.17172z%20M497.1716%2C497.18713%0A%09v-77.23853c0%2C0-34.99564%2C0-34.99564%2C0c0%2C18.08203-14.65842%2C32.74045-32.74045%2C32.74045c-0.75803%2C0-1.51004-0.02576-2.25522-0.07648%0A%09h0.00003v70.04343h-0.00009c0.74982%2C0.01617%2C1.50159%2C0.02429%2C2.25528%2C0.02429c25.95068%2C0%2C49.65402-9.62207%2C67.73691-25.49316%0A%09H497.1716z%20M497.1716%2C559.93109v-53.64822h0.0007c-18.65356%2C14.65579-42.17441%2C23.39651-67.73679%2C23.39651%0A%09c-0.75354%2C0-1.50531-0.00757-2.25525-0.02271h0.00006v30.27441H497.1716z%20M361.69946%2C412.94949l0.00082-45.84869%0A%09c-4.44632%2C4.53787-10.64368%2C7.35352-17.49866%2C7.35352c-6.76471%2C0-12.88901-2.74197-17.32208-7.17514l-0.17572%2C45.67032H361.69946z%0A%09%20M361.69995%2C419.94861h-34.99612c0%2C30.78638%2C13.54218%2C58.40979%2C34.9946%2C77.23837h0.00104L361.69995%2C419.94861z%20M368.69858%2C419.94861%0A%09v82.8623h-0.00067c14.67749%2C10.77667%2C32.32333%2C17.7475%2C51.48322%2C19.45819l0.00009-0.00092v-70.90543h-0.00024%0A%09c-13.57538-3.99289-23.4859-16.54614-23.4859-31.41415H368.69858z%20M368.69858%2C349.95737v62.99213h27.99649v-62.99213H368.69858%0A%09%20M344.20163%2C290.46481c-28.9913%2C0-52.49341%2C23.50211-52.49341%2C52.49344h104.98685%0A%09C396.69507%2C313.96692%2C373.19296%2C290.46481%2C344.20163%2C290.46481z%22%20fill%3D%22%23FFFFFF%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");background-size:cover;}
+.map-controls{position:absolute;bottom:16px;right:16px;z-index:400;display:flex;flex-direction:column;gap:10px;align-items:flex-end;}
+.locate-btn{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:11px 16px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);font-family:var(--font);font-size:.82rem;font-weight:600;color:var(--ink);}
+.locate-btn svg{width:18px;height:18px;stroke:var(--ink);flex-shrink:0;}
+.locate-btn.active{color:var(--accent);}
+.locate-btn.active svg{stroke:var(--accent);}
+.fullscreen-btn{width:44px;height:44px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);}
+.fullscreen-btn svg{width:18px;height:18px;stroke:var(--ink);}
+
+.locate-cta{position:absolute;top:14px;left:14px;right:14px;z-index:400;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border:1px solid var(--line-2);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.locate-cta p{font-size:.82rem;font-weight:500;color:var(--ink);flex:1;line-height:1.4;}
+.locate-cta button{font-family:var(--font);font-size:.78rem;font-weight:700;background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:9px 14px;cursor:pointer;white-space:nowrap;}
+.locate-cta .x{background:none;border:none;color:var(--faint);font-size:1.1rem;cursor:pointer;padding:2px 4px;}
+
+/* Overlay "tocca per interagire" su mobile */
+.map-tap-overlay{position:absolute;inset:0;z-index:350;background:rgba(23,25,28,.32);display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;}
+.map-tap-overlay span{background:rgba(255,255,255,.95);color:var(--ink);font-size:.86rem;font-weight:600;padding:12px 18px;border-radius:999px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.2);}
+.map-tap-overlay svg{width:17px;height:17px;stroke:var(--ink);}
+
+/* pittogrammi: solo simbolo nero, senza cerchi */
+.poi-pin{display:flex;align-items:center;justify-content:center;}
+.poi-pin svg{width:24px;height:24px;stroke:#17191C;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 2px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.25));}
+.home-mark{display:flex;align-items:center;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 3px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.3));}
+.home-mark svg{width:78px;height:auto;display:block;}
+.home-mark svg path{fill:#17191C !important;}
 
 .leaflet-popup-content-wrapper{border-radius:16px;padding:0;box-shadow:0 8px 30px rgba(0,0,0,.18);}
 .leaflet-popup-content{margin:0;width:290px !important;}
@@ -107,8 +125,18 @@ a{color:inherit;}
 
 .user-dot{width:16px;height:16px;border-radius:50%;background:#1A73E8;border:3px solid #fff;box-shadow:0 0 0 2px rgba(26,115,232,.35),0 1px 4px rgba(0,0,0,.3);}
 
-.list-hint{padding:0 clamp(16px,4vw,44px) 60px;font-size:.82rem;color:var(--faint);max-width:44em;line-height:1.6;}
-.site-footer{border-top:1px solid var(--ink);padding:28px clamp(16px,4vw,44px) 40px;font-size:.8rem;color:var(--muted);}
+.list-hint{padding:0 clamp(16px,4vw,44px) 20px;font-size:.82rem;color:var(--faint);max-width:44em;line-height:1.6;}
+
+/* Footer identico al sito vetrina */
+.site-footer{border-top:1px solid var(--ink);margin-top:clamp(50px,8vw,110px);padding-top:clamp(34px,5vw,60px);padding-bottom:48px;}
+.foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:30px;}
+.foot-brand .brand-logo{height:30px;width:auto;}
+.foot-brand .brand-logo{height:30px;width:auto;}
+.foot-tag{margin-top:14px;font-size:.92rem;color:var(--muted);max-width:24em;line-height:1.55;}
+.foot-col h4{font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;}
+.foot-col a:hover{color:var(--ink);}
+.foot-col p{display:block;font-size:.95rem;color:var(--muted);text-decoration:none;line-height:1.95;}
+.foot-legal{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:.76rem;color:var(--faint);}
 </style>
 </head>
 <body>
@@ -147,17 +175,33 @@ a{color:inherit;}
   <div class="filter-panel" id="filterPanel"></div>
 </div>
 
-<div class="map-wrap">
+<div class="map-wrap" id="mapWrap">
   <div id="map"></div>
-  <button class="locate-btn" id="locateBtn" title="Mostra la mia posizione">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-  </button>
+  <div class="locate-cta" id="locateCta">
+    <p>Attiva la tua posizione per vedere subito i luoghi più vicini a te.</p>
+    <button id="locateCtaBtn">Attiva posizione</button>
+    <button class="x" id="locateCtaClose" aria-label="Chiudi">✕</button>
+  </div>
+  <div class="map-controls">
+    <button class="fullscreen-btn" id="fullscreenBtn" title="Schermo intero">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg>
+    </button>
+    <button class="locate-btn" id="locateBtn" title="Mostra la mia posizione">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      <span>La mia posizione</span>
+    </button>
+  </div>
 </div>
 
-<p class="list-hint">Consiglio: attiva la tua posizione per vedere subito i luoghi più vicini a te e ottenere le indicazioni stradali con un tocco.</p>
+<p class="list-hint">Su smartphone: tocca una volta la mappa per attivarla, poi trascina liberamente senza che interferisca con lo scroll della pagina.</p>
 
-<footer class="site-footer pad">
-  Guida a cura del tuo host — Maestranze, Matera.
+<footer class="site-footer pad" id="contact">
+  <div class="foot-top">
+    <div class="foot-brand"><svg class="brand-logo" viewBox="130 64 1405 262" role="img" aria-label="Maestranze"><path fill="#2C2F31" transform="translate(243.20,193.90) scale(1.21) translate(-243.20,-193.90)" d="M212.9,254.4c-1.6-1.1-2.2-1.4-3.6-2.7l-0.5,0.5c2.3,2.7,4.2,3.6,4.2,7.1v34.1H154V136.2  c0-23.1,18.7-41.7,41.7-41.7s41.7,18.7,41.7,41.7c0,0,0,54,0,54c0,1.3,0.1,2.6,0.4,3.9c0.3,1.2,0.7,2.4,1.2,3.6  c0.5,1.1,1.2,2.2,1.9,3.2c0.7,1,1.6,1.9,2.5,2.7c0.9,0.8,1.9,1.6,3,2.2c0.8,0.5,2.6,1.3,2.6,1.3s0-9.7,0-12.1c0-2.2,0-4.4,0-6.6  c0-2.8,0-5.6,0-8.4c0-3.2,0-6.3,0-9.5c0-3.2,0-6.4,0-9.7c0-3,0-6,0-9.1c0-2.6,0-5.1,0-7.7c0-1.8,0-3.6,0-5.4c0-0.8,0-1.6,0-2.4  c0,0,0,0,0-0.1c0-23.1,18.7-41.7,41.7-41.7c23.1,0,41.7,18.7,41.7,41.7v54c0,22.3-9.4,42.3-24.6,56.4v46.8h-58.9c0,0,0-26.4,0-26.4  C235.8,265.9,223.5,261.4,212.9,254.4z M254,136.2h73.7c0-20.3-16.5-36.8-36.8-36.8S254,115.9,254,136.2 M303.1,141.1h-24.6  c0,6.8,5.5,12.3,12.3,12.3C297.6,153.4,303.1,147.9,303.1,141.1z M308,185.3h19.6v-44.2c0,0-19.6,0-19.6,0V185.3 M254,208.2  c0.5,0,1,0.1,1.6,0.1c10,0,18.1-8.1,18.1-18.1v-49.1c0,0-19.6,0-19.6,0L254,208.2L254,208.2z M158.9,141.1v147.3H208v-37.6h0  c-17.9-14.1-29.5-36-29.5-60.6v-4.9v-44.2H158.9z M183.5,141.1c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3H183.5 M303.1,244.4  v-54.2c0,0-24.6,0-24.6,0c0,12.7-10.3,23-23,23c-0.5,0-1.1,0-1.6-0.1h0v49.2h0c0.5,0,1.1,0,1.6,0  C273.8,262.3,290.4,255.6,303.1,244.4L303.1,244.4z M212.9,190.2v58.1h0c10.3,7.6,22.7,12.5,36.1,13.7l0,0v-49.8h0  c-9.5-2.8-16.5-11.6-16.5-22H212.9z M212.9,141.1v44.2h19.6v-44.2H212.9 M195.8,99.4c-20.3,0-36.8,16.5-36.8,36.8h73.7  C232.6,115.9,216.1,99.4,195.8,99.4z M308,239.7L308,239.7c12.2-12.9,19.6-30.3,19.6-49.5H308v45c0,3.6-1.8,4.9-4.2,7.6l0.5,0.5  C305.7,242,306.4,241.3,308,239.7L308,239.7z M183.6,157.9l-0.1,27.5H208l0-28.6c0.1-0.9,0.5-1.8,0.8-2.7c0.3-0.7,0.5-1.4,0.9-2.1  c0.2-0.4,1.1-1.7,0.5-2c-0.2-0.1-0.5-0.2-0.6,0.1c-0.4,1.1-0.9,2-1.5,3c-2.4,3.8-7.5,5.2-12.3,5.2c-4.7,0-9-1.9-12.2-5  c-1.4-1.4-2.2-2-3.6-3.4l-0.5,0.5C181.8,153.1,183.6,154.3,183.6,157.9z M307.1,150.4l-0.5-0.5c-1.4,1.3-2.3,2-3.6,3.4  c-3.1,3.1-7.4,5-12.2,5c-4.8,0-9.9-1.4-12.3-5.2c-0.6-1-1.2-1.9-1.5-3c-0.1-0.3-0.4-0.3-0.6-0.1c-0.6,0.3,0.3,1.6,0.5,2  c0.3,0.7,0.6,1.4,0.9,2.1c0.3,0.8,0.8,1.8,0.8,2.7l0,28.6h24.6l-0.1-27.5C303,154.3,304.8,153.1,307.1,150.4z M303.1,255.3  c0-3.6,1.8-4.4,4.2-7.1l-0.5-0.5c-1.4,1.3-2,1.8-3.6,3.1h0h0c-13.1,10.3-29.6,16.4-47.5,16.4c-0.5,0-1.1,0-1.6,0h0v21.2h49.1  L303.1,255.3z M208,240c0-10.8,0-49.7,0-49.7h-24.6c0,21.6,9.5,41,24.6,54.2h0l0,0l0,0c1.8,1.7,2,1.8,3.7,3.3l0.5-0.5  C209.8,244.6,208,243.5,208,240z"/><g fill="#2C2F31" stroke="#2C2F31" stroke-width="0.7548" stroke-miterlimit="10"><path d="M569.6,206.4v80.1h-20.3v-75.7c0-20.3-12.2-24.9-24.5-24.9H523c-12.2,0-24.5,7.8-24.5,29.5l0.2,71.1h-20.3   v-75.7c0-20.3-12.2-24.9-24.5-24.9h-1.8c-12.2,0-24.5,7.8-24.5,29.5v71.1h-20.3V171.1h21v0.5c0,6.9-5.8,18.2-9.9,29.8l2.8,0.9   l0.5-1.4c9.2-27.7,23.5-32.5,38.6-32.5c16.4,0,29.1,8.3,29.1,21.7c0,3.2-0.2,6.7-1.6,10.4l3,0.7c6.2-24,24.2-32.8,42-32.8   C546.5,168.3,569.6,175.2,569.6,206.4z"/><path d="M585.5,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C610.4,289.3,585.5,269.9,585.5,229z M642.5,272   c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9H642.5z"/><path d="M817,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.2,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C796.5,168.3,817,191.4,817,228.3z M795.6,216.8   c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H795.6z"/><path d="M876.6,272.2c14.3,0,25.4-6,25.4-16.9c0-9.5-6.7-14.5-20.1-17.8l-22.6-5.3c-19.6-4.6-27.5-15.5-27.5-30.7   c0-21,18.9-33.2,44.1-33.2c26.3,0,45.9,15.9,46.6,40.6h-21.5c-1.2-16.9-14.1-23.5-26.1-23.5c-13.4,0-22.2,5.8-22.2,15.5   c0,6.5,3.2,12.5,14.5,15l23.8,5.5c19.2,4.4,31.9,14.5,31.9,32.3c0,22.4-17.5,35.6-46.4,35.6c-34.6,0-49.6-22.2-49.9-42.9H848   C848.9,262,860.4,272.2,876.6,272.2z"/><path d="M988.1,267.8v17.8c-4.4,1.4-7.6,2.3-14.1,2.3c-21.7,0-28.9-14.1-28.9-35.3v-64.6h-16.6v-16.9h14.3   c6.5,0,8.5,0,17.3,2.1l0.5-2.5c-10.6-2.8-15.5-7.2-15.5-16.9v-14.1h20.5v10.6c0,13.4,1.2,20.8,15.9,20.8h4.4v16.9h-20.5v66.3   c0,8.8,2.3,15,12,15C979.8,269.2,983.7,269,988.1,267.8z"/><path d="M1050.9,191.9c-16.4,0.2-24.7,7.6-24.7,29.8v64.9h-20.3V171.1h20.3v0.5c0,9.7-3.7,18.9-8.3,29.8l2.8,0.9   c12.5-29.8,26.3-31.2,44.3-31.2h3.9l-0.2,22.6C1062.4,192.6,1055.7,191.9,1050.9,191.9z"/><path d="M1069.4,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C1094.3,289.3,1069.4,269.9,1069.4,229z    M1126.4,272c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9   H1126.4z"/><path d="M1221.5,171.1v1.6c0,7.8-6.5,19.4-9.9,28.6l2.8,0.9c8.5-23.1,24.7-33.9,44.6-33.9c18.9,0,40.6,6.9,40.6,39   v79.2h-20.3v-76.2c0-17.8-11.3-24.5-27.2-24.5h-0.5c-16.4,0-30.7,9.9-30.7,27.9v72.7h-20.3V171.1H1221.5z"/><path d="M1404.1,171.1v16.6l-52.9,64.2c-7.2,8.5-9.2,12-21.2,16.4l0.9,2.5c7.8-1.4,12.2-1.4,19.6-1.4l57.5-0.2v17.3   h-95.3v-16.4l49.4-60.3c9.2-11.3,18.7-21.7,23.8-27l-1.6-1.8l-1.6,1.4c-5.5,4.8-9.7,5.8-18.7,5.8l-47.3,0.5v-17.5H1404.1z"/><path d="M1519.5,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.3,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C1499,168.3,1519.5,191.4,1519.5,228.3z    M1498,216.8c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H1498z"/></g></svg><p class="foot-tag">Guida turistica a cura di Maestranze — Matera, Basilicata.</p></div>
+    <div class="foot-col"><h4>Contatti</h4><a href="mailto:lemaestranzematera@gmail.com">lemaestranzematera@gmail.com</a><a href="https://wa.me/393517652975" target="_blank" rel="noopener">WhatsApp +39 351 765 2975</a><p>Matera, Italia</p></div>
+    <div class="foot-col"><h4>Appartamenti</h4><a href="index.html#apartments">Carpentiera</a><a href="index.html#apartments">Bidello</a><a href="index.html#booking">Prenota</a></div>
+  </div>
+  <div class="foot-legal">© 2026 Maestranze Urban Apartments · P.IVA 00000000000 · Tutti i diritti riservati.</div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -166,6 +210,7 @@ const PROPERTY = {"lat": 40.6737229, "lng": 16.5949969};
 const CATEGORIES = [{"key": "visite", "label": "Visite turistiche", "color": "#2E6F4E"}, {"key": "quartieri", "label": "Guide ai quartieri", "color": "#7A5C2E"}, {"key": "dintorni", "label": "Dintorni", "color": "#5B4B8A"}, {"key": "cibo", "label": "Dove mangiare", "color": "#B23B3B"}, {"key": "shop", "label": "Artigianato locale", "color": "#B8842E"}, {"key": "attivita", "label": "Attività", "color": "#1F7A8C"}, {"key": "servizi", "label": "Servizi utili", "color": "#555A5E"}];
 const PLACES = [{"id": "casa-grotta", "name": "Casa Grotta nei Sassi", "cat": "visite", "lat": 40.6637768, "lng": 16.6122649, "addr": "Vico Solitario, 11, Matera", "placeId": "ChIJkyOL5Nt-RxMR67chAe8q-7s", "desc": "Come si viveva nei Sassi prima dell'abbandono del 1952: l'unica casa scavata visitabile così com'era.", "rating": 4.6, "count": 2803, "phone": "+390835310118", "sub": null}, {"id": "musma", "name": "MUSMA – Museo della Scultura Contemporanea", "cat": "visite", "lat": 40.6661031, "lng": 16.6122937, "addr": "Via S. Giacomo, Matera", "placeId": "ChIJryZtJdl-RxMRvFg0s7Hnrvo", "desc": "L'unico museo \"in grotta\" al mondo, dentro il cinquecentesco Palazzo Pomarici.", "rating": 4.5, "count": 396, "phone": "+393669357768", "sub": null}, {"id": "casa-ortega", "name": "Casa di Ortega – Museo delle Arti Applicate", "cat": "visite", "lat": 40.6683168, "lng": 16.6108434, "addr": "Via San Nicola del Sole, Sasso Barisano, Matera", "placeId": "ChIJB1cZT99-RxMRKQcqPJNR-Es", "desc": "Dedicata all'artista spagnolo José Ortega e alla tradizione artigianale materana.", "rating": 4.6, "count": 115, "phone": "+393669357768", "sub": null}, {"id": "ipogeo", "name": "Ipogeo Materasum", "cat": "visite", "lat": 40.667763, "lng": 16.6068338, "addr": "Recinto XX Settembre, 7, Matera", "placeId": "ChIJxc-ezt9-RxMRb-XicCGqG_I", "desc": "Una città sotterranea da esplorare, tra ambienti scavati nella roccia e aperture per luce e aria.", "rating": 4.5, "count": 416, "phone": "+393662859653", "sub": null}, {"id": "murgia-parco", "name": "Parco della Murgia Materana", "cat": "visite", "lat": 40.6316055, "lng": 16.6645007, "addr": "Matera", "placeId": "ChIJ86rlV5h-RxMRYDJ1eaVyCg8", "desc": "Set naturale di diversi film internazionali, tra chiese rupestri e paesaggio brullo.", "rating": 4.6, "count": 3602, "phone": "+390835336166", "sub": null}, {"id": "santa-barbara", "name": "Chiese rupestri di Santa Barbara e Cappuccino", "cat": "visite", "lat": 40.6581829, "lng": 16.6161941, "addr": "Via Casalnuovo, 82, Matera", "placeId": "ChIJFz5Dftt-RxMRicf9gbwgXBg", "desc": "Chiesa rupestre del X–XI secolo scavata nella roccia sopra la Gravina, con affreschi bizantini.", "rating": 4.2, "count": 29, "phone": null, "sub": null}, {"id": "sant-agostino", "name": "Convento di Sant'Agostino", "cat": "visite", "lat": 40.6700417, "lng": 16.6099649, "addr": "Via D'Addozio, Matera", "placeId": "ChIJ-8pnlSB_RxMRRrOwEWif8HI", "desc": "Costruito su uno sperone roccioso nel Sasso Barisano, con ambienti ipogei e cripta.", "rating": 4.6, "count": 697, "phone": null, "sub": null}, {"id": "la-palomba", "name": "Parco Scultura La Palomba", "cat": "visite", "lat": 40.6811883, "lng": 16.6047174, "addr": "Contrada Pedale della Palomba, Matera", "placeId": "ChIJyZxOnTF_RxMR7wcATZU8kxA", "desc": "Un'antica cava di tufo trasformata in parco di sculture permanenti. Ingresso gratuito.", "rating": 4.3, "count": 228, "phone": null, "sub": null}, {"id": "santa-maria-palomba", "name": "Cripta di Santa Maria della Palomba", "cat": "visite", "lat": 40.6793531, "lng": 16.606131, "addr": "Contrada Pedale della Palomba, Matera", "placeId": "ChIJ6aDrezB_RxMR0QOwRa1-nZ0", "desc": "Chiesa del 1580 con affresco trecentesco, che conduce a una cripta rupestre nel tufo.", "rating": 4.8, "count": 84, "phone": "+390835405240", "sub": null}, {"id": "madonna-vergini", "name": "Madonna delle Vergini", "cat": "visite", "lat": 40.6708122, "lng": 16.6178298, "addr": "Matera", "placeId": "ChIJ92KYiSh_RxMRTz1YKdQpYzE", "desc": "Piccola cappella rupestre ancora aperta al culto, con vista panoramica sulla Gravina.", "rating": 4.6, "count": 445, "phone": "+390835336166", "sub": null}, {"id": "castello-tramontano", "name": "Castello Tramontano", "cat": "visite", "lat": 40.6639501, "lng": 16.6059453, "addr": "Via del Castello, Matera", "placeId": "ChIJ2_rVLRt_RxMRY6JHfPWJCQQ", "desc": "Fortezza incompiuta voluta dal Conte Tramontano nel 1497, sulla collina di Montigny.", "rating": 4.0, "count": 1417, "phone": null, "sub": null}, {"id": "carmine", "name": "Chiesa del Carmine", "cat": "visite", "lat": 40.6632913, "lng": 16.6101389, "addr": "Piazzetta Pascoli, Matera", "placeId": "ChIJ52H-FNx-RxMRGEo6JKsCnrg", "desc": "In Piazza Pascoli, oggi spazio per mostre ed eventi culturali.", "rating": 4.5, "count": 11, "phone": null, "sub": null}, {"id": "santa-chiara", "name": "Chiesa di Santa Chiara d'Assisi", "cat": "visite", "lat": 40.6640418, "lng": 16.6091904, "addr": "Via Domenico Ridola, Matera", "placeId": "ChIJvf9jL9x-RxMR7XYhEsyIoxA", "desc": "Costruita tra il 1668 e il 1672 insieme al Seminario Lanfranchi.", "rating": 4.5, "count": 96, "phone": null, "sub": null}, {"id": "purgatorio", "name": "Chiesa del Purgatorio", "cat": "visite", "lat": 40.6644108, "lng": 16.6089304, "addr": "Via Domenico Ridola, Matera", "placeId": "ChIJ0REJgt5-RxMRrXiJUPsVYso", "desc": "Facciata tardo barocca unica in città, dedicata al tema della morte e redenzione.", "rating": 4.5, "count": 534, "phone": null, "sub": null}, {"id": "palombaro", "name": "Palombaro Lungo", "cat": "visite", "lat": 40.6669026, "lng": 16.6065001, "addr": "Piazza Vittorio Veneto, Matera", "placeId": "ChIJkbEyWcd_RxMRnGrE6CBJsJw", "desc": "Una cisterna gigante sotto la piazza principale, come una cattedrale sotterranea.", "rating": 4.5, "count": 12468, "phone": "+39339363832", "sub": null}, {"id": "cattedrale", "name": "Cattedrale di Maria SS. della Bruna", "cat": "visite", "lat": 40.6667941, "lng": 16.6110991, "addr": "Piazza Duomo, Matera", "placeId": "ChIJUVTbKd9-RxMRRwNtPq2rwus", "desc": "Costruita tra il 1230 e il 1270, domina la città dividendo Sasso Caveoso e Sasso Barisano.", "rating": 4.6, "count": 4576, "phone": "+390835332908", "sub": null}, {"id": "santa-lucia", "name": "Chiesa di Santa Lucia e Agata alla Fontana", "cat": "visite", "lat": 40.6658958, "lng": 16.606606, "addr": "Via Luigi Lavista, Matera", "placeId": "ChIJ6cx9Ft5-RxMRTPgvsHhCgqs", "desc": "Fondata a fine Settecento per la comunità benedettina della Civita.", "rating": 4.5, "count": 170, "phone": "+390835332962", "sub": null}, {"id": "annunziata", "name": "Palazzo dell'Annunziata", "cat": "quartieri", "lat": 40.6671731, "lng": 16.6054439, "addr": "Piazza Vittorio Veneto, Matera", "placeId": "ChIJ43ONgeB-RxMRfqvBBThXS_s", "desc": "Ex monastero del 1748, oggi sede della biblioteca provinciale Tommaso Stigliani.", "rating": 4.0, "count": 48, "phone": "+390835306502", "sub": null}, {"id": "san-domenico", "name": "Chiesa di San Domenico", "cat": "visite", "lat": 40.6672029, "lng": 16.6066571, "addr": "Piazza Vittorio Veneto, Matera", "placeId": "ChIJo1luNN5-RxMRQfTsU5bG9H4", "desc": "Uno dei complessi più antichi della città (1230), oggi sede della Prefettura.", "rating": 4.4, "count": 51, "phone": "+390835334182", "sub": null}, {"id": "san-giovanni", "name": "San Giovanni Battista", "cat": "visite", "lat": 40.6676733, "lng": 16.6079427, "addr": "Via San Biagio, Matera", "placeId": "ChIJK5AFs99-RxMRRp9cBu2ye-o", "desc": "Insieme alla Cattedrale, il più importante esempio di romanico pugliese a Matera.", "rating": 4.7, "count": 1071, "phone": "+390835334182", "sub": null}, {"id": "san-francesco", "name": "Chiesa di San Francesco d'Assisi", "cat": "visite", "lat": 40.6653667, "lng": 16.6093126, "addr": "Piazza S. Francesco, Matera", "placeId": "ChIJRYkikt5-RxMRK27FH0mforU", "desc": "Facciata barocca imponente. Qui si conclude la Processione dei Pastori il 2 luglio.", "rating": 4.6, "count": 725, "phone": "+390835332908", "sub": null}, {"id": "museo-ridola", "name": "Museo Nazionale Ridola", "cat": "visite", "lat": 40.6638859, "lng": 16.60932, "addr": "Via Domenico Ridola, 24, Matera", "placeId": "ChIJ6dcRGd9_RxMRPOfzZLBVg7s", "desc": "Fondato nel 1911 dal senatore-archeologo Domenico Ridola: reperti dai villaggi neolitici.", "rating": 4.6, "count": 479, "phone": "+390835310058", "sub": null}, {"id": "tavole-palatine", "name": "Tavole Palatine", "cat": "dintorni", "lat": 40.416068, "lng": 16.8167496, "addr": "Bernalda (Metaponto)", "placeId": "ChIJM67SHWJpRxMRdRjXFfAwVa0", "desc": "Tempio dorico di fine VI secolo a.C. dedicato a Hera, tra le testimonianze meglio conservate della Magna Grecia.", "rating": 4.4, "count": 2589, "phone": "+390835745327", "sub": null}, {"id": "piazza-sedile", "name": "Piazza del Sedile", "cat": "quartieri", "lat": 40.6656487, "lng": 16.6097317, "addr": "Matera", "placeId": "ChIJYZYv695-RxMRudbzuvW4Fr0", "desc": "Cuore musicale e artistico della città, sede del Conservatorio Duni. Palazzo del Sedile del 1540.", "rating": null, "count": null, "phone": null, "sub": null}, {"id": "la-martella", "name": "La Martella", "cat": "quartieri", "lat": 40.6872417, "lng": 16.547827, "addr": "Contrada La Martella, Matera", "placeId": "ChIJo0dRjY9_RxMRrKW3lTJ4jo4", "desc": "Borgata rurale nata negli anni '50 dal progetto di risanamento dei Sassi voluto da De Gasperi.", "rating": null, "count": null, "phone": null, "sub": null}, {"id": "craco", "name": "Craco", "cat": "dintorni", "lat": 40.3781678, "lng": 16.4403541, "addr": "Craco (MT)", "placeId": "ChIJFc26mSqiOBMRTjo-f0uJgR4", "desc": "Borgo medievale fantasma su una rocca a 400 metri — set cinematografico di fama internazionale.", "rating": 4.5, "count": 3301, "phone": "+39346514926", "sub": null}, {"id": "castelmezzano", "name": "Castelmezzano", "cat": "dintorni", "lat": 40.5291498, "lng": 16.0451076, "addr": "Castelmezzano (PZ)", "placeId": "ChIJ65CI-GvpOBMRGbgumtRcpCs", "desc": "Borgo nelle \"Dolomiti Lucane\". Da qui parte il celebre \"Volo dell'Angelo\" verso Pietrapertosa.", "rating": null, "count": null, "phone": null, "sub": null}, {"id": "guardia-perticara", "name": "Guardia Perticara", "cat": "dintorni", "lat": 40.3607861, "lng": 16.098991, "addr": "Guardia Perticara (PZ)", "placeId": "ChIJU7nWT-_GOBMRk3ZUy7i3F8Q", "desc": "Tra i Borghi più belli d'Italia, Bandiera Arancione del Touring Club dal 2011.", "rating": null, "count": null, "phone": null, "sub": null}, {"id": "regia-corte", "name": "Regia Corte", "cat": "cibo", "lat": 40.6652948, "lng": 16.6119062, "addr": "Rione Pianelle, Matera", "placeId": "ChIJy23SAtx-RxMRrwHIcgx5qCI", "desc": "Vista suggestiva sul centro di Matera e piatti della tradizione, cucina biologica.", "rating": 4.4, "count": 397, "phone": "+390835312914", "sub": null}, {"id": "baccus", "name": "Ristorante Baccus", "cat": "cibo", "lat": 40.6694839, "lng": 16.6092438, "addr": "Vico Santa Cesarea, 34, Matera", "placeId": "ChIJKQO6Rt9-RxMRcfgSUcLs3XM", "desc": "Nel cuore dei Sassi, cucina locale sotto la guida dello chef.", "rating": 4.5, "count": 1264, "phone": "+390835188536", "sub": null}, {"id": "ohime", "name": "OHIMÈ Matera", "cat": "cibo", "lat": 40.6701623, "lng": 16.6066479, "addr": "Via T. Stigliani, 82, Matera", "placeId": "ChIJQQQbzil_RxMRGC8j6bdwl68", "desc": "Cucina curata nel centro storico, molto amata per i panini gourmet.", "rating": 4.8, "count": 680, "phone": "+393278414877", "sub": null}, {"id": "caffe-schiuma", "name": "Caffè Schiuma", "cat": "cibo", "lat": 40.6702988, "lng": 16.6063431, "addr": "Via T. Stigliani, 92, Matera", "placeId": "ChIJ3Wt1DyB_RxMRPgy-yShTCpc", "desc": "Pasticceria di qualità, ottima per una pausa dolce in centro.", "rating": 4.2, "count": 799, "phone": "+390835334283", "sub": null}, {"id": "perrone", "name": "Panificio Perrone – Il Forno di Gennaro", "cat": "cibo", "lat": 40.6734295, "lng": 16.6005565, "addr": "Via Nazionale, 52, Matera", "placeId": "ChIJpcfEiB5_RxMRU9UV8ht0mNs", "desc": "Produzione artigianale del vero Pane di Matera, secondo l'antica tradizione.", "rating": 4.5, "count": 870, "phone": "+390835385656", "sub": null}, {"id": "area8", "name": "AREA 8", "cat": "cibo", "lat": 40.6629019, "lng": 16.6102036, "addr": "Via Casalnuovo, 15, Matera", "placeId": "ChIJv-Ndadx-RxMRzwRLBhrrmp8", "desc": "Agenzia creativa di giorno, cocktail bar e teatro di notte nel cuore dei Sassi.", "rating": 4.5, "count": 1382, "phone": "+393333369788", "sub": null}, {"id": "falco-grillaio", "name": "Al Falco Grillaio", "cat": "cibo", "lat": 40.66399, "lng": 16.60956, "addr": "Via Domenico Ridola, 17, Matera", "placeId": "ChIJryOTJdx-RxMRtFUKiyZYQ4E", "desc": "Trattoria-pizzeria in via Ridola, sapori tradizionali del territorio.", "rating": 4.1, "count": 1193, "phone": "+390835331128", "sub": null}, {"id": "piu-sud", "name": "Più Sud", "cat": "cibo", "lat": 40.6647974, "lng": 16.6114222, "addr": "Rione Pianelle, Matera", "placeId": "ChIJCa65d_B_RxMRM9kSCAtJI3s", "desc": "Pizzeria e store scavato nella roccia: pizze originali, vino e specialità locali.", "rating": 4.5, "count": 1180, "phone": "+390835197630", "sub": null}, {"id": "osteria-casale", "name": "Osteria al Casale", "cat": "cibo", "lat": 40.6687103, "lng": 16.6108443, "addr": "Via Madonna delle Virtù, 29, Matera", "placeId": "ChIJewajXN9-RxMRoIPcs3-lOto", "desc": "Enogastronomia di qualità nel Sasso Barisano, tra i ristoranti più amati della città.", "rating": 4.5, "count": 1334, "phone": "+393298021190", "sub": null}, {"id": "tufa", "name": "TUFA – Piccole Sculture", "cat": "shop", "lat": 40.6623449, "lng": 16.6114266, "addr": "Via Bruno Buozzi, 20, Matera", "placeId": "ChIJwwbMSqJ_RxMR7H9-bLmsyPs", "desc": "Mini-sculture in tufo, ognuna unica, lavorate artigianalmente a mano.", "rating": 5.0, "count": 23, "phone": null, "sub": null}, {"id": "daciarte", "name": "Daciarte", "cat": "shop", "lat": 40.6672628, "lng": 16.6073267, "addr": "Via San Biagio, 17/19, Matera", "placeId": "ChIJ6fefNd5-RxMR3y_Wrrz2_ws", "desc": "Laboratorio di ceramica artistica dipinta a mano, nel cuore di Matera.", "rating": 4.1, "count": 11, "phone": "+393287959189", "sub": null}, {"id": "bike-tour", "name": "Matera Bike Tour", "cat": "attivita", "lat": 40.6626463, "lng": 16.6103869, "addr": "Via Casalnuovo, 23, Matera", "placeId": "ChIJ6dcxPTR_RxMRufaCvom-1ac", "desc": "Noleggio di risciò elettrici per esplorare i luoghi più belli della città senza stress.", "rating": 4.9, "count": 55, "phone": "+393471968707", "sub": null}, {"id": "ape-calessino", "name": "Ape Calessino Tour Matera", "cat": "attivita", "lat": 40.6636924, "lng": 16.6094845, "addr": "Vico Case Nuove, 28, Matera", "placeId": "ChIJ0SEOO9x-RxMRIVYqMHQj3x0", "desc": "Giro panoramico tra Sassi e centro storico, con audioguida in più lingue.", "rating": 4.5, "count": 158, "phone": "+393456666221", "sub": null}, {"id": "dok", "name": "Supermercati DOK", "cat": "servizi", "lat": 40.6767836, "lng": 16.596104, "addr": "Via S. Pardo, 57 bis, Matera", "placeId": "ChIJER1xNc9_RxMR0PiYfDJf_-0", "desc": "Supermercato con ottimi prodotti locali e banco gastronomia.", "rating": 4.6, "count": 645, "phone": "+390835385015", "sub": "supermercato"}, {"id": "spesi", "name": "SpeSì Supermercati", "cat": "servizi", "lat": 40.6733036, "lng": 16.5920892, "addr": "Via Dante Alighieri, 69, Matera", "placeId": "ChIJ0cWmL3B_RxMRWEMuyCfQ1tU", "desc": "Supermercato di quartiere, il più vicino alla struttura.", "rating": 4.3, "count": 164, "phone": "+390835185535", "sub": "supermercato"}, {"id": "hairstudio", "name": "Hair Studio Francesco", "cat": "servizi", "lat": 40.6743752, "lng": 16.5939441, "addr": "Viale Giuseppe Parini, 2, Matera", "placeId": "ChIJS7mINf5-RxMR2JlYQ6YNy1Q", "desc": "Parrucchiere a due passi dalla struttura.", "rating": 4.7, "count": 32, "phone": "+393281677888", "sub": "parrucchiere"}, {"id": "dariohair", "name": "Dario Hair Trend Parrucchiere", "cat": "servizi", "lat": 40.6751952, "lng": 16.5969369, "addr": "Via Gaetano Salvemini, 57, Matera", "placeId": "ChIJXyoBBX9_RxMR2iNPQCx-E_8", "desc": "Parrucchiere molto apprezzato, specializzato anche in capelli ricci.", "rating": 5.0, "count": 47, "phone": "+393206053390", "sub": "parrucchiere"}, {"id": "lavasubito", "name": "Lavanderia Self LavaSubito", "cat": "servizi", "lat": 40.6733118, "lng": 16.6002164, "addr": "Via Nazionale, 21, Matera", "placeId": "ChIJvRb7sHV_RxMRgEKZuBirVnM", "desc": "Lavanderia self-service, buon rapporto qualità-prezzo.", "rating": 4.0, "count": 34, "phone": "+390835165956", "sub": "lavanderia"}, {"id": "bluwash", "name": "Bluwash", "cat": "servizi", "lat": 40.673407, "lng": 16.5857285, "addr": "Via la Martella, 2, Matera", "placeId": "ChIJX4_A0r9_RxMR5EhikLapsGQ", "desc": "Lavanderia self-service aperta dalle 6 a mezzanotte, portare il proprio detersivo.", "rating": 4.1, "count": 63, "phone": null, "sub": "lavanderia"}, {"id": "selfbags", "name": "Self Bags – Deposito Bagagli Matera", "cat": "servizi", "lat": 40.6661023, "lng": 16.6023086, "addr": "Via Gerardo Guerrieri, 11, Matera", "placeId": "ChIJn4KYBXN_RxMRUFZPGToNcPc", "desc": "Deposito bagagli self-service aperto 24 ore, comodo per il giorno di partenza.", "rating": 4.3, "count": 27, "phone": "+390835185939", "sub": "bagagli"}];
 const ICONS = {"visite": "<path d=\"M3 9l9-5 9 5M4 9v9h16V9M8 9v9M12 9v9M16 9v9M3 21h18\"/>", "quartieri": "<path d=\"M12 21s7-7.5 7-12a7 7 0 10-14 0c0 4.5 7 12 7 12z\"/><circle cx=\"12\" cy=\"9\" r=\"2.2\"/>", "dintorni": "<path d=\"M3 19l6-10 4 6 2-3 6 7H3z\"/>", "cibo": "<path d=\"M6 2v8M4 2v5a2 2 0 004 0V2M6 10v12M18 2c-2 0-3 2-3 5s1 4 3 4v11\"/>", "shop": "<path d=\"M6 8h12l-1 12H7L6 8z\"/><path d=\"M9 8V6a3 3 0 016 0v2\"/>", "attivita": "<circle cx=\"6\" cy=\"17\" r=\"3.1\"/><circle cx=\"18\" cy=\"17\" r=\"3.1\"/><path d=\"M6 17l4-9h4l3 9M10 8h4M13 8l3 4\"/>", "servizi": "<path d=\"M4 9l1-5h14l1 5M4 9v10h16V9M4 9c0 1.6 1.3 3 3 3s3-1.4 3-3M10 9c0 1.6 1.3 3 3 3s3-1.4 3-3M16 9c0 1.6 1.3 3 3 3s3-1.4 3-3M9 19v-5h6v5\"/>", "supermercato": "<circle cx=\"9\" cy=\"20\" r=\"1.2\"/><circle cx=\"17\" cy=\"20\" r=\"1.2\"/><path d=\"M2 3h2l2.4 12.4a2 2 0 002 1.6h8.6a2 2 0 002-1.7L21 8H6\"/>", "parrucchiere": "<circle cx=\"6\" cy=\"6\" r=\"2.1\"/><circle cx=\"6\" cy=\"18\" r=\"2.1\"/><path d=\"M8 7.5L20 19M8 16.5L20 5M9 12l2 2\"/>", "lavanderia": "<path d=\"M12 3s6 7 6 11a6 6 0 11-12 0c0-4 6-11 6-11z\"/>", "bagagli": "<rect x=\"3\" y=\"8\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M9 8V5a2 2 0 012-2h2a2 2 0 012 2v3\"/>"};
+const HOME_LOGO_SVG = "<svg class=\"brand-logo\" viewBox=\"130 64 1405 262\" role=\"img\" aria-label=\"Maestranze\"><path fill=\"#2C2F31\" transform=\"translate(243.20,193.90) scale(1.21) translate(-243.20,-193.90)\" d=\"M212.9,254.4c-1.6-1.1-2.2-1.4-3.6-2.7l-0.5,0.5c2.3,2.7,4.2,3.6,4.2,7.1v34.1H154V136.2  c0-23.1,18.7-41.7,41.7-41.7s41.7,18.7,41.7,41.7c0,0,0,54,0,54c0,1.3,0.1,2.6,0.4,3.9c0.3,1.2,0.7,2.4,1.2,3.6  c0.5,1.1,1.2,2.2,1.9,3.2c0.7,1,1.6,1.9,2.5,2.7c0.9,0.8,1.9,1.6,3,2.2c0.8,0.5,2.6,1.3,2.6,1.3s0-9.7,0-12.1c0-2.2,0-4.4,0-6.6  c0-2.8,0-5.6,0-8.4c0-3.2,0-6.3,0-9.5c0-3.2,0-6.4,0-9.7c0-3,0-6,0-9.1c0-2.6,0-5.1,0-7.7c0-1.8,0-3.6,0-5.4c0-0.8,0-1.6,0-2.4  c0,0,0,0,0-0.1c0-23.1,18.7-41.7,41.7-41.7c23.1,0,41.7,18.7,41.7,41.7v54c0,22.3-9.4,42.3-24.6,56.4v46.8h-58.9c0,0,0-26.4,0-26.4  C235.8,265.9,223.5,261.4,212.9,254.4z M254,136.2h73.7c0-20.3-16.5-36.8-36.8-36.8S254,115.9,254,136.2 M303.1,141.1h-24.6  c0,6.8,5.5,12.3,12.3,12.3C297.6,153.4,303.1,147.9,303.1,141.1z M308,185.3h19.6v-44.2c0,0-19.6,0-19.6,0V185.3 M254,208.2  c0.5,0,1,0.1,1.6,0.1c10,0,18.1-8.1,18.1-18.1v-49.1c0,0-19.6,0-19.6,0L254,208.2L254,208.2z M158.9,141.1v147.3H208v-37.6h0  c-17.9-14.1-29.5-36-29.5-60.6v-4.9v-44.2H158.9z M183.5,141.1c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3H183.5 M303.1,244.4  v-54.2c0,0-24.6,0-24.6,0c0,12.7-10.3,23-23,23c-0.5,0-1.1,0-1.6-0.1h0v49.2h0c0.5,0,1.1,0,1.6,0  C273.8,262.3,290.4,255.6,303.1,244.4L303.1,244.4z M212.9,190.2v58.1h0c10.3,7.6,22.7,12.5,36.1,13.7l0,0v-49.8h0  c-9.5-2.8-16.5-11.6-16.5-22H212.9z M212.9,141.1v44.2h19.6v-44.2H212.9 M195.8,99.4c-20.3,0-36.8,16.5-36.8,36.8h73.7  C232.6,115.9,216.1,99.4,195.8,99.4z M308,239.7L308,239.7c12.2-12.9,19.6-30.3,19.6-49.5H308v45c0,3.6-1.8,4.9-4.2,7.6l0.5,0.5  C305.7,242,306.4,241.3,308,239.7L308,239.7z M183.6,157.9l-0.1,27.5H208l0-28.6c0.1-0.9,0.5-1.8,0.8-2.7c0.3-0.7,0.5-1.4,0.9-2.1  c0.2-0.4,1.1-1.7,0.5-2c-0.2-0.1-0.5-0.2-0.6,0.1c-0.4,1.1-0.9,2-1.5,3c-2.4,3.8-7.5,5.2-12.3,5.2c-4.7,0-9-1.9-12.2-5  c-1.4-1.4-2.2-2-3.6-3.4l-0.5,0.5C181.8,153.1,183.6,154.3,183.6,157.9z M307.1,150.4l-0.5-0.5c-1.4,1.3-2.3,2-3.6,3.4  c-3.1,3.1-7.4,5-12.2,5c-4.8,0-9.9-1.4-12.3-5.2c-0.6-1-1.2-1.9-1.5-3c-0.1-0.3-0.4-0.3-0.6-0.1c-0.6,0.3,0.3,1.6,0.5,2  c0.3,0.7,0.6,1.4,0.9,2.1c0.3,0.8,0.8,1.8,0.8,2.7l0,28.6h24.6l-0.1-27.5C303,154.3,304.8,153.1,307.1,150.4z M303.1,255.3  c0-3.6,1.8-4.4,4.2-7.1l-0.5-0.5c-1.4,1.3-2,1.8-3.6,3.1h0h0c-13.1,10.3-29.6,16.4-47.5,16.4c-0.5,0-1.1,0-1.6,0h0v21.2h49.1  L303.1,255.3z M208,240c0-10.8,0-49.7,0-49.7h-24.6c0,21.6,9.5,41,24.6,54.2h0l0,0l0,0c1.8,1.7,2,1.8,3.7,3.3l0.5-0.5  C209.8,244.6,208,243.5,208,240z\"/><g fill=\"#2C2F31\" stroke=\"#2C2F31\" stroke-width=\"0.7548\" stroke-miterlimit=\"10\"><path d=\"M569.6,206.4v80.1h-20.3v-75.7c0-20.3-12.2-24.9-24.5-24.9H523c-12.2,0-24.5,7.8-24.5,29.5l0.2,71.1h-20.3   v-75.7c0-20.3-12.2-24.9-24.5-24.9h-1.8c-12.2,0-24.5,7.8-24.5,29.5v71.1h-20.3V171.1h21v0.5c0,6.9-5.8,18.2-9.9,29.8l2.8,0.9   l0.5-1.4c9.2-27.7,23.5-32.5,38.6-32.5c16.4,0,29.1,8.3,29.1,21.7c0,3.2-0.2,6.7-1.6,10.4l3,0.7c6.2-24,24.2-32.8,42-32.8   C546.5,168.3,569.6,175.2,569.6,206.4z\"/><path d=\"M585.5,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C610.4,289.3,585.5,269.9,585.5,229z M642.5,272   c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9H642.5z\"/><path d=\"M817,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.2,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C796.5,168.3,817,191.4,817,228.3z M795.6,216.8   c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H795.6z\"/><path d=\"M876.6,272.2c14.3,0,25.4-6,25.4-16.9c0-9.5-6.7-14.5-20.1-17.8l-22.6-5.3c-19.6-4.6-27.5-15.5-27.5-30.7   c0-21,18.9-33.2,44.1-33.2c26.3,0,45.9,15.9,46.6,40.6h-21.5c-1.2-16.9-14.1-23.5-26.1-23.5c-13.4,0-22.2,5.8-22.2,15.5   c0,6.5,3.2,12.5,14.5,15l23.8,5.5c19.2,4.4,31.9,14.5,31.9,32.3c0,22.4-17.5,35.6-46.4,35.6c-34.6,0-49.6-22.2-49.9-42.9H848   C848.9,262,860.4,272.2,876.6,272.2z\"/><path d=\"M988.1,267.8v17.8c-4.4,1.4-7.6,2.3-14.1,2.3c-21.7,0-28.9-14.1-28.9-35.3v-64.6h-16.6v-16.9h14.3   c6.5,0,8.5,0,17.3,2.1l0.5-2.5c-10.6-2.8-15.5-7.2-15.5-16.9v-14.1h20.5v10.6c0,13.4,1.2,20.8,15.9,20.8h4.4v16.9h-20.5v66.3   c0,8.8,2.3,15,12,15C979.8,269.2,983.7,269,988.1,267.8z\"/><path d=\"M1050.9,191.9c-16.4,0.2-24.7,7.6-24.7,29.8v64.9h-20.3V171.1h20.3v0.5c0,9.7-3.7,18.9-8.3,29.8l2.8,0.9   c12.5-29.8,26.3-31.2,44.3-31.2h3.9l-0.2,22.6C1062.4,192.6,1055.7,191.9,1050.9,191.9z\"/><path d=\"M1069.4,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C1094.3,289.3,1069.4,269.9,1069.4,229z    M1126.4,272c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9   H1126.4z\"/><path d=\"M1221.5,171.1v1.6c0,7.8-6.5,19.4-9.9,28.6l2.8,0.9c8.5-23.1,24.7-33.9,44.6-33.9c18.9,0,40.6,6.9,40.6,39   v79.2h-20.3v-76.2c0-17.8-11.3-24.5-27.2-24.5h-0.5c-16.4,0-30.7,9.9-30.7,27.9v72.7h-20.3V171.1H1221.5z\"/><path d=\"M1404.1,171.1v16.6l-52.9,64.2c-7.2,8.5-9.2,12-21.2,16.4l0.9,2.5c7.8-1.4,12.2-1.4,19.6-1.4l57.5-0.2v17.3   h-95.3v-16.4l49.4-60.3c9.2-11.3,18.7-21.7,23.8-27l-1.6-1.8l-1.6,1.4c-5.5,4.8-9.7,5.8-18.7,5.8l-47.3,0.5v-17.5H1404.1z\"/><path d=\"M1519.5,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.3,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C1499,168.3,1519.5,191.4,1519.5,228.3z    M1498,216.8c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H1498z\"/></g></svg>";
 const SUB_LABEL = {supermercato:"Supermercato", parrucchiere:"Parrucchiere", lavanderia:"Lavanderia", bagagli:"Deposito bagagli"};
 
 const map = L.map('map', { zoomControl: true }).setView([PROPERTY.lat, PROPERTY.lng], 14);
@@ -175,8 +220,8 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 }).addTo(map);
 
 const homeIcon = L.divIcon({
-  className: '', html: '<div class="home-badge"></div>',
-  iconSize: [32,32], iconAnchor: [16,16], popupAnchor: [0,-18]
+  className: '', html: '<div class="home-mark">' + HOME_LOGO_SVG + '</div>',
+  iconSize: [78,18], iconAnchor: [10,9], popupAnchor: [0,-10]
 });
 L.marker([PROPERTY.lat, PROPERTY.lng], {icon: homeIcon, zIndexOffset: 500})
   .addTo(map).bindPopup('<div class="poi-card"><div class="poi-name">Maestranze</div><div class="poi-desc">Sei qui.</div></div>');
@@ -231,8 +276,8 @@ function popupHtml(p){
 PLACES.forEach(p => {
   const icon = L.divIcon({
     className: '',
-    html: '<div class="poi-pin" style="background:' + catColor(p.cat) + '"><svg viewBox="0 0 24 24">' + iconFor(p) + '</svg></div>',
-    iconSize: [28,28], iconAnchor: [14,14], popupAnchor: [0,-16]
+    html: '<div class="poi-pin"><svg viewBox="0 0 24 24">' + iconFor(p) + '</svg></div>',
+    iconSize: [24,24], iconAnchor: [12,12], popupAnchor: [0,-14]
   });
   const m = L.marker([p.lat, p.lng], {icon}).addTo(map);
   m.bindPopup(() => popupHtml(p));
@@ -241,10 +286,11 @@ PLACES.forEach(p => {
   markers[p.id] = m;
 });
 
-/* Selettore a tendina categorie */
+/* Selettore a tendina categorie (toggle robusto, chiusura solo su click davvero esterno) */
 const filterBtn = document.getElementById('filterBtn');
 const filterPanel = document.getElementById('filterPanel');
 const filterLabel = document.getElementById('filterLabel');
+const filterWrap = document.querySelector('.filter-wrap');
 let activeCats = new Set(CATEGORIES.map(c => c.key));
 
 function renderPanel(){
@@ -262,9 +308,9 @@ function renderPanel(){
   });
   const actions = document.createElement('div');
   actions.className = 'filter-actions';
-  const allBtn = document.createElement('button'); allBtn.textContent = 'Tutte';
+  const allBtn = document.createElement('button'); allBtn.type='button'; allBtn.textContent = 'Tutte';
   allBtn.onclick = () => { activeCats = new Set(CATEGORIES.map(c=>c.key)); applyFilters(); updateLabel(); renderPanel(); };
-  const noneBtn = document.createElement('button'); noneBtn.textContent = 'Nessuna';
+  const noneBtn = document.createElement('button'); noneBtn.type='button'; noneBtn.textContent = 'Nessuna';
   noneBtn.onclick = () => { activeCats = new Set(); applyFilters(); updateLabel(); renderPanel(); };
   actions.appendChild(allBtn); actions.appendChild(noneBtn);
   filterPanel.appendChild(actions);
@@ -280,32 +326,70 @@ function applyFilters(){
     else { if(map.hasLayer(m)) map.removeLayer(m); }
   });
 }
-filterBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  filterBtn.classList.toggle('open');
-  filterPanel.classList.toggle('open');
+function openPanel(){ filterBtn.classList.add('open'); filterPanel.classList.add('open'); }
+function closePanel(){ filterBtn.classList.remove('open'); filterPanel.classList.remove('open'); }
+filterBtn.type = 'button';
+filterBtn.addEventListener('click', function(e){
+  e.preventDefault();
+  if (filterPanel.classList.contains('open')) closePanel(); else openPanel();
 });
-document.addEventListener('click', (e) => {
-  if (!filterPanel.contains(e.target) && e.target !== filterBtn){
-    filterBtn.classList.remove('open'); filterPanel.classList.remove('open');
-  }
+document.addEventListener('click', function(e){
+  if (!filterWrap.contains(e.target)) closePanel();
 });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePanel(); });
 renderPanel();
 updateLabel();
 
+/* Geolocalizzazione: bottone + CTA + banner */
+const mapWrap = document.getElementById('mapWrap');
+const locateCta = document.getElementById('locateCta');
 let userMarker = null;
-document.getElementById('locateBtn').addEventListener('click', function(){
+function requestLocation(triggerBtn){
   if (!navigator.geolocation){ alert('Geolocalizzazione non disponibile su questo dispositivo.'); return; }
-  this.classList.add('active');
+  if (triggerBtn) triggerBtn.classList.add('active');
   navigator.geolocation.getCurrentPosition(pos => {
     userLatLng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
     const uIcon = L.divIcon({ className: '', html: '<div class="user-dot"></div>', iconSize:[16,16], iconAnchor:[8,8] });
     if (userMarker) userMarker.setLatLng(userLatLng); else userMarker = L.marker(userLatLng, {icon: uIcon, zIndexOffset: 1000}).addTo(map);
     map.setView(userLatLng, 15);
+    document.getElementById('locateBtn').classList.add('active');
+    if (locateCta) locateCta.remove();
   }, err => {
     alert('Non riesco ad accedere alla tua posizione. Controlla i permessi del browser.');
   }, { enableHighAccuracy: true, timeout: 8000 });
+}
+document.getElementById('locateBtn').addEventListener('click', function(){ requestLocation(this); });
+document.getElementById('locateCtaBtn').addEventListener('click', function(){ requestLocation(document.getElementById('locateBtn')); });
+document.getElementById('locateCtaClose').addEventListener('click', function(){ locateCta.remove(); });
+
+/* Schermo intero */
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+fullscreenBtn.addEventListener('click', function(){
+  if (!document.fullscreenElement){
+    (mapWrap.requestFullscreen || mapWrap.webkitRequestFullscreen || function(){}).call(mapWrap);
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+  }
 });
+document.addEventListener('fullscreenchange', function(){
+  mapWrap.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+  setTimeout(() => map.invalidateSize(), 200);
+});
+
+/* Su mobile: tocca una volta per attivare il trascinamento della mappa,
+   così scrollare la pagina non resta "intrappolato" dentro la mappa */
+const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+if (isTouch){
+  map.dragging.disable();
+  const overlay = document.createElement('div');
+  overlay.className = 'map-tap-overlay';
+  overlay.innerHTML = '<span><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5V6a1.5 1.5 0 013 0v4M12 6.5V5a1.5 1.5 0 013 0v5M15 6.5a1.5 1.5 0 013 0V13M9 11.5v5.5c0-1-3-2-3.5-1s.5 3 1.5 4.5c1.2 1.8 2.8 3 5.5 3 3.5 0 6-2.5 6-6v-4"/></svg>Tocca per interagire con la mappa</span>';
+  mapWrap.appendChild(overlay);
+  overlay.addEventListener('click', function(){
+    map.dragging.enable();
+    overlay.remove();
+  });
+}
 
 /* Menu hamburger (identico al sito vetrina) */
 (function(){const btn=document.getElementById('menuBtn'),ov=document.getElementById('menuOverlay');
