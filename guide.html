@@ -72,11 +72,12 @@ a{color:inherit;}
 }
 
 /* Selettore a tendina categorie */
-.filter-wrap{position:relative;z-index:80;padding:20px clamp(16px,4vw,44px) 14px;display:flex;}
-.filter-btn{display:flex;align-items:center;gap:10px;font-family:var(--font);font-size:.88rem;font-weight:600;padding:11px 16px;border-radius:999px;border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;}
-.filter-btn svg{width:15px;height:15px;stroke:var(--muted);transition:transform .2s;}
+.filter-wrap{position:absolute;top:14px;left:14px;z-index:400;}
+.filter-btn{display:flex;align-items:center;gap:8px;font-family:var(--font);font-size:.82rem;font-weight:600;padding:11px 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);max-width:52vw;}
+.filter-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-btn svg{width:15px;height:15px;stroke:var(--muted);transition:transform .2s;flex-shrink:0;}
 .filter-btn.open svg{transform:rotate(180deg);}
-.filter-panel{position:absolute;top:100%;left:clamp(16px,4vw,44px);margin-top:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:8px;width:270px;max-width:calc(100vw - 32px);z-index:200;display:none;}
+.filter-panel{position:absolute;top:100%;left:0;margin-top:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:8px;width:270px;max-width:calc(100vw - 44px);z-index:410;display:none;}
 .filter-panel.open{display:block;}
 .filter-row{display:flex;align-items:center;width:100%;gap:12px;padding:11px 10px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:500;font-family:var(--font);background:none;border:none;text-align:left;color:var(--faint);transition:color .12s;}
 .filter-row:hover{background:var(--paper);}
@@ -204,16 +205,15 @@ a{color:inherit;}
   <p>Una mappa dei luoghi, sapori e servizi che amiamo — pensata per chi soggiorna nei nostri appartamenti. Filtra per categoria, attiva la tua posizione e tocca un punto per i dettagli.</p>
 </section>
 
-<div class="filter-wrap">
-  <button class="filter-btn" id="filterBtn" type="button">
-    <span id="filterLabel">Tutte le categorie</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-  </button>
-  <div class="filter-panel" id="filterPanel"></div>
-</div>
-
 <div class="map-wrap" id="mapWrap">
   <div id="map"></div>
+  <div class="filter-wrap">
+    <button class="filter-btn" id="filterBtn" type="button">
+      <span id="filterLabel">Categorie</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="filter-panel" id="filterPanel"></div>
+  </div>
   <div class="top-controls">
     <button class="fullscreen-btn" id="fullscreenBtn" type="button" title="Schermo intero">
       <svg class="ic-expand" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg>
@@ -265,8 +265,17 @@ const homeIcon = L.divIcon({
   className: '', html: '<div class="home-mark">' + HOME_LOGO_SVG + '</div>',
   iconSize: [78,18], iconAnchor: [10,9], popupAnchor: [0,-10]
 });
+const homePopupHtml = '<div class="poi-card">'
+  + '<div class="poi-cat" style="color:var(--accent)">Il tuo alloggio</div>'
+  + '<div class="poi-name">Maestranze</div>'
+  + '<div class="poi-desc">Sei qui: il punto di partenza ideale per esplorare Matera a piedi. Da qui ai Sassi ci vogliono pochi minuti.</div>'
+  + '<div class="poi-meta">Viale Ludovico Ariosto, 6 · Matera</div>'
+  + '<div class="poi-actions">'
+  + '<a class="poi-btn primary" href="index.html#apartments">I nostri appartamenti</a>'
+  + '<a class="poi-btn subtle" href="https://wa.me/393517652975" target="_blank" rel="noopener">Scrivici</a>'
+  + '</div></div>';
 L.marker([PROPERTY.lat, PROPERTY.lng], {icon: homeIcon, zIndexOffset: 500})
-  .addTo(map).bindPopup('<div class="poi-card"><div class="poi-name">Maestranze</div><div class="poi-desc">Sei qui.</div></div>');
+  .addTo(map).bindPopup(homePopupHtml);
 
 function catColor(cat){ const c = CATEGORIES.find(c=>c.key===cat); return c ? c.color : '#666'; }
 function catLabel(cat){ const c = CATEGORIES.find(c=>c.key===cat); return c ? c.label : cat; }
