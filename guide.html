@@ -72,16 +72,15 @@ a{color:inherit;}
 .filter-row{display:flex;align-items:center;width:100%;gap:10px;padding:10px;border-radius:10px;cursor:pointer;font-size:.86rem;font-weight:500;font-family:var(--font);background:none;border:none;text-align:left;color:var(--ink);}
 .filter-row:hover{background:var(--paper);}
 .filter-check{width:18px;height:18px;border-radius:5px;border:1.6px solid var(--line-2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s;}
-.filter-check svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .12s;}
+.filter-check svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .12s;}
 .filter-row.checked .filter-check{background:var(--accent);border-color:var(--accent);}
 .filter-row.checked .filter-check svg{opacity:1;}
-.filter-row .cat-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.filter-row .cat-icon svg{width:17px;height:17px;stroke:#17191C;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
+.filter-row .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 .filter-actions{display:flex;gap:6px;padding:6px 6px 2px;border-top:1px solid var(--line);margin-top:6px;}
 .filter-actions button{flex:1;font-family:var(--font);font-size:.76rem;font-weight:600;padding:7px;border-radius:8px;border:1px solid var(--line-2);background:var(--paper);cursor:pointer;color:var(--muted);}
 
 .map-wrap{position:relative;margin:0 clamp(16px,4vw,44px) clamp(24px,4vw,40px);border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:margin .2s,border-radius .2s;}
-.map-wrap.is-fullscreen{position:fixed;inset:0;z-index:9999;margin:0;border-radius:0;border:none;}
+.map-wrap.is-fullscreen{margin:0;border-radius:0;border:none;}
 #map{height:min(72vh,640px);width:100%;background:var(--line);}
 .map-wrap.is-fullscreen #map{height:100vh;}
 #map .leaflet-tile-pane{filter:grayscale(100%) contrast(1.05) brightness(1.02);}
@@ -89,15 +88,20 @@ a{color:inherit;}
 .top-controls{position:absolute;top:14px;right:14px;z-index:400;}
 .fullscreen-btn{width:44px;height:44px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);}
 .fullscreen-btn svg{width:18px;height:18px;stroke:var(--ink);}
-.fullscreen-btn .ic-collapse{display:none;}
-.fullscreen-btn.active .ic-expand{display:none;}
-.fullscreen-btn.active .ic-collapse{display:block;}
 
 .locate-cta{position:absolute;left:14px;right:14px;bottom:14px;z-index:400;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);border:1px solid var(--line-2);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
 .locate-cta svg{width:20px;height:20px;stroke:var(--accent);flex-shrink:0;}
 .locate-cta p{font-size:.82rem;font-weight:500;color:var(--ink);flex:1;line-height:1.4;}
 .locate-cta button.go{font-family:var(--font);font-size:.78rem;font-weight:700;background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:9px 14px;cursor:pointer;white-space:nowrap;}
 .locate-cta .x{background:none;border:none;color:var(--faint);font-size:1.1rem;cursor:pointer;padding:2px 4px;}
+
+.route-bar{position:absolute;left:14px;right:14px;bottom:14px;z-index:400;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);border:1px solid var(--line-2);border-radius:14px;padding:12px 14px;display:none;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.route-bar.on{display:flex;}
+.route-bar svg{width:20px;height:20px;stroke:var(--accent);flex-shrink:0;}
+.route-bar p{font-size:.82rem;font-weight:500;color:var(--ink);flex:1;line-height:1.4;}
+.route-bar p b{font-weight:700;}
+.route-bar .x{background:none;border:none;color:var(--faint);font-size:1.1rem;cursor:pointer;padding:2px 4px;}
+.poi-btn.js-directions{background:var(--accent);color:#fff;border-color:var(--accent);cursor:pointer;font-family:var(--font);}
 
 /* Overlay "tocca per interagire" su mobile */
 .map-tap-overlay{position:absolute;inset:0;z-index:350;background:rgba(23,25,28,.32);display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;}
@@ -106,7 +110,7 @@ a{color:inherit;}
 
 /* pittogrammi: solo simbolo nero, senza cerchi, ben visibili */
 .poi-pin{display:flex;align-items:center;justify-content:center;width:32px;height:32px;}
-.poi-pin svg{width:24px;height:24px;stroke:#0D0E10;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 3px #fff) drop-shadow(0 1px 1px rgba(0,0,0,.3));}
+.poi-pin svg{width:24px;height:24px;stroke:#0D0E10;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 1px 1px rgba(0,0,0,.35));}
 .home-mark{display:flex;align-items:center;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.3));}
 .home-mark svg{width:78px;height:auto;display:block;}
 .home-mark svg path{fill:#0D0E10 !important;}
@@ -135,12 +139,12 @@ a{color:inherit;}
 .site-footer{border-top:1px solid var(--ink);margin-top:clamp(50px,8vw,110px);padding-top:clamp(34px,5vw,60px);padding-bottom:48px;}
 .foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:30px;}
 .foot-brand .brand-logo{height:30px;width:auto;}
-.foot-brand .brand-logo{height:30px;width:auto;}
 .foot-tag{margin-top:14px;font-size:.92rem;color:var(--muted);max-width:24em;line-height:1.55;}
 .foot-col h4{font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;}
+.foot-col a,.foot-col p{display:block;font-size:.95rem;color:var(--muted);text-decoration:none;line-height:1.95;}
 .foot-col a:hover{color:var(--ink);}
-.foot-col p{display:block;font-size:.95rem;color:var(--muted);text-decoration:none;line-height:1.95;}
 .foot-legal{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:.76rem;color:var(--faint);}
+
 </style>
 </head>
 <body>
@@ -183,8 +187,7 @@ a{color:inherit;}
   <div id="map"></div>
   <div class="top-controls">
     <button class="fullscreen-btn" id="fullscreenBtn" type="button" title="Schermo intero">
-      <svg class="ic-expand" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg>
-      <svg class="ic-collapse" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4a2 2 0 01-2 2H3M21 9h-4a2 2 0 01-2-2V3M3 15h4a2 2 0 012 2v4M15 21v-4a2 2 0 012-2h4"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg>
     </button>
   </div>
   <div class="locate-cta" id="locateCta">
@@ -192,6 +195,11 @@ a{color:inherit;}
     <p>Attiva la tua posizione per vedere subito i luoghi più vicini a te.</p>
     <button class="go" id="locateCtaBtn" type="button">Attiva posizione</button>
     <button class="x" id="locateCtaClose" type="button" aria-label="Chiudi">✕</button>
+  </div>
+  <div class="route-bar" id="routeBar">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5-2V6l5 2m0 12l6-2m-6 2V8m6 10l5 2V4l-5-2m0 18V6m0 0L9 8"/></svg>
+    <p id="routeBarText">Calcolo percorso…</p>
+    <button class="x" id="routeBarClose" type="button" aria-label="Chiudi">✕</button>
   </div>
 </div>
 
@@ -249,8 +257,6 @@ function popupHtml(p){
   const gmaps = p.placeId
     ? 'https://www.google.com/maps/place/?q=place_id:' + p.placeId
     : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.name + ' ' + p.addr);
-  const dirBase = 'https://www.google.com/maps/dir/?api=1&destination=' + p.lat + ',' + p.lng
-    + (p.placeId ? '&destination_place_id=' + p.placeId : '');
   let distHtml = '';
   if (userLatLng){
     const d = haversine(userLatLng.lat, userLatLng.lng, p.lat, p.lng);
@@ -270,7 +276,7 @@ function popupHtml(p){
     + '<div class="poi-desc">' + p.desc + '</div>'
     + '<div class="poi-meta">' + p.addr + '<br>' + phoneHtml + distHtml + '</div>'
     + '<div class="poi-actions">'
-    + '<a class="poi-btn" href="' + dirBase + '" target="_blank" rel="noopener">Indicazioni</a>'
+    + '<button class="poi-btn js-directions" type="button">Indicazioni</button>'
     + '<a class="poi-btn primary" href="' + gmaps + '" target="_blank" rel="noopener">Vedi su Maps</a>'
     + '</div></div>';
 }
@@ -283,7 +289,12 @@ PLACES.forEach(p => {
   });
   const m = L.marker([p.lat, p.lng], {icon}).addTo(map);
   m.bindPopup(() => popupHtml(p));
-  m.on('popupopen', () => { m.setPopupContent(popupHtml(p)); });
+  m.on('popupopen', () => {
+    m.setPopupContent(popupHtml(p));
+    const el = m.getPopup().getElement();
+    const btn = el && el.querySelector('.js-directions');
+    if (btn) btn.addEventListener('click', () => { map.closePopup(); showRoute(p.lat, p.lng, p.name); });
+  });
   m.__cat = p.cat;
   markers[p.id] = m;
 });
@@ -317,7 +328,7 @@ function renderPanel(){
     row.className = 'filter-row' + (activeCats.has(c.key) ? ' checked' : '');
     row.dataset.key = c.key;
     row.innerHTML = '<span class="filter-check"><svg viewBox="0 0 24 24"><path d="M4 12l6 6L20 6"/></svg></span>'
-      + '<span class="cat-icon"><svg viewBox="0 0 24 24">' + (ICONS[c.key]||'') + '</svg></span><span>' + c.label + '</span>';
+      + '<span class="dot" style="background:' + c.color + '"></span><span>' + c.label + '</span>';
     row.addEventListener('click', function(ev){
       ev.stopPropagation();
       if (activeCats.has(c.key)) activeCats.delete(c.key); else activeCats.add(c.key);
@@ -348,45 +359,69 @@ document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeP
 renderPanel();
 updateLabel();
 
-/* Geolocalizzazione: un solo punto d'ingresso, il bannerino in basso */
+/* Geolocalizzazione: un solo punto d'ingresso (il bannerino), riutilizzabile anche dalle Indicazioni */
 const mapWrap = document.getElementById('mapWrap');
 const locateCta = document.getElementById('locateCta');
 const locateCtaBtn = document.getElementById('locateCtaBtn');
 let userMarker = null;
-function requestLocation(){
+function requestLocation(onSuccess){
   if (!navigator.geolocation){ alert('Geolocalizzazione non disponibile su questo dispositivo.'); return; }
-  locateCtaBtn.textContent = 'Attivazione…';
-  locateCtaBtn.disabled = true;
+  if (locateCta && locateCta.parentNode){ locateCtaBtn.textContent = 'Attivazione…'; locateCtaBtn.disabled = true; }
   navigator.geolocation.getCurrentPosition(pos => {
     userLatLng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
     const uIcon = L.divIcon({ className: '', html: '<div class="user-dot"></div>', iconSize:[16,16], iconAnchor:[8,8] });
     if (userMarker) userMarker.setLatLng(userLatLng); else userMarker = L.marker(userLatLng, {icon: uIcon, zIndexOffset: 1000}).addTo(map);
-    map.setView(userLatLng, 15);
-    if (locateCta) locateCta.remove();
+    if (locateCta && locateCta.parentNode) locateCta.remove();
+    if (onSuccess) onSuccess(); else map.setView(userLatLng, 15);
   }, err => {
-    locateCtaBtn.textContent = 'Attiva posizione';
-    locateCtaBtn.disabled = false;
+    if (locateCta && locateCta.parentNode){ locateCtaBtn.textContent = 'Attiva posizione'; locateCtaBtn.disabled = false; }
     alert('Non riesco ad accedere alla tua posizione. Controlla i permessi del browser.');
   }, { enableHighAccuracy: true, timeout: 8000 });
 }
-locateCtaBtn.addEventListener('click', requestLocation);
+locateCtaBtn.addEventListener('click', function(){ requestLocation(); });
 document.getElementById('locateCtaClose').addEventListener('click', function(){ locateCta.remove(); });
 
-/* Schermo intero: toggle via CSS (position:fixed), non dipende dalla Fullscreen API nativa
-   che su iOS Safari non funziona in modo affidabile su elementi generici */
-const fullscreenBtn = document.getElementById('fullscreenBtn');
-function setFullscreen(on){
-  mapWrap.classList.toggle('is-fullscreen', on);
-  fullscreenBtn.classList.toggle('active', on);
-  fullscreenBtn.title = on ? 'Esci da schermo intero' : 'Schermo intero';
-  document.body.style.overflow = on ? 'hidden' : '';
-  setTimeout(() => map.invalidateSize(), 200);
+/* Indicazioni disegnate direttamente sulla mappa (percorso a piedi via OSRM, servizio pubblico gratuito) */
+const routeBar = document.getElementById('routeBar');
+const routeBarText = document.getElementById('routeBarText');
+let routeLine = null;
+function clearRoute(){
+  if (routeLine){ map.removeLayer(routeLine); routeLine = null; }
+  routeBar.classList.remove('on');
 }
+document.getElementById('routeBarClose').addEventListener('click', clearRoute);
+function showRoute(lat, lng, name){
+  if (!userLatLng){ requestLocation(() => showRoute(lat, lng, name)); return; }
+  routeBarText.textContent = 'Calcolo percorso verso ' + name + '…';
+  routeBar.classList.add('on');
+  const url = 'https://router.project-osrm.org/route/v1/foot/' + userLatLng.lng + ',' + userLatLng.lat + ';' + lng + ',' + lat + '?overview=full&geometries=geojson';
+  fetch(url).then(r => r.json()).then(data => {
+    if (!data.routes || !data.routes[0]) throw new Error('no route');
+    const route = data.routes[0];
+    const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+    if (routeLine) map.removeLayer(routeLine);
+    routeLine = L.polyline(coords, {color:'#2E6F4E', weight:5, opacity:.85}).addTo(map);
+    map.fitBounds(routeLine.getBounds(), {padding:[50,50]});
+    const km = (route.distance/1000).toFixed(1).replace('.', ',');
+    const mins = Math.round(route.duration/60);
+    routeBarText.innerHTML = '<b>' + name + '</b> — ' + km + ' km a piedi, circa ' + mins + ' min';
+  }).catch(() => {
+    routeBarText.textContent = 'Non riesco a calcolare il percorso al momento. Riprova o usa "Vedi su Maps".';
+  });
+}
+
+/* Schermo intero */
+const fullscreenBtn = document.getElementById('fullscreenBtn');
 fullscreenBtn.addEventListener('click', function(){
-  setFullscreen(!mapWrap.classList.contains('is-fullscreen'));
+  if (!document.fullscreenElement){
+    (mapWrap.requestFullscreen || mapWrap.webkitRequestFullscreen || function(){}).call(mapWrap);
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+  }
 });
-document.addEventListener('keydown', function(e){
-  if (e.key === 'Escape' && mapWrap.classList.contains('is-fullscreen')) setFullscreen(false);
+document.addEventListener('fullscreenchange', function(){
+  mapWrap.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+  setTimeout(() => map.invalidateSize(), 200);
 });
 
 /* Su mobile: tocca una volta per attivare il trascinamento della mappa,
