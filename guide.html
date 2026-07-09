@@ -72,12 +72,12 @@ a{color:inherit;}
 }
 
 /* Selettore a tendina categorie */
-.filter-wrap{position:absolute;top:14px;left:14px;z-index:400;}
-.filter-btn{display:flex;align-items:center;gap:8px;font-family:var(--font);font-size:.82rem;font-weight:600;padding:11px 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);max-width:52vw;}
+.filter-wrap{position:relative;}
+.filter-btn{display:flex;align-items:center;gap:8px;font-family:var(--font);font-size:.82rem;font-weight:600;padding:11px 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);max-width:46vw;white-space:nowrap;}
 .filter-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .filter-btn svg{width:15px;height:15px;stroke:var(--muted);transition:transform .2s;flex-shrink:0;}
 .filter-btn.open svg{transform:rotate(180deg);}
-.filter-panel{position:absolute;top:100%;left:0;margin-top:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:8px;width:270px;max-width:calc(100vw - 44px);z-index:410;display:none;}
+.filter-panel{position:absolute;top:100%;right:0;margin-top:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:8px;width:270px;max-width:calc(100vw - 44px);z-index:410;display:none;}
 .filter-panel.open{display:block;}
 .filter-row{display:flex;align-items:center;width:100%;gap:12px;padding:11px 10px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:500;font-family:var(--font);background:none;border:none;text-align:left;color:var(--faint);transition:color .12s;}
 .filter-row:hover{background:var(--paper);}
@@ -88,13 +88,13 @@ a{color:inherit;}
 .filter-actions{display:flex;gap:6px;padding:6px 6px 2px;border-top:1px solid var(--line);margin-top:6px;}
 .filter-actions button{flex:1;font-family:var(--font);font-size:.76rem;font-weight:600;padding:7px;border-radius:8px;border:1px solid var(--line-2);background:var(--paper);cursor:pointer;color:var(--muted);}
 
-.map-wrap{position:relative;margin:0 clamp(16px,4vw,44px) clamp(24px,4vw,40px);border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:margin .2s,border-radius .2s;}
+.map-wrap{position:relative;z-index:1;margin:0 clamp(16px,4vw,44px) clamp(24px,4vw,40px);border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:margin .2s,border-radius .2s;}
 .map-wrap.is-fullscreen{position:fixed;inset:0;z-index:9999;margin:0;border-radius:0;border:none;}
 #map{height:min(72vh,640px);width:100%;background:var(--line);}
 .map-wrap.is-fullscreen #map{height:100vh;}
 #map .leaflet-tile-pane{filter:grayscale(100%) contrast(1.05) brightness(1.02);}
 
-.top-controls{position:absolute;top:14px;right:14px;z-index:400;}
+.top-controls{position:absolute;top:14px;right:14px;z-index:400;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
 .fullscreen-btn{width:44px;height:44px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);}
 .fullscreen-btn svg{width:18px;height:18px;stroke:var(--ink);}
 .fullscreen-btn .ic-collapse{display:none;}
@@ -207,14 +207,14 @@ a{color:inherit;}
 
 <div class="map-wrap" id="mapWrap">
   <div id="map"></div>
-  <div class="filter-wrap">
-    <button class="filter-btn" id="filterBtn" type="button">
-      <span id="filterLabel">Categorie</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-    </button>
-    <div class="filter-panel" id="filterPanel"></div>
-  </div>
   <div class="top-controls">
+    <div class="filter-wrap">
+      <button class="filter-btn" id="filterBtn" type="button">
+        <span id="filterLabel">Categorie</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="filter-panel" id="filterPanel"></div>
+    </div>
     <button class="fullscreen-btn" id="fullscreenBtn" type="button" title="Schermo intero">
       <svg class="ic-expand" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg>
       <svg class="ic-collapse" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4a2 2 0 01-2 2H3M21 9h-4a2 2 0 01-2-2V3M3 15h4a2 2 0 012 2v4M15 21v-4a2 2 0 012-2h4"/></svg>
