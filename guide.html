@@ -62,6 +62,15 @@ a{color:inherit;}
 .hero-gl-canvas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:1;}
 .intro p{margin-top:clamp(18px,2.4vw,30px);font-size:clamp(1rem,1.6vw,1.25rem);line-height:1.5;color:var(--muted);max-width:40em;}
 
+/* Cursore personalizzato desktop: cerchio vuoto -> pallino pieno sui cliccabili (identico alla home) */
+#cursorDot{display:none;}
+@media (hover:hover) and (pointer:fine){
+  body{cursor:none;}
+  a,button,select,input,textarea,label,summary,[role="button"],[onclick],.clickable{cursor:none;}
+  #cursorDot{display:block;position:fixed;top:0;left:0;z-index:2147483647;pointer-events:none;width:32px;height:32px;border:2px solid #FF5A1F;border-radius:50%;background:transparent;transition:width .2s ease,height .2s ease,background-color .2s ease,border-width .2s ease,opacity .25s ease;will-change:transform;opacity:0;}
+  #cursorDot.is-dot{width:14px;height:14px;background:#FF5A1F;border-width:0;}
+}
+
 /* Selettore a tendina categorie */
 .filter-wrap{position:relative;z-index:80;padding:20px clamp(16px,4vw,44px) 14px;display:flex;}
 .filter-btn{display:flex;align-items:center;gap:10px;font-family:var(--font);font-size:.88rem;font-weight:600;padding:11px 16px;border-radius:999px;border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;}
@@ -72,15 +81,16 @@ a{color:inherit;}
 .filter-row{display:flex;align-items:center;width:100%;gap:10px;padding:10px;border-radius:10px;cursor:pointer;font-size:.86rem;font-weight:500;font-family:var(--font);background:none;border:none;text-align:left;color:var(--ink);}
 .filter-row:hover{background:var(--paper);}
 .filter-check{width:18px;height:18px;border-radius:5px;border:1.6px solid var(--line-2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s;}
-.filter-check svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .12s;}
+.filter-check svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .12s;}
 .filter-row.checked .filter-check{background:var(--accent);border-color:var(--accent);}
 .filter-row.checked .filter-check svg{opacity:1;}
-.filter-row .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.filter-row .cat-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.filter-row .cat-icon svg{width:17px;height:17px;stroke:#17191C;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
 .filter-actions{display:flex;gap:6px;padding:6px 6px 2px;border-top:1px solid var(--line);margin-top:6px;}
 .filter-actions button{flex:1;font-family:var(--font);font-size:.76rem;font-weight:600;padding:7px;border-radius:8px;border:1px solid var(--line-2);background:var(--paper);cursor:pointer;color:var(--muted);}
 
 .map-wrap{position:relative;margin:0 clamp(16px,4vw,44px) clamp(24px,4vw,40px);border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:margin .2s,border-radius .2s;}
-.map-wrap.is-fullscreen{margin:0;border-radius:0;border:none;}
+.map-wrap.is-fullscreen{position:fixed;inset:0;z-index:9999;margin:0;border-radius:0;border:none;}
 #map{height:min(72vh,640px);width:100%;background:var(--line);}
 .map-wrap.is-fullscreen #map{height:100vh;}
 #map .leaflet-tile-pane{filter:grayscale(100%) contrast(1.05) brightness(1.02);}
@@ -88,11 +98,15 @@ a{color:inherit;}
 .top-controls{position:absolute;top:14px;right:14px;z-index:400;}
 .fullscreen-btn{width:44px;height:44px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);}
 .fullscreen-btn svg{width:18px;height:18px;stroke:var(--ink);}
+.fullscreen-btn .ic-collapse{display:none;}
+.fullscreen-btn.active .ic-expand{display:none;}
+.fullscreen-btn.active .ic-collapse{display:block;}
 
 .locate-cta{position:absolute;left:14px;right:14px;bottom:14px;z-index:400;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);border:1px solid var(--line-2);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
 .locate-cta svg{width:20px;height:20px;stroke:var(--accent);flex-shrink:0;}
 .locate-cta p{font-size:.82rem;font-weight:500;color:var(--ink);flex:1;line-height:1.4;}
-.locate-cta button.go{font-family:var(--font);font-size:.78rem;font-weight:700;background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:9px 14px;cursor:pointer;white-space:nowrap;}
+.locate-cta button.go,.route-bar button.go{font-family:var(--font);font-size:.78rem;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:999px;padding:9px 14px;cursor:pointer;white-space:nowrap;}
+.route-bar button.stop{font-family:var(--font);font-size:.78rem;font-weight:700;background:var(--surface);color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:9px 14px;cursor:pointer;white-space:nowrap;}
 .locate-cta .x{background:none;border:none;color:var(--faint);font-size:1.1rem;cursor:pointer;padding:2px 4px;}
 
 .route-bar{position:absolute;left:14px;right:14px;bottom:14px;z-index:400;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);border:1px solid var(--line-2);border-radius:14px;padding:12px 14px;display:none;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
@@ -110,7 +124,7 @@ a{color:inherit;}
 
 /* pittogrammi: solo simbolo nero, senza cerchi, ben visibili */
 .poi-pin{display:flex;align-items:center;justify-content:center;width:32px;height:32px;}
-.poi-pin svg{width:24px;height:24px;stroke:#0D0E10;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 1px 1px rgba(0,0,0,.35));}
+.poi-pin svg{width:24px;height:24px;stroke:#0D0E10;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 3px #fff) drop-shadow(0 1px 1px rgba(0,0,0,.3));}
 .home-mark{display:flex;align-items:center;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.3));}
 .home-mark svg{width:78px;height:auto;display:block;}
 .home-mark svg path{fill:#0D0E10 !important;}
@@ -187,7 +201,8 @@ a{color:inherit;}
   <div id="map"></div>
   <div class="top-controls">
     <button class="fullscreen-btn" id="fullscreenBtn" type="button" title="Schermo intero">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg>
+      <svg class="ic-expand" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg>
+      <svg class="ic-collapse" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4a2 2 0 01-2 2H3M21 9h-4a2 2 0 01-2-2V3M3 15h4a2 2 0 012 2v4M15 21v-4a2 2 0 012-2h4"/></svg>
     </button>
   </div>
   <div class="locate-cta" id="locateCta">
@@ -199,6 +214,8 @@ a{color:inherit;}
   <div class="route-bar" id="routeBar">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5-2V6l5 2m0 12l6-2m-6 2V8m6 10l5 2V4l-5-2m0 18V6m0 0L9 8"/></svg>
     <p id="routeBarText">Calcolo percorso…</p>
+    <button class="go" id="routeBarNavBtn" type="button" style="display:none;">Avvia navigazione</button>
+    <button class="stop" id="routeBarStopBtn" type="button" style="display:none;">Termina</button>
     <button class="x" id="routeBarClose" type="button" aria-label="Chiudi">✕</button>
   </div>
 </div>
@@ -328,7 +345,7 @@ function renderPanel(){
     row.className = 'filter-row' + (activeCats.has(c.key) ? ' checked' : '');
     row.dataset.key = c.key;
     row.innerHTML = '<span class="filter-check"><svg viewBox="0 0 24 24"><path d="M4 12l6 6L20 6"/></svg></span>'
-      + '<span class="dot" style="background:' + c.color + '"></span><span>' + c.label + '</span>';
+      + '<span class="cat-icon"><svg viewBox="0 0 24 24">' + (ICONS[c.key]||'') + '</svg></span><span>' + c.label + '</span>';
     row.addEventListener('click', function(ev){
       ev.stopPropagation();
       if (activeCats.has(c.key)) activeCats.delete(c.key); else activeCats.add(c.key);
@@ -381,47 +398,115 @@ function requestLocation(onSuccess){
 locateCtaBtn.addEventListener('click', function(){ requestLocation(); });
 document.getElementById('locateCtaClose').addEventListener('click', function(){ locateCta.remove(); });
 
-/* Indicazioni disegnate direttamente sulla mappa (percorso a piedi via OSRM, servizio pubblico gratuito) */
+/* Indicazioni disegnate direttamente sulla mappa + navigazione passo-passo dal vivo
+   (percorso a piedi via OSRM, servizio pubblico gratuito) */
 const routeBar = document.getElementById('routeBar');
 const routeBarText = document.getElementById('routeBarText');
-let routeLine = null;
+const routeBarNavBtn = document.getElementById('routeBarNavBtn');
+const routeBarStopBtn = document.getElementById('routeBarStopBtn');
+let routeLine = null, routeSteps = [], currentStepIdx = 0, destLatLng = null, destName = '';
+let navMode = false, navWatchId = null;
+
+function instructionFor(step){
+  const name = step.name || 'la strada';
+  const type = step.maneuver.type, mod = step.maneuver.modifier || '';
+  if (type === 'depart') return 'Parti verso ' + name;
+  if (type === 'arrive') return 'Sei arrivato: ' + destName;
+  if (mod.indexOf('left') !== -1) return 'Svolta a sinistra su ' + name;
+  if (mod.indexOf('right') !== -1) return 'Svolta a destra su ' + name;
+  if (type === 'roundabout' || type === 'rotary') return 'Alla rotonda, prosegui su ' + name;
+  return 'Prosegui dritto su ' + name;
+}
 function clearRoute(){
+  stopNavigation();
   if (routeLine){ map.removeLayer(routeLine); routeLine = null; }
+  routeSteps = []; currentStepIdx = 0; destLatLng = null;
+  routeBarNavBtn.style.display = 'none';
+  routeBarStopBtn.style.display = 'none';
   routeBar.classList.remove('on');
 }
 document.getElementById('routeBarClose').addEventListener('click', clearRoute);
+
 function showRoute(lat, lng, name){
   if (!userLatLng){ requestLocation(() => showRoute(lat, lng, name)); return; }
+  destLatLng = { lat, lng }; destName = name;
   routeBarText.textContent = 'Calcolo percorso verso ' + name + '…';
   routeBar.classList.add('on');
-  const url = 'https://router.project-osrm.org/route/v1/foot/' + userLatLng.lng + ',' + userLatLng.lat + ';' + lng + ',' + lat + '?overview=full&geometries=geojson';
+  fetchRoute();
+}
+function fetchRoute(){
+  const url = 'https://router.project-osrm.org/route/v1/foot/' + userLatLng.lng + ',' + userLatLng.lat + ';' + destLatLng.lng + ',' + destLatLng.lat + '?overview=full&geometries=geojson&steps=true';
   fetch(url).then(r => r.json()).then(data => {
     if (!data.routes || !data.routes[0]) throw new Error('no route');
     const route = data.routes[0];
+    routeSteps = (route.legs && route.legs[0] && route.legs[0].steps) || [];
+    currentStepIdx = 0;
     const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
     if (routeLine) map.removeLayer(routeLine);
     routeLine = L.polyline(coords, {color:'#2E6F4E', weight:5, opacity:.85}).addTo(map);
-    map.fitBounds(routeLine.getBounds(), {padding:[50,50]});
+    if (!navMode) map.fitBounds(routeLine.getBounds(), {padding:[50,50]});
     const km = (route.distance/1000).toFixed(1).replace('.', ',');
     const mins = Math.round(route.duration/60);
-    routeBarText.innerHTML = '<b>' + name + '</b> — ' + km + ' km a piedi, circa ' + mins + ' min';
+    routeBarText.innerHTML = '<b>' + destName + '</b> — ' + km + ' km a piedi, circa ' + mins + ' min';
+    routeBarNavBtn.style.display = routeSteps.length ? 'inline-block' : 'none';
   }).catch(() => {
     routeBarText.textContent = 'Non riesco a calcolare il percorso al momento. Riprova o usa "Vedi su Maps".';
   });
 }
-
-/* Schermo intero */
-const fullscreenBtn = document.getElementById('fullscreenBtn');
-fullscreenBtn.addEventListener('click', function(){
-  if (!document.fullscreenElement){
-    (mapWrap.requestFullscreen || mapWrap.webkitRequestFullscreen || function(){}).call(mapWrap);
-  } else {
-    (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+function updateStepText(){
+  if (!routeSteps.length) return;
+  const step = routeSteps[Math.min(currentStepIdx, routeSteps.length-1)];
+  let extra = '';
+  if (userLatLng && destLatLng){
+    const remKm = haversine(userLatLng.lat, userLatLng.lng, destLatLng.lat, destLatLng.lng);
+    extra = ' <span style="color:var(--faint);font-weight:500;">(' + fmtDist(remKm) + ' al traguardo)</span>';
   }
-});
-document.addEventListener('fullscreenchange', function(){
-  mapWrap.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+  routeBarText.innerHTML = '<b>' + instructionFor(step) + '</b>' + extra;
+}
+function checkStepAdvance(){
+  if (!routeSteps.length || currentStepIdx >= routeSteps.length - 1) return;
+  const loc = routeSteps[currentStepIdx].maneuver.location; // [lng,lat]
+  const d = haversine(userLatLng.lat, userLatLng.lng, loc[1], loc[0]);
+  if (d * 1000 < 25) currentStepIdx++;
+}
+function startNavigation(){
+  if (!routeSteps.length || !navigator.geolocation) return;
+  navMode = true;
+  routeBarNavBtn.style.display = 'none';
+  routeBarStopBtn.style.display = 'inline-block';
+  updateStepText();
+  navWatchId = navigator.geolocation.watchPosition(pos => {
+    userLatLng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    if (userMarker) userMarker.setLatLng(userLatLng);
+    map.setView(userLatLng, 17);
+    checkStepAdvance();
+    updateStepText();
+  }, () => {}, { enableHighAccuracy: true, maximumAge: 2000 });
+}
+function stopNavigation(){
+  navMode = false;
+  if (navWatchId !== null){ navigator.geolocation.clearWatch(navWatchId); navWatchId = null; }
+  routeBarStopBtn.style.display = 'none';
+  if (routeSteps.length) routeBarNavBtn.style.display = 'inline-block';
+}
+routeBarNavBtn.addEventListener('click', startNavigation);
+routeBarStopBtn.addEventListener('click', function(){ stopNavigation(); fetchRoute(); });
+
+/* Schermo intero: toggle via CSS (position:fixed), non dipende dalla Fullscreen API nativa
+   che su iOS Safari non funziona in modo affidabile su elementi generici */
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+function setFullscreen(on){
+  mapWrap.classList.toggle('is-fullscreen', on);
+  fullscreenBtn.classList.toggle('active', on);
+  fullscreenBtn.title = on ? 'Esci da schermo intero' : 'Schermo intero';
+  document.body.style.overflow = on ? 'hidden' : '';
   setTimeout(() => map.invalidateSize(), 200);
+}
+fullscreenBtn.addEventListener('click', function(){
+  setFullscreen(!mapWrap.classList.contains('is-fullscreen'));
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape' && mapWrap.classList.contains('is-fullscreen')) setFullscreen(false);
 });
 
 /* Su mobile: tocca una volta per attivare il trascinamento della mappa,
@@ -438,6 +523,21 @@ if (isTouch){
     overlay.remove();
   });
 }
+
+/* Cursore personalizzato desktop (identico alla home) */
+(function(){
+ if(!window.matchMedia||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+ var dot=document.createElement('div');dot.id='cursorDot';document.body.appendChild(dot);
+ var x=innerWidth/2,y=innerHeight/2,tx=x,ty=y;
+ var sel='a,button,select,input,textarea,label,summary,[role='button'],[onclick],.clickable';
+ window.addEventListener('mousemove',function(e){
+  tx=e.clientX;ty=e.clientY;
+  dot.style.opacity='1';
+  var t=e.target&&e.target.closest?e.target.closest(sel):null;
+  dot.classList.toggle('is-dot',!!t);
+ },{passive:true});
+ (function loop(){x+=(tx-x)*0.25;y+=(ty-y)*0.25;dot.style.transform='translate('+x+'px,'+y+'px) translate(-50%,-50%)';requestAnimationFrame(loop);})();
+})();
 
 /* Menu hamburger (identico al sito vetrina) */
 (function(){const btn=document.getElementById('menuBtn'),ov=document.getElementById('menuOverlay');
