@@ -741,6 +741,12 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
 
 setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(e){}var t=(navigator.language||'en').slice(0,2);return({it:'it',de:'de',fr:'fr',en:'en'})[t]||'en';})());
 
+
+/* Il browser a volte ripristina la posizione di scroll orizzontale dei caroselli dopo un refresh:
+   qui la riporto sempre a zero, sia al primo caricamento sia tornando da history/bfcache. */
+function resetCarousels(){ document.querySelectorAll('.apt-carousel').forEach(function(el){ el.scrollLeft = 0; }); }
+resetCarousels();
+window.addEventListener('pageshow', resetCarousels);
 </script>
 </body>
 </html>

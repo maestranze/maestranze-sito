@@ -421,6 +421,12 @@ document.querySelectorAll('a[data-i18n="m_home"]').forEach(function(a){
     try{ sessionStorage.setItem('forceIntro','1'); }catch(e){}
   });
 });
+
+/* Il browser a volte ripristina la posizione di scroll orizzontale dei caroselli dopo un refresh:
+   qui la riporto sempre a zero, sia al primo caricamento sia tornando da history/bfcache. */
+function resetCarousels(){ document.querySelectorAll('.apt-carousel').forEach(function(el){ el.scrollLeft = 0; }); }
+resetCarousels();
+window.addEventListener('pageshow', resetCarousels);
 </script>
 </body>
 </html>
