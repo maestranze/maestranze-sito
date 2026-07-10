@@ -75,6 +75,15 @@ a{color:inherit;}
 .feat-img{margin:clamp(26px,3.5vw,46px) 0 clamp(40px,6vw,84px);aspect-ratio:16/9;width:100%;border-radius:14px;display:flex;align-items:flex-end;padding:16px;
   background:radial-gradient(120% 90% at 75% 0%,var(--accent-soft) 0%,transparent 55%),repeating-linear-gradient(180deg,#F2F2EE 0 22px,#ECECE8 22px 23px),var(--line);}
 .feat-img .tag{font-size:.64rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 9px;}
+.apt-gallery{margin:clamp(26px,3.5vw,46px) 0 clamp(40px,6vw,84px);}
+.apt-gallery .g-hero{position:relative;aspect-ratio:16/9;width:100%;border-radius:14px;overflow:hidden;margin-bottom:10px;background:var(--line);}
+.apt-gallery .g-hero img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+.apt-gallery .g-hero:hover img{transform:scale(1.03);}
+.apt-gallery .g-hero .tag{position:absolute;left:16px;bottom:16px;font-size:.64rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 9px;}
+.apt-gallery .g-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.apt-gallery .g-strip img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;display:block;background:var(--line);transition:transform .4s ease;}
+.apt-gallery .g-strip img:hover{transform:scale(1.04);}
+@media(max-width:640px){.apt-gallery .g-strip{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:760px){.feat{grid-template-columns:1fr;gap:10px;}}
 
 /* Value (direct -15%) */
@@ -288,7 +297,18 @@ body.lock{overflow:hidden;}
       <div class="feat-left"><h3>Maestranze Carpentiera</h3><div class="feat-meta" data-i18n="a_meta1">2 bedrooms · 2 double beds · living room with kitchen · bathroom · 65 m²</div></div>
       <div class="feat-right"><p data-i18n="a_desc1">A bright, comfortable apartment in the heart of Spine Bianche, for up to four guests. Free parking at the door, a few minutes' walk from the Sassi and the centre.</p><a class="link-u" href="#booking" data-i18n="a_cta">Check dates</a></div>
     </article>
-    <div class="feat-img"><span class="tag">photo · Carpentiera</span></div>
+    <div class="apt-gallery">
+      <div class="g-hero">
+        <img src="carpentiera-hero-living.jpg" alt="Maestranze Carpentiera — soggiorno" loading="lazy" />
+        <span class="tag">photo · Carpentiera</span>
+      </div>
+      <div class="g-strip">
+        <img src="carpentiera-bedroom.jpg" alt="Maestranze Carpentiera — camera da letto" loading="lazy" />
+        <img src="carpentiera-kitchen.jpg" alt="Maestranze Carpentiera — cucina" loading="lazy" />
+        <img src="carpentiera-dining.jpg" alt="Maestranze Carpentiera — zona pranzo" loading="lazy" />
+        <img src="carpentiera-bathroom.jpg" alt="Maestranze Carpentiera — bagno" loading="lazy" />
+      </div>
+    </div>
     <article class="feat">
       <div class="feat-left"><h3>Maestranze Bidello</h3><div class="feat-meta" data-i18n="a_meta2">1 bedroom · 1 double bed · living room with kitchen · bathroom · balcony · 55 m² + 10 m² balcony</div></div>
       <div class="feat-right"><p data-i18n="a_desc2">An urban retreat for two, essential and contemporary, set in the 1950s architecture of the neighbourhood. Quiet, comfortable, well connected.</p><a class="link-u" href="#booking" data-i18n="a_cta">Check dates</a></div>
