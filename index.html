@@ -505,7 +505,7 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
  function buildParticles(){
   const NS='http://www.w3.org/2000/svg',ref=document.getElementById('refpath'),builder=document.getElementById('builder');
   const NS_X='http://www.w3.org/1999/xlink';
-  builder.innerHTML='';
+  builder.querySelectorAll('.frag').forEach(el=>el.remove());
   const bb=ref.getBBox();
   const cols=6, rows=8, cw=bb.width/cols, ch=bb.height/rows, ov=0.8;
   const svgEl=document.querySelector('.intro-logo');
