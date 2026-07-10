@@ -86,7 +86,7 @@ a{color:inherit;}
   display:flex;gap:22px;overflow-x:auto;
   scroll-snap-type:x proximity;
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;}
+  scrollbar-width:none;overflow-anchor:none;}
 .apt-carousel::-webkit-scrollbar{display:none;}
 .apt-carousel .car-slide{flex:0 0 auto;height:clamp(260px,34vw,420px);scroll-snap-align:center;background:var(--surface);}
 .apt-carousel .car-slide img{display:block;height:100%;width:auto;}
@@ -747,6 +747,7 @@ setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(
 function resetCarousels(){ document.querySelectorAll('.apt-carousel').forEach(function(el){ el.scrollLeft = 0; }); }
 resetCarousels();
 window.addEventListener('pageshow', resetCarousels);
+window.addEventListener('load', function(){ resetCarousels(); setTimeout(resetCarousels, 300); setTimeout(resetCarousels, 1000); });
 </script>
 </body>
 </html>
