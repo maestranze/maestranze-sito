@@ -75,44 +75,20 @@ a{color:inherit;}
 .feat-img{margin:clamp(26px,3.5vw,46px) 0 clamp(40px,6vw,84px);aspect-ratio:16/9;width:100%;border-radius:14px;display:flex;align-items:flex-end;padding:16px;
   background:radial-gradient(120% 90% at 75% 0%,var(--accent-soft) 0%,transparent 55%),repeating-linear-gradient(180deg,#F2F2EE 0 22px,#ECECE8 22px 23px),var(--line);}
 .feat-img .tag{font-size:.64rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 9px;}
-.apt-moodboard{position:relative;width:100%;margin:clamp(26px,3.5vw,46px) 0 clamp(40px,6vw,84px);
+.apt-carousel{position:relative;width:100%;margin:clamp(26px,3.5vw,46px) 0 clamp(40px,6vw,84px);
   background-color:var(--paper);
   background-image:radial-gradient(rgba(44,47,49,.22) 1px, transparent 1px);
   background-size:15px 15px;
-  border-radius:14px;padding:10px;}
-.mb-grid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:70px;grid-auto-flow:dense;gap:8px;}
-.mb-item{position:relative;overflow:hidden;border-radius:8px;cursor:pointer;background:var(--line);}
-.mb-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease;}
-.mb-item:hover img{transform:scale(1.05);}
-.mb-item.s-big{grid-column:span 4;grid-row:span 4;}
-.mb-item.s-wide{grid-column:span 3;grid-row:span 2;}
-.mb-item.s-tall{grid-column:span 2;grid-row:span 3;}
-.mb-item.s-norm{grid-column:span 2;grid-row:span 2;}
-@media(max-width:640px){
-  .mb-grid{grid-template-columns:repeat(4,1fr);grid-auto-rows:56px;}
-  .mb-item.s-big{grid-column:span 4;grid-row:span 3;}
-  .mb-item.s-wide{grid-column:span 4;grid-row:span 2;}
-  .mb-item.s-tall{grid-column:span 2;grid-row:span 3;}
-  .mb-item.s-norm{grid-column:span 2;grid-row:span 2;}
-}
+  border-radius:14px;
+  padding:22px clamp(16px,4vw,40px);
+  display:flex;gap:22px;overflow-x:auto;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;}
+.apt-carousel::-webkit-scrollbar{display:none;}
+.apt-carousel .car-slide{flex:0 0 auto;height:clamp(260px,34vw,420px);scroll-snap-align:center;border:1px solid var(--line-2);border-radius:6px;overflow:hidden;background:var(--surface);}
+.apt-carousel .car-slide img{display:block;height:100%;width:auto;}
 @media(max-width:760px){.feat{grid-template-columns:1fr;gap:10px;}}
-
-/* Lightbox: foto ingrandita, mai ritagliata, con scroll singolo stile carosello */
-.lightbox{position:fixed;inset:0;z-index:1000;background:rgba(23,25,28,.92);display:none;align-items:center;justify-content:center;}
-.lightbox.on{display:flex;}
-.lb-stage{position:relative;width:88vw;height:82vh;display:flex;align-items:center;justify-content:center;}
-.lb-stage img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;transition:opacity .25s ease;}
-.lb-close{position:absolute;top:18px;right:18px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;}
-.lb-close svg{width:18px;height:18px;}
-.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;}
-.lb-nav svg{width:20px;height:20px;}
-.lb-prev{left:18px;}
-.lb-next{right:18px;}
-.lb-nav:hover, .lb-close:hover{background:rgba(255,255,255,.22);}
-.lb-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5;}
-.lb-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .2s,width .2s;cursor:pointer;display:block;padding:0;border:none;}
-.lb-dots span.active{background:#fff;width:20px;border-radius:3px;}
-@media(max-width:640px){.lb-nav{width:38px;height:38px;}.lb-nav svg{width:16px;height:16px;}.lb-stage{width:94vw;height:74vh;}}
 
 /* Value (direct -15%) */
 .value h2{font-family:var(--font);font-weight:600;font-size:clamp(2rem,6vw,4.2rem);letter-spacing:-.025em;max-width:16ch;}
@@ -325,15 +301,30 @@ body.lock{overflow:hidden;}
       <div class="feat-left"><h3>Maestranze Carpentiera</h3><div class="feat-meta" data-i18n="a_meta1">2 bedrooms · 2 double beds · living room with kitchen · bathroom · 65 m²</div></div>
       <div class="feat-right"><p data-i18n="a_desc1">A bright, comfortable apartment in the heart of Spine Bianche, for up to four guests. Free parking at the door, a few minutes' walk from the Sassi and the centre.</p><a class="link-u" href="#booking" data-i18n="a_cta">Check dates</a></div>
     </article>
-    <div class="apt-moodboard" data-images='["carpentiera-01-living.jpg","carpentiera-04-stairs.jpg","carpentiera-02-bedroom1.jpg","carpentiera-05-kitchen.jpg","carpentiera-03-bedroom2.jpg","carpentiera-06-dining.jpg","carpentiera-07-bathroom.jpg","carpentiera-08-entrance.jpg"]' data-tag="photo · Carpentiera">
-      <div class="mb-grid"></div>
+    <div class="apt-carousel">
+      <div class="car-slide"><img src="carpentiera-01-living.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-slide"><img src="carpentiera-02-bedroom1.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-slide"><img src="carpentiera-03-bedroom2.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-slide"><img src="carpentiera-04-stairs.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-slide"><img src="carpentiera-05-kitchen.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-slide"><img src="carpentiera-06-dining.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-slide"><img src="carpentiera-07-bathroom.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-slide"><img src="carpentiera-08-entrance.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-slide"><img src="carpentiera-09-wordrobe.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
     </div>
     <article class="feat">
       <div class="feat-left"><h3>Maestranze Bidello</h3><div class="feat-meta" data-i18n="a_meta2">1 bedroom · 1 double bed · living room with kitchen · bathroom · balcony · 55 m² + 10 m² balcony</div></div>
       <div class="feat-right"><p data-i18n="a_desc2">An urban retreat for two, essential and contemporary, set in the 1950s architecture of the neighbourhood. Quiet, comfortable, well connected.</p><a class="link-u" href="#booking" data-i18n="a_cta">Check dates</a></div>
     </article>
-    <div class="apt-moodboard" data-images='["bidello-01-living.jpg","bidello-05-balcony.jpg","bidello-02-bedroom.jpg","bidello-04-kitchen.jpg","bidello-03-bedroom-mirror.jpg","bidello-07-workstation.jpg","bidello-06-bathroom.jpg","bidello-08-bedroom-windows.jpg"]' data-tag="photo · Bidello">
-      <div class="mb-grid"></div>
+    <div class="apt-carousel">
+      <div class="car-slide"><img src="bidello-01-living.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
+      <div class="car-slide"><img src="bidello-02-bedroom.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
+      <div class="car-slide"><img src="bidello-03-bedroom-mirror.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
+      <div class="car-slide"><img src="bidello-04-kitchen.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
+      <div class="car-slide"><img src="bidello-05-balcony.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
+      <div class="car-slide"><img src="bidello-06-bathroom.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
+      <div class="car-slide"><img src="bidello-07-workstation.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
+      <div class="car-slide"><img src="bidello-08-bedroom-windows.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
     </div>
   </section>
 
@@ -718,104 +709,6 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
 
 setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(e){}var t=(navigator.language||'en').slice(0,2);return({it:'it',de:'de',fr:'fr',en:'en'})[t]||'en';})());
 
-/* Mood board sulla griglia puntinata: piu' foto insieme per ogni appartamento.
-   Cliccando su una foto si apre il lightbox: ingrandita per intero (mai ritagliata),
-   con scorrimento singolo stile carosello tra tutte le foto di quell'appartamento. */
-(function(){
-  var SPAN_PATTERN = ['s-big','s-norm','s-wide','s-norm','s-wide','s-tall','s-norm','s-norm'];
-
-  function buildMoodboard(el){
-    var images;
-    try { images = JSON.parse(el.getAttribute('data-images') || '[]'); } catch(e){ images = []; }
-    var grid = el.querySelector('.mb-grid');
-    grid.innerHTML = '';
-    for (var i = 0; i < images.length; i++){
-      var item = document.createElement('div');
-      item.className = 'mb-item ' + (SPAN_PATTERN[i % SPAN_PATTERN.length]);
-      var img = document.createElement('img');
-      img.src = images[i];
-      img.loading = 'lazy';
-      img.alt = '';
-      item.appendChild(img);
-      (function(images, i){
-        item.addEventListener('click', function(){ Lightbox.open(images, i); });
-      })(images, i);
-      grid.appendChild(item);
-    }
-  }
-
-  var Lightbox = {
-    el: null, imgEl: null, dotsEl: null,
-    images: [], idx: 0,
-    init: function(){
-      this.el = document.getElementById('lightbox');
-      this.imgEl = document.getElementById('lbImg');
-      this.dotsEl = document.getElementById('lbDots');
-      var self = this;
-      document.getElementById('lbClose').addEventListener('click', function(){ self.close(); });
-      document.getElementById('lbPrev').addEventListener('click', function(){ self.go(-1); });
-      document.getElementById('lbNext').addEventListener('click', function(){ self.go(1); });
-      this.el.addEventListener('click', function(e){ if (e.target === self.el) self.close(); });
-      document.addEventListener('keydown', function(e){
-        if (!self.el.classList.contains('on')) return;
-        if (e.key === 'Escape') self.close();
-        if (e.key === 'ArrowLeft') self.go(-1);
-        if (e.key === 'ArrowRight') self.go(1);
-      });
-      var sx = null;
-      this.el.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, {passive:true});
-      this.el.addEventListener('touchend', function(e){
-        if (sx === null) return;
-        var dx = e.changedTouches[0].clientX - sx;
-        if (Math.abs(dx) > 40) self.go(dx < 0 ? 1 : -1);
-        sx = null;
-      }, {passive:true});
-    },
-    open: function(images, idx){
-      this.images = images;
-      this.idx = idx;
-      this.render();
-      this.el.classList.add('on');
-      this.el.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    },
-    close: function(){
-      this.el.classList.remove('on');
-      this.el.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    },
-    go: function(dir){
-      this.idx = (this.idx + dir + this.images.length) % this.images.length;
-      this.render();
-    },
-    render: function(){
-      var self = this;
-      this.imgEl.style.opacity = '0';
-      setTimeout(function(){
-        self.imgEl.src = self.images[self.idx];
-        self.imgEl.style.opacity = '1';
-      }, 120);
-      this.dotsEl.innerHTML = '';
-      for (var i = 0; i < this.images.length; i++){
-        var d = document.createElement('span');
-        if (i === this.idx) d.className = 'active';
-        (function(self, i, d){ d.addEventListener('click', function(){ self.idx = i; self.render(); }); })(this, i, d);
-        this.dotsEl.appendChild(d);
-      }
-    }
-  };
-  Lightbox.init();
-
-  var boards = document.querySelectorAll('.apt-moodboard');
-  for (var bi = 0; bi < boards.length; bi++){ buildMoodboard(boards[bi]); }
-})();
 </script>
-<div class="lightbox" id="lightbox" aria-hidden="true">
-  <button class="lb-close" id="lbClose" type="button" aria-label="Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="Foto precedente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="Foto successiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-  <div class="lb-stage"><img id="lbImg" src="" alt="" /></div>
-  <div class="lb-dots" id="lbDots"></div>
-</div>
 </body>
 </html>
