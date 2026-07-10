@@ -80,7 +80,8 @@ a{color:inherit;}
   background-image:radial-gradient(rgba(44,47,49,.22) 1px, transparent 1px);
   background-size:15px 15px;}
 .apt-carousel .carousel-stage{position:absolute;inset:0;}
-.apt-carousel .shard{position:absolute;inset:0;background-repeat:no-repeat;}
+.print-wrap{position:absolute;top:50%;left:50%;max-width:70%;max-height:78%;background:#fff;padding:9px 9px 30px;box-shadow:0 16px 36px rgba(23,25,28,.22),0 3px 10px rgba(23,25,28,.1);transition:transform .6s cubic-bezier(.4,0,.2,1), opacity .5s ease;}
+.print-wrap img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;}
 .apt-carousel .tag{position:absolute;left:16px;top:16px;z-index:5;font-size:.64rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 9px;}
 .car-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(251,251,249,.92);border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:6;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.12);padding:0;}
 .car-nav svg{width:18px;height:18px;}
@@ -705,18 +706,18 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
 
 setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(e){}var t=(navigator.language||'en').slice(0,2);return({it:'it',de:'de',fr:'fr',en:'en'})[t]||'en';})());
 
-/* Carosello "a terrazzo": le foto (nella loro proporzione reale, mai ritagliate) si frammentano
-   in tessere irregolari come il pavimento in graniglia delle case, e si ricompongono nella foto
-   successiva lasciando intravedere, tra i tagli, il fondo puntinato della griglia. */
+/* Carosello "pila di foto stampate": ogni foto e' un vero print, nella sua proporzione reale,
+   appoggiato sul fondo a griglia puntinata. Passando alla successiva, la foto in cima viene
+   spostata di lato come la sfoglieresti a mano, scoprendo quella sotto. */
 (function(){
+  function rot(seed){ return ((seed * 47) % 7) - 3; } // piccola rotazione pseudo-casuale ma stabile, tra -3 e +3 gradi
+
   function TerrazzoCarousel(el){
     this.el = el;
     try { this.images = JSON.parse(el.getAttribute('data-images') || '[]'); } catch(e){ this.images = []; }
     this.stage = el.querySelector('.carousel-stage');
     this.dotsWrap = el.querySelector('.car-dots');
     this.idx = 0;
-    this.rows = 6; this.cols = 8; this.jitter = 0.5;
-    this.gapScale = 0.94;
     this.animating = false;
     if (!this.images.length) return;
     this.renderDots();
@@ -738,15 +739,16 @@ setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(
     el.addEventListener('mouseleave', function(){ self._auto = setInterval(function(){ if(!self.animating) self.go(1); }, 6000); });
   }
 
-  /* "contain": calcola il rettangolo (in % del contenitore 16:9) dove la foto appare
-     per intero, nella sua proporzione reale, senza mai essere ritagliata. */
-  TerrazzoCarousel.prototype.fitRect = function(img){
-    var containerRatio = 16 / 9;
-    var imgRatio = img.w / img.h;
-    var dispW, dispH;
-    if (imgRatio > containerRatio) { dispW = 100; dispH = 100 * containerRatio / imgRatio; }
-    else { dispH = 100; dispW = 100 * imgRatio / containerRatio; }
-    return { x: (100 - dispW) / 2, y: (100 - dispH) / 2, w: dispW, h: dispH };
+  TerrazzoCarousel.prototype.makePrint = function(index){
+    var img = this.images[index];
+    var d = document.createElement('div');
+    d.className = 'print-wrap';
+    var im = document.createElement('img');
+    im.src = img.src;
+    im.alt = '';
+    im.loading = 'lazy';
+    d.appendChild(im);
+    return d;
   };
 
   TerrazzoCarousel.prototype.renderDots = function(){
@@ -759,58 +761,13 @@ setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(
     }
   };
 
-  /* griglia di tessere irregolari, generata SOLO dentro il rettangolo dove la foto e' visibile */
-  TerrazzoCarousel.prototype.makeGrid = function(rect){
-    var rows = this.rows, cols = this.cols, jitter = this.jitter;
-    var pts = [];
-    for (var r = 0; r <= rows; r++){
-      var row = [];
-      for (var c = 0; c <= cols; c++){
-        var x = rect.x + (c / cols) * rect.w;
-        var y = rect.y + (r / rows) * rect.h;
-        if (r > 0 && r < rows) y += (Math.random() - 0.5) * jitter * (rect.h / rows);
-        if (c > 0 && c < cols) x += (Math.random() - 0.5) * jitter * (rect.w / cols);
-        row.push([x, y]);
-      }
-      pts.push(row);
-    }
-    var cells = [];
-    for (var r2 = 0; r2 < rows; r2++){
-      for (var c2 = 0; c2 < cols; c2++){
-        var p00=pts[r2][c2], p10=pts[r2][c2+1], p11=pts[r2+1][c2+1], p01=pts[r2+1][c2];
-        var cx=(p00[0]+p10[0]+p11[0]+p01[0])/4, cy=(p00[1]+p10[1]+p11[1]+p01[1])/4;
-        cells.push({ r: r2, c: c2, pts: [p00,p10,p11,p01], cx: cx, cy: cy });
-      }
-    }
-    return cells;
-  };
-  TerrazzoCarousel.prototype.clipOf = function(cell){
-    var p = cell.pts;
-    return 'polygon(' + p[0][0] + '% ' + p[0][1] + '%,' + p[1][0] + '% ' + p[1][1] + '%,' + p[2][0] + '% ' + p[2][1] + '%,' + p[3][0] + '% ' + p[3][1] + '%)';
-  };
-  TerrazzoCarousel.prototype.styleShard = function(d, cell, img, rect, extraTransform){
-    d.style.clipPath = this.clipOf(cell);
-    d.style.webkitClipPath = d.style.clipPath;
-    d.style.backgroundImage = 'url("' + img.src + '")';
-    d.style.backgroundSize = rect.w + '% ' + rect.h + '%';
-    d.style.backgroundPosition = rect.x + '% ' + rect.y + '%';
-    d.style.transformOrigin = cell.cx + '% ' + cell.cy + '%';
-    d.style.transform = (extraTransform || '') + ' scale(' + this.gapScale + ')';
-  };
-
   TerrazzoCarousel.prototype.renderInitial = function(){
-    var img = this.images[this.idx];
-    var rect = this.fitRect(img);
-    var cells = this.makeGrid(rect);
-    var frag = document.createDocumentFragment();
-    for (var i = 0; i < cells.length; i++){
-      var d = document.createElement('div');
-      d.className = 'shard';
-      this.styleShard(d, cells[i], img, rect, '');
-      frag.appendChild(d);
-    }
     this.stage.innerHTML = '';
-    this.stage.appendChild(frag);
+    var d = this.makePrint(this.idx);
+    d.style.transform = 'translate(-50%,-50%) rotate(' + rot(this.idx) + 'deg)';
+    d.style.opacity = '1';
+    d.style.zIndex = '2';
+    this.stage.appendChild(d);
   };
 
   TerrazzoCarousel.prototype.go = function(dir){
@@ -821,64 +778,38 @@ setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(
 
   TerrazzoCarousel.prototype.transition = function(nextIdx, dir){
     this.animating = true;
-    var cols = this.cols;
-    var curImg = this.images[this.idx], nextImg = this.images[nextIdx];
-    var curRect = this.fitRect(curImg), nextRect = this.fitRect(nextImg);
-    var outCells = this.makeGrid(curRect);
-    var inCells = this.makeGrid(nextRect);
-    var outEls = [], inEls = [];
 
-    for (var i = 0; i < inCells.length; i++){
-      var cell = inCells[i];
-      var d = document.createElement('div');
-      d.className = 'shard';
-      var txIn = (dir > 0 ? 1 : -1) * (70 + Math.random() * 50);
-      var tyIn = (Math.random() - 0.5) * 70;
-      var rotIn = (dir > 0 ? 1 : -1) * (10 + Math.random() * 14);
-      this.styleShard(d, cell, nextImg, nextRect, 'translate(' + txIn + 'px,' + tyIn + 'px) rotate(' + rotIn + 'deg) ');
-      d.style.transform = d.style.transform.replace('scale(' + this.gapScale + ')', 'scale(.55)');
-      d.style.opacity = '0';
-      var delayIn = (dir > 0 ? cell.c : (cols - 1 - cell.c)) * 17 + Math.random() * 40;
-      d.style.transition = 'transform .68s cubic-bezier(.22,.85,.28,1) ' + delayIn + 'ms, opacity .55s ease ' + delayIn + 'ms';
-      this.stage.appendChild(d);
-      inEls.push(d);
-    }
-    for (var j = 0; j < outCells.length; j++){
-      var cell2 = outCells[j];
-      var d2 = document.createElement('div');
-      d2.className = 'shard';
-      this.styleShard(d2, cell2, curImg, curRect, '');
-      var delayOut = (dir > 0 ? cell2.c : (cols - 1 - cell2.c)) * 17;
-      d2.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1) ' + delayOut + 'ms, opacity .5s ease ' + delayOut + 'ms';
-      this.stage.appendChild(d2);
-      outEls.push(d2);
-    }
+    // la foto in cima (quella attuale) verra' "spostata di lato a mano"
+    var outEl = this.stage.querySelector('.print-wrap');
 
+    // la foto nuova parte leggermente dietro la pila, appena visibile, e arriva sopra
+    var inEl = this.makePrint(nextIdx);
+    var startRot = rot(nextIdx) + (dir > 0 ? 6 : -6);
+    inEl.style.transform = 'translate(-50%,-50%) translate(' + (dir > 0 ? 5 : -5) + '%,3%) scale(.94) rotate(' + startRot + 'deg)';
+    inEl.style.opacity = '0';
+    inEl.style.zIndex = '1';
+    this.stage.insertBefore(inEl, outEl);
+
+    var self = this;
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){
-        for (var k = 0; k < outEls.length; k++){
-          var txOut = (dir > 0 ? -1 : 1) * (70 + Math.random() * 50);
-          var tyOut = (Math.random() - 0.5) * 70;
-          var rotOut = (dir > 0 ? -1 : 1) * (10 + Math.random() * 14);
-          outEls[k].style.transform = 'translate(' + txOut + 'px,' + tyOut + 'px) rotate(' + rotOut + 'deg) scale(.55)';
-          outEls[k].style.opacity = '0';
+        if (outEl){
+          outEl.style.zIndex = '3';
+          outEl.style.transform = 'translate(-50%,-50%) translate(' + (dir > 0 ? -60 : 60) + '%,-14%) rotate(' + (rot(self.idx) + (dir > 0 ? -16 : 16)) + 'deg)';
+          outEl.style.opacity = '0';
         }
-        for (var m = 0; m < inEls.length; m++){
-          var cellM = inCells[m];
-          inEls[m].style.transformOrigin = cellM.cx + '% ' + cellM.cy + '%';
-          inEls[m].style.transform = 'translate(0,0) rotate(0deg) scale(' + 0.94 + ')';
-          inEls[m].style.opacity = '1';
-        }
+        inEl.style.zIndex = '2';
+        inEl.style.transform = 'translate(-50%,-50%) rotate(' + rot(nextIdx) + 'deg)';
+        inEl.style.opacity = '1';
       });
     });
 
-    var self = this;
     setTimeout(function(){
-      for (var n = 0; n < outEls.length; n++){ if (outEls[n].parentNode) outEls[n].parentNode.removeChild(outEls[n]); }
+      if (outEl && outEl.parentNode) outEl.parentNode.removeChild(outEl);
       self.idx = nextIdx;
       self.animating = false;
       self.renderDots();
-    }, 880);
+    }, 620);
   };
 
   var carousels = document.querySelectorAll('.apt-carousel');
