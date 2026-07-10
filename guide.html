@@ -773,6 +773,13 @@ setLang((function(){ try { var s = localStorage.getItem('lang'); if (s) return s
  if(target) liquid(target,'top',0.13);
  window.__titleGL = function(){ if(target && target.__rebuild) target.__rebuild(); };
 })();
+
+/* Cliccando Home da questa pagina, forza la ripartenza dell'animazione d'ingresso sulla home */
+document.querySelectorAll('a[data-i18n="m_home"]').forEach(function(a){
+  a.addEventListener('click', function(){
+    try{ sessionStorage.setItem('forceIntro','1'); }catch(e){}
+  });
+});
 </script>
 </body>
 </html>

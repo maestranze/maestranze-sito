@@ -412,6 +412,13 @@ function setLang(l){lang=I18N[l]?l:'it';document.documentElement.lang=lang;try{l
 })();
 
 setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(e){}var t=(navigator.language||'it').slice(0,2);return({it:'it',de:'de',fr:'fr',en:'en'})[t]||'it';})());
+
+/* Cliccando Home da questa pagina, forza la ripartenza dell'animazione d'ingresso sulla home */
+document.querySelectorAll('a[data-i18n="m_home"]').forEach(function(a){
+  a.addEventListener('click', function(){
+    try{ sessionStorage.setItem('forceIntro','1'); }catch(e){}
+  });
+});
 </script>
 </body>
 </html>
