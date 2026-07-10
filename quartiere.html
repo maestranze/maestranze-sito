@@ -106,15 +106,13 @@ figure.shot figcaption{margin-top:9px;font-size:.82rem;color:var(--muted);line-h
   background-size:22px 22px;
   border-radius:14px;
   padding:22px 0;
-  display:flex;gap:12px;overflow-x:auto;
+  display:flex;gap:22px;overflow-x:auto;
   scroll-snap-type:x proximity;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;overflow-anchor:none;}
 .apt-carousel::-webkit-scrollbar{display:none;}
-.apt-carousel .car-slide{flex:0 0 auto;height:clamp(260px,34vw,420px);scroll-snap-align:start;background:var(--surface);}
+.apt-carousel .car-slide{flex:0 0 auto;height:clamp(260px,34vw,420px);scroll-snap-align:center;background:var(--surface);}
 .apt-carousel .car-slide img{display:block;height:100%;width:auto;}
-.apt-carousel .car-slide:first-child{margin-left:clamp(16px,4vw,40px);}
-.apt-carousel .car-slide:last-child{margin-right:clamp(16px,4vw,40px);}
 
 .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
 .benefit{background:var(--surface);border:1px solid var(--line-2);border-radius:16px;padding:24px 20px;display:flex;flex-direction:column;gap:12px;}
