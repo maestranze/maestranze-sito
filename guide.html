@@ -49,6 +49,9 @@ a{color:inherit;}
 .menu-lang{margin-top:34px;display:flex;gap:6px;}
 .menu-lang button{font-family:var(--font);font-size:.8rem;font-weight:500;padding:6px 12px;border:none;border-radius:999px;background:transparent;color:var(--faint);cursor:pointer;}
 .menu-lang button.active{background:var(--ink);color:var(--paper);}
+.menu-lang{margin-top:34px;display:flex;gap:6px;}
+.menu-lang button{font-family:var(--font);font-size:.8rem;font-weight:500;padding:6px 12px;border:none;border-radius:999px;background:transparent;color:var(--faint);cursor:pointer;}
+.menu-lang button.active{background:var(--ink);color:var(--paper);}
 .menu-close{position:absolute;top:16px;right:16px;width:56px;height:56px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);transition:transform .2s ease;}
 .menu-close:hover{transform:rotate(90deg);}
 .menu-close svg{width:36px;height:36px;}
@@ -128,25 +131,28 @@ a{color:inherit;}
 .home-mark svg{width:78px;height:auto;display:block;}
 .home-mark svg path{fill:#0D0E10 !important;}
 
-.leaflet-popup-content-wrapper{
-  border-radius:22px;padding:0;
+/* Popup fisso: non e' piu' un popup Leaflet ancorato al marker (che si sposta panando/zoomando
+   la mappa) ma un pannello sempre centrato sopra la mappa, fermo finche' non lo chiudi. */
+.poi-overlay{position:absolute;inset:0;z-index:700;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(23,25,28,.28);}
+.poi-overlay.on{display:flex;}
+.poi-panel{
+  position:relative;width:100%;max-width:320px;
+  border-radius:22px;
   background-color:var(--paper);
   background-image:radial-gradient(rgba(44,47,49,0.20) 1px, transparent 1px);
   background-size:22px 22px;
   border:1px solid var(--ink);
-  box-shadow:0 18px 50px rgba(23,25,28,.16);
+  box-shadow:0 18px 50px rgba(23,25,28,.22);
 }
-.leaflet-popup-content{margin:0;width:296px !important;}
-.leaflet-popup-tip{display:none;}
-.leaflet-popup-close-button{
-  font-family:var(--font) !important;color:var(--ink) !important;
-  font-size:1.5rem !important;font-weight:400 !important;
-  width:38px !important;height:38px !important;
-  padding:0 !important;top:6px !important;right:8px !important;
-  display:flex !important;align-items:center;justify-content:center;
+.poi-close{
+  position:absolute;top:6px;right:8px;
+  font-family:var(--font);color:var(--ink);
+  font-size:1.5rem;font-weight:400;
+  width:38px;height:38px;border:none;background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
   transition:color .15s,transform .3s cubic-bezier(.4,0,.2,1);
 }
-.leaflet-popup-close-button:hover{color:var(--accent) !important;transform:rotate(90deg);}
+.poi-close:hover{color:var(--accent);transform:rotate(90deg);}
 .poi-card{padding:20px 20px 20px;}
 .poi-cat{font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;padding-right:34px;}
 .poi-name{font-family:var(--font);font-weight:600;font-size:1.05rem;line-height:1.2;margin-bottom:6px;}
@@ -183,30 +189,44 @@ a{color:inherit;}
   <a class="brand" href="index.html" aria-label="Maestranze"><svg class="brand-logo" viewBox="130 64 1405 262" role="img" aria-label="Maestranze"><path fill="#2C2F31" transform="translate(243.20,193.90) scale(1.21) translate(-243.20,-193.90)" d="M212.9,254.4c-1.6-1.1-2.2-1.4-3.6-2.7l-0.5,0.5c2.3,2.7,4.2,3.6,4.2,7.1v34.1H154V136.2  c0-23.1,18.7-41.7,41.7-41.7s41.7,18.7,41.7,41.7c0,0,0,54,0,54c0,1.3,0.1,2.6,0.4,3.9c0.3,1.2,0.7,2.4,1.2,3.6  c0.5,1.1,1.2,2.2,1.9,3.2c0.7,1,1.6,1.9,2.5,2.7c0.9,0.8,1.9,1.6,3,2.2c0.8,0.5,2.6,1.3,2.6,1.3s0-9.7,0-12.1c0-2.2,0-4.4,0-6.6  c0-2.8,0-5.6,0-8.4c0-3.2,0-6.3,0-9.5c0-3.2,0-6.4,0-9.7c0-3,0-6,0-9.1c0-2.6,0-5.1,0-7.7c0-1.8,0-3.6,0-5.4c0-0.8,0-1.6,0-2.4  c0,0,0,0,0-0.1c0-23.1,18.7-41.7,41.7-41.7c23.1,0,41.7,18.7,41.7,41.7v54c0,22.3-9.4,42.3-24.6,56.4v46.8h-58.9c0,0,0-26.4,0-26.4  C235.8,265.9,223.5,261.4,212.9,254.4z M254,136.2h73.7c0-20.3-16.5-36.8-36.8-36.8S254,115.9,254,136.2 M303.1,141.1h-24.6  c0,6.8,5.5,12.3,12.3,12.3C297.6,153.4,303.1,147.9,303.1,141.1z M308,185.3h19.6v-44.2c0,0-19.6,0-19.6,0V185.3 M254,208.2  c0.5,0,1,0.1,1.6,0.1c10,0,18.1-8.1,18.1-18.1v-49.1c0,0-19.6,0-19.6,0L254,208.2L254,208.2z M158.9,141.1v147.3H208v-37.6h0  c-17.9-14.1-29.5-36-29.5-60.6v-4.9v-44.2H158.9z M183.5,141.1c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3H183.5 M303.1,244.4  v-54.2c0,0-24.6,0-24.6,0c0,12.7-10.3,23-23,23c-0.5,0-1.1,0-1.6-0.1h0v49.2h0c0.5,0,1.1,0,1.6,0  C273.8,262.3,290.4,255.6,303.1,244.4L303.1,244.4z M212.9,190.2v58.1h0c10.3,7.6,22.7,12.5,36.1,13.7l0,0v-49.8h0  c-9.5-2.8-16.5-11.6-16.5-22H212.9z M212.9,141.1v44.2h19.6v-44.2H212.9 M195.8,99.4c-20.3,0-36.8,16.5-36.8,36.8h73.7  C232.6,115.9,216.1,99.4,195.8,99.4z M308,239.7L308,239.7c12.2-12.9,19.6-30.3,19.6-49.5H308v45c0,3.6-1.8,4.9-4.2,7.6l0.5,0.5  C305.7,242,306.4,241.3,308,239.7L308,239.7z M183.6,157.9l-0.1,27.5H208l0-28.6c0.1-0.9,0.5-1.8,0.8-2.7c0.3-0.7,0.5-1.4,0.9-2.1  c0.2-0.4,1.1-1.7,0.5-2c-0.2-0.1-0.5-0.2-0.6,0.1c-0.4,1.1-0.9,2-1.5,3c-2.4,3.8-7.5,5.2-12.3,5.2c-4.7,0-9-1.9-12.2-5  c-1.4-1.4-2.2-2-3.6-3.4l-0.5,0.5C181.8,153.1,183.6,154.3,183.6,157.9z M307.1,150.4l-0.5-0.5c-1.4,1.3-2.3,2-3.6,3.4  c-3.1,3.1-7.4,5-12.2,5c-4.8,0-9.9-1.4-12.3-5.2c-0.6-1-1.2-1.9-1.5-3c-0.1-0.3-0.4-0.3-0.6-0.1c-0.6,0.3,0.3,1.6,0.5,2  c0.3,0.7,0.6,1.4,0.9,2.1c0.3,0.8,0.8,1.8,0.8,2.7l0,28.6h24.6l-0.1-27.5C303,154.3,304.8,153.1,307.1,150.4z M303.1,255.3  c0-3.6,1.8-4.4,4.2-7.1l-0.5-0.5c-1.4,1.3-2,1.8-3.6,3.1h0h0c-13.1,10.3-29.6,16.4-47.5,16.4c-0.5,0-1.1,0-1.6,0h0v21.2h49.1  L303.1,255.3z M208,240c0-10.8,0-49.7,0-49.7h-24.6c0,21.6,9.5,41,24.6,54.2h0l0,0l0,0c1.8,1.7,2,1.8,3.7,3.3l0.5-0.5  C209.8,244.6,208,243.5,208,240z"/><g fill="#2C2F31" stroke="#2C2F31" stroke-width="0.7548" stroke-miterlimit="10"><path d="M569.6,206.4v80.1h-20.3v-75.7c0-20.3-12.2-24.9-24.5-24.9H523c-12.2,0-24.5,7.8-24.5,29.5l0.2,71.1h-20.3   v-75.7c0-20.3-12.2-24.9-24.5-24.9h-1.8c-12.2,0-24.5,7.8-24.5,29.5v71.1h-20.3V171.1h21v0.5c0,6.9-5.8,18.2-9.9,29.8l2.8,0.9   l0.5-1.4c9.2-27.7,23.5-32.5,38.6-32.5c16.4,0,29.1,8.3,29.1,21.7c0,3.2-0.2,6.7-1.6,10.4l3,0.7c6.2-24,24.2-32.8,42-32.8   C546.5,168.3,569.6,175.2,569.6,206.4z"/><path d="M585.5,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C610.4,289.3,585.5,269.9,585.5,229z M642.5,272   c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9H642.5z"/><path d="M817,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.2,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C796.5,168.3,817,191.4,817,228.3z M795.6,216.8   c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H795.6z"/><path d="M876.6,272.2c14.3,0,25.4-6,25.4-16.9c0-9.5-6.7-14.5-20.1-17.8l-22.6-5.3c-19.6-4.6-27.5-15.5-27.5-30.7   c0-21,18.9-33.2,44.1-33.2c26.3,0,45.9,15.9,46.6,40.6h-21.5c-1.2-16.9-14.1-23.5-26.1-23.5c-13.4,0-22.2,5.8-22.2,15.5   c0,6.5,3.2,12.5,14.5,15l23.8,5.5c19.2,4.4,31.9,14.5,31.9,32.3c0,22.4-17.5,35.6-46.4,35.6c-34.6,0-49.6-22.2-49.9-42.9H848   C848.9,262,860.4,272.2,876.6,272.2z"/><path d="M988.1,267.8v17.8c-4.4,1.4-7.6,2.3-14.1,2.3c-21.7,0-28.9-14.1-28.9-35.3v-64.6h-16.6v-16.9h14.3   c6.5,0,8.5,0,17.3,2.1l0.5-2.5c-10.6-2.8-15.5-7.2-15.5-16.9v-14.1h20.5v10.6c0,13.4,1.2,20.8,15.9,20.8h4.4v16.9h-20.5v66.3   c0,8.8,2.3,15,12,15C979.8,269.2,983.7,269,988.1,267.8z"/><path d="M1050.9,191.9c-16.4,0.2-24.7,7.6-24.7,29.8v64.9h-20.3V171.1h20.3v0.5c0,9.7-3.7,18.9-8.3,29.8l2.8,0.9   c12.5-29.8,26.3-31.2,44.3-31.2h3.9l-0.2,22.6C1062.4,192.6,1055.7,191.9,1050.9,191.9z"/><path d="M1069.4,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C1094.3,289.3,1069.4,269.9,1069.4,229z    M1126.4,272c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9   H1126.4z"/><path d="M1221.5,171.1v1.6c0,7.8-6.5,19.4-9.9,28.6l2.8,0.9c8.5-23.1,24.7-33.9,44.6-33.9c18.9,0,40.6,6.9,40.6,39   v79.2h-20.3v-76.2c0-17.8-11.3-24.5-27.2-24.5h-0.5c-16.4,0-30.7,9.9-30.7,27.9v72.7h-20.3V171.1H1221.5z"/><path d="M1404.1,171.1v16.6l-52.9,64.2c-7.2,8.5-9.2,12-21.2,16.4l0.9,2.5c7.8-1.4,12.2-1.4,19.6-1.4l57.5-0.2v17.3   h-95.3v-16.4l49.4-60.3c9.2-11.3,18.7-21.7,23.8-27l-1.6-1.8l-1.6,1.4c-5.5,4.8-9.7,5.8-18.7,5.8l-47.3,0.5v-17.5H1404.1z"/><path d="M1519.5,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.3,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C1499,168.3,1519.5,191.4,1519.5,228.3z    M1498,216.8c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H1498z"/></g></svg></a>
   <nav class="nav-pill">
     <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    <a class="nav-link" href="index.html#apartments">Apartments</a>
-    <a class="nav-link" href="quartiere.html">The neighbourhood</a>
-    <a class="nav-link is-current" href="guide.html">Guida della città</a>
-    <a class="nav-cta" href="index.html#booking">Book</a>
+    <a class="nav-link" href="index.html#top" data-i18n="m_home">Home</a>
+    <a class="nav-link" href="index.html#apartments" data-i18n="m_apts">Apartments</a>
+    <a class="nav-link" href="quartiere.html" data-i18n="m_place">The neighbourhood</a>
+    <a class="nav-link is-current" href="guide.html" data-i18n="m_guide">City guide</a>
+    <a class="nav-cta" href="index.html#booking" data-i18n="m_book">Book</a>
   </nav>
 </header>
 
 <nav class="menu-overlay" id="menuOverlay" aria-hidden="true">
   <button class="menu-close" id="menuClose" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <a href="index.html#apartments">Apartments</a>
-  <a href="index.html#booking">Book</a>
-  <a href="quartiere.html">The neighbourhood</a>
-  <a href="guide.html">Guida della città</a>
-  <a href="index.html#contact">Contact</a>
+  <a href="index.html#top" data-i18n="m_home">Home</a>
+  <a href="index.html#apartments" data-i18n="m_apts">Apartments</a>
+  <a href="index.html#booking" data-i18n="m_book">Book</a>
+  <a href="quartiere.html" data-i18n="m_place">The neighbourhood</a>
+  <a href="guide.html" data-i18n="m_guide">City guide</a>
+  <a href="index.html#contact" data-i18n="m_contact">Contact</a>
+  <div class="menu-lang">
+    <button id="langEn" onclick="setLang('en')">EN</button>
+    <button id="langIt" onclick="setLang('it')">IT</button>
+    <button id="langDe" onclick="setLang('de')">DE</button>
+    <button id="langFr" onclick="setLang('fr')">FR</button>
+  </div>
 </nav>
 
 <section class="intro pad">
-  <div class="intro-eyebrow">Guida della città</div>
-  <h1>Matera, vista da chi ci vive.</h1>
-  <p>Una mappa dei luoghi, sapori e servizi che amiamo — pensata per chi soggiorna nei nostri appartamenti. Filtra per categoria, attiva la tua posizione e tocca un punto per i dettagli.</p>
+  <div class="intro-eyebrow" data-i18n="g_eyebrow">Guida della città</div>
+  <h1 data-i18n="g_title">Matera, vista da chi ci vive.</h1>
+  <p data-i18n="g_sub">Una mappa dei luoghi, sapori e servizi che amiamo — pensata per chi soggiorna nei nostri appartamenti. Filtra per categoria, attiva la tua posizione e tocca un punto per i dettagli.</p>
 </section>
 
 <div class="map-wrap" id="mapWrap">
   <div id="map"></div>
+  <div class="poi-overlay" id="poiOverlay">
+    <div class="poi-panel" id="poiPanel">
+      <button class="poi-close" id="poiClose" type="button" aria-label="Chiudi">&times;</button>
+      <div id="poiPanelContent"></div>
+    </div>
+  </div>
   <div class="top-controls">
     <div class="filter-wrap">
       <button class="filter-btn" id="filterBtn" type="button">
@@ -239,7 +259,7 @@ a{color:inherit;}
 
 <footer class="site-footer pad" id="contact">
   <div class="foot-top">
-    <div class="foot-brand"><svg class="brand-logo" viewBox="130 64 1405 262" role="img" aria-label="Maestranze"><path fill="#2C2F31" transform="translate(243.20,193.90) scale(1.21) translate(-243.20,-193.90)" d="M212.9,254.4c-1.6-1.1-2.2-1.4-3.6-2.7l-0.5,0.5c2.3,2.7,4.2,3.6,4.2,7.1v34.1H154V136.2  c0-23.1,18.7-41.7,41.7-41.7s41.7,18.7,41.7,41.7c0,0,0,54,0,54c0,1.3,0.1,2.6,0.4,3.9c0.3,1.2,0.7,2.4,1.2,3.6  c0.5,1.1,1.2,2.2,1.9,3.2c0.7,1,1.6,1.9,2.5,2.7c0.9,0.8,1.9,1.6,3,2.2c0.8,0.5,2.6,1.3,2.6,1.3s0-9.7,0-12.1c0-2.2,0-4.4,0-6.6  c0-2.8,0-5.6,0-8.4c0-3.2,0-6.3,0-9.5c0-3.2,0-6.4,0-9.7c0-3,0-6,0-9.1c0-2.6,0-5.1,0-7.7c0-1.8,0-3.6,0-5.4c0-0.8,0-1.6,0-2.4  c0,0,0,0,0-0.1c0-23.1,18.7-41.7,41.7-41.7c23.1,0,41.7,18.7,41.7,41.7v54c0,22.3-9.4,42.3-24.6,56.4v46.8h-58.9c0,0,0-26.4,0-26.4  C235.8,265.9,223.5,261.4,212.9,254.4z M254,136.2h73.7c0-20.3-16.5-36.8-36.8-36.8S254,115.9,254,136.2 M303.1,141.1h-24.6  c0,6.8,5.5,12.3,12.3,12.3C297.6,153.4,303.1,147.9,303.1,141.1z M308,185.3h19.6v-44.2c0,0-19.6,0-19.6,0V185.3 M254,208.2  c0.5,0,1,0.1,1.6,0.1c10,0,18.1-8.1,18.1-18.1v-49.1c0,0-19.6,0-19.6,0L254,208.2L254,208.2z M158.9,141.1v147.3H208v-37.6h0  c-17.9-14.1-29.5-36-29.5-60.6v-4.9v-44.2H158.9z M183.5,141.1c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3H183.5 M303.1,244.4  v-54.2c0,0-24.6,0-24.6,0c0,12.7-10.3,23-23,23c-0.5,0-1.1,0-1.6-0.1h0v49.2h0c0.5,0,1.1,0,1.6,0  C273.8,262.3,290.4,255.6,303.1,244.4L303.1,244.4z M212.9,190.2v58.1h0c10.3,7.6,22.7,12.5,36.1,13.7l0,0v-49.8h0  c-9.5-2.8-16.5-11.6-16.5-22H212.9z M212.9,141.1v44.2h19.6v-44.2H212.9 M195.8,99.4c-20.3,0-36.8,16.5-36.8,36.8h73.7  C232.6,115.9,216.1,99.4,195.8,99.4z M308,239.7L308,239.7c12.2-12.9,19.6-30.3,19.6-49.5H308v45c0,3.6-1.8,4.9-4.2,7.6l0.5,0.5  C305.7,242,306.4,241.3,308,239.7L308,239.7z M183.6,157.9l-0.1,27.5H208l0-28.6c0.1-0.9,0.5-1.8,0.8-2.7c0.3-0.7,0.5-1.4,0.9-2.1  c0.2-0.4,1.1-1.7,0.5-2c-0.2-0.1-0.5-0.2-0.6,0.1c-0.4,1.1-0.9,2-1.5,3c-2.4,3.8-7.5,5.2-12.3,5.2c-4.7,0-9-1.9-12.2-5  c-1.4-1.4-2.2-2-3.6-3.4l-0.5,0.5C181.8,153.1,183.6,154.3,183.6,157.9z M307.1,150.4l-0.5-0.5c-1.4,1.3-2.3,2-3.6,3.4  c-3.1,3.1-7.4,5-12.2,5c-4.8,0-9.9-1.4-12.3-5.2c-0.6-1-1.2-1.9-1.5-3c-0.1-0.3-0.4-0.3-0.6-0.1c-0.6,0.3,0.3,1.6,0.5,2  c0.3,0.7,0.6,1.4,0.9,2.1c0.3,0.8,0.8,1.8,0.8,2.7l0,28.6h24.6l-0.1-27.5C303,154.3,304.8,153.1,307.1,150.4z M303.1,255.3  c0-3.6,1.8-4.4,4.2-7.1l-0.5-0.5c-1.4,1.3-2,1.8-3.6,3.1h0h0c-13.1,10.3-29.6,16.4-47.5,16.4c-0.5,0-1.1,0-1.6,0h0v21.2h49.1  L303.1,255.3z M208,240c0-10.8,0-49.7,0-49.7h-24.6c0,21.6,9.5,41,24.6,54.2h0l0,0l0,0c1.8,1.7,2,1.8,3.7,3.3l0.5-0.5  C209.8,244.6,208,243.5,208,240z"/><g fill="#2C2F31" stroke="#2C2F31" stroke-width="0.7548" stroke-miterlimit="10"><path d="M569.6,206.4v80.1h-20.3v-75.7c0-20.3-12.2-24.9-24.5-24.9H523c-12.2,0-24.5,7.8-24.5,29.5l0.2,71.1h-20.3   v-75.7c0-20.3-12.2-24.9-24.5-24.9h-1.8c-12.2,0-24.5,7.8-24.5,29.5v71.1h-20.3V171.1h21v0.5c0,6.9-5.8,18.2-9.9,29.8l2.8,0.9   l0.5-1.4c9.2-27.7,23.5-32.5,38.6-32.5c16.4,0,29.1,8.3,29.1,21.7c0,3.2-0.2,6.7-1.6,10.4l3,0.7c6.2-24,24.2-32.8,42-32.8   C546.5,168.3,569.6,175.2,569.6,206.4z"/><path d="M585.5,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C610.4,289.3,585.5,269.9,585.5,229z M642.5,272   c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9H642.5z"/><path d="M817,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.2,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C796.5,168.3,817,191.4,817,228.3z M795.6,216.8   c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H795.6z"/><path d="M876.6,272.2c14.3,0,25.4-6,25.4-16.9c0-9.5-6.7-14.5-20.1-17.8l-22.6-5.3c-19.6-4.6-27.5-15.5-27.5-30.7   c0-21,18.9-33.2,44.1-33.2c26.3,0,45.9,15.9,46.6,40.6h-21.5c-1.2-16.9-14.1-23.5-26.1-23.5c-13.4,0-22.2,5.8-22.2,15.5   c0,6.5,3.2,12.5,14.5,15l23.8,5.5c19.2,4.4,31.9,14.5,31.9,32.3c0,22.4-17.5,35.6-46.4,35.6c-34.6,0-49.6-22.2-49.9-42.9H848   C848.9,262,860.4,272.2,876.6,272.2z"/><path d="M988.1,267.8v17.8c-4.4,1.4-7.6,2.3-14.1,2.3c-21.7,0-28.9-14.1-28.9-35.3v-64.6h-16.6v-16.9h14.3   c6.5,0,8.5,0,17.3,2.1l0.5-2.5c-10.6-2.8-15.5-7.2-15.5-16.9v-14.1h20.5v10.6c0,13.4,1.2,20.8,15.9,20.8h4.4v16.9h-20.5v66.3   c0,8.8,2.3,15,12,15C979.8,269.2,983.7,269,988.1,267.8z"/><path d="M1050.9,191.9c-16.4,0.2-24.7,7.6-24.7,29.8v64.9h-20.3V171.1h20.3v0.5c0,9.7-3.7,18.9-8.3,29.8l2.8,0.9   c12.5-29.8,26.3-31.2,44.3-31.2h3.9l-0.2,22.6C1062.4,192.6,1055.7,191.9,1050.9,191.9z"/><path d="M1069.4,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C1094.3,289.3,1069.4,269.9,1069.4,229z    M1126.4,272c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9   H1126.4z"/><path d="M1221.5,171.1v1.6c0,7.8-6.5,19.4-9.9,28.6l2.8,0.9c8.5-23.1,24.7-33.9,44.6-33.9c18.9,0,40.6,6.9,40.6,39   v79.2h-20.3v-76.2c0-17.8-11.3-24.5-27.2-24.5h-0.5c-16.4,0-30.7,9.9-30.7,27.9v72.7h-20.3V171.1H1221.5z"/><path d="M1404.1,171.1v16.6l-52.9,64.2c-7.2,8.5-9.2,12-21.2,16.4l0.9,2.5c7.8-1.4,12.2-1.4,19.6-1.4l57.5-0.2v17.3   h-95.3v-16.4l49.4-60.3c9.2-11.3,18.7-21.7,23.8-27l-1.6-1.8l-1.6,1.4c-5.5,4.8-9.7,5.8-18.7,5.8l-47.3,0.5v-17.5H1404.1z"/><path d="M1519.5,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.3,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C1499,168.3,1519.5,191.4,1519.5,228.3z    M1498,216.8c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H1498z"/></g></svg><p class="foot-tag">Urban apartments nel Rione Spine Bianche, Matera. Prenota diretto, soggiorna meglio.</p></div>
+    <div class="foot-brand"><svg class="brand-logo" viewBox="130 64 1405 262" role="img" aria-label="Maestranze"><path fill="#2C2F31" transform="translate(243.20,193.90) scale(1.21) translate(-243.20,-193.90)" d="M212.9,254.4c-1.6-1.1-2.2-1.4-3.6-2.7l-0.5,0.5c2.3,2.7,4.2,3.6,4.2,7.1v34.1H154V136.2  c0-23.1,18.7-41.7,41.7-41.7s41.7,18.7,41.7,41.7c0,0,0,54,0,54c0,1.3,0.1,2.6,0.4,3.9c0.3,1.2,0.7,2.4,1.2,3.6  c0.5,1.1,1.2,2.2,1.9,3.2c0.7,1,1.6,1.9,2.5,2.7c0.9,0.8,1.9,1.6,3,2.2c0.8,0.5,2.6,1.3,2.6,1.3s0-9.7,0-12.1c0-2.2,0-4.4,0-6.6  c0-2.8,0-5.6,0-8.4c0-3.2,0-6.3,0-9.5c0-3.2,0-6.4,0-9.7c0-3,0-6,0-9.1c0-2.6,0-5.1,0-7.7c0-1.8,0-3.6,0-5.4c0-0.8,0-1.6,0-2.4  c0,0,0,0,0-0.1c0-23.1,18.7-41.7,41.7-41.7c23.1,0,41.7,18.7,41.7,41.7v54c0,22.3-9.4,42.3-24.6,56.4v46.8h-58.9c0,0,0-26.4,0-26.4  C235.8,265.9,223.5,261.4,212.9,254.4z M254,136.2h73.7c0-20.3-16.5-36.8-36.8-36.8S254,115.9,254,136.2 M303.1,141.1h-24.6  c0,6.8,5.5,12.3,12.3,12.3C297.6,153.4,303.1,147.9,303.1,141.1z M308,185.3h19.6v-44.2c0,0-19.6,0-19.6,0V185.3 M254,208.2  c0.5,0,1,0.1,1.6,0.1c10,0,18.1-8.1,18.1-18.1v-49.1c0,0-19.6,0-19.6,0L254,208.2L254,208.2z M158.9,141.1v147.3H208v-37.6h0  c-17.9-14.1-29.5-36-29.5-60.6v-4.9v-44.2H158.9z M183.5,141.1c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3H183.5 M303.1,244.4  v-54.2c0,0-24.6,0-24.6,0c0,12.7-10.3,23-23,23c-0.5,0-1.1,0-1.6-0.1h0v49.2h0c0.5,0,1.1,0,1.6,0  C273.8,262.3,290.4,255.6,303.1,244.4L303.1,244.4z M212.9,190.2v58.1h0c10.3,7.6,22.7,12.5,36.1,13.7l0,0v-49.8h0  c-9.5-2.8-16.5-11.6-16.5-22H212.9z M212.9,141.1v44.2h19.6v-44.2H212.9 M195.8,99.4c-20.3,0-36.8,16.5-36.8,36.8h73.7  C232.6,115.9,216.1,99.4,195.8,99.4z M308,239.7L308,239.7c12.2-12.9,19.6-30.3,19.6-49.5H308v45c0,3.6-1.8,4.9-4.2,7.6l0.5,0.5  C305.7,242,306.4,241.3,308,239.7L308,239.7z M183.6,157.9l-0.1,27.5H208l0-28.6c0.1-0.9,0.5-1.8,0.8-2.7c0.3-0.7,0.5-1.4,0.9-2.1  c0.2-0.4,1.1-1.7,0.5-2c-0.2-0.1-0.5-0.2-0.6,0.1c-0.4,1.1-0.9,2-1.5,3c-2.4,3.8-7.5,5.2-12.3,5.2c-4.7,0-9-1.9-12.2-5  c-1.4-1.4-2.2-2-3.6-3.4l-0.5,0.5C181.8,153.1,183.6,154.3,183.6,157.9z M307.1,150.4l-0.5-0.5c-1.4,1.3-2.3,2-3.6,3.4  c-3.1,3.1-7.4,5-12.2,5c-4.8,0-9.9-1.4-12.3-5.2c-0.6-1-1.2-1.9-1.5-3c-0.1-0.3-0.4-0.3-0.6-0.1c-0.6,0.3,0.3,1.6,0.5,2  c0.3,0.7,0.6,1.4,0.9,2.1c0.3,0.8,0.8,1.8,0.8,2.7l0,28.6h24.6l-0.1-27.5C303,154.3,304.8,153.1,307.1,150.4z M303.1,255.3  c0-3.6,1.8-4.4,4.2-7.1l-0.5-0.5c-1.4,1.3-2,1.8-3.6,3.1h0h0c-13.1,10.3-29.6,16.4-47.5,16.4c-0.5,0-1.1,0-1.6,0h0v21.2h49.1  L303.1,255.3z M208,240c0-10.8,0-49.7,0-49.7h-24.6c0,21.6,9.5,41,24.6,54.2h0l0,0l0,0c1.8,1.7,2,1.8,3.7,3.3l0.5-0.5  C209.8,244.6,208,243.5,208,240z"/><g fill="#2C2F31" stroke="#2C2F31" stroke-width="0.7548" stroke-miterlimit="10"><path d="M569.6,206.4v80.1h-20.3v-75.7c0-20.3-12.2-24.9-24.5-24.9H523c-12.2,0-24.5,7.8-24.5,29.5l0.2,71.1h-20.3   v-75.7c0-20.3-12.2-24.9-24.5-24.9h-1.8c-12.2,0-24.5,7.8-24.5,29.5v71.1h-20.3V171.1h21v0.5c0,6.9-5.8,18.2-9.9,29.8l2.8,0.9   l0.5-1.4c9.2-27.7,23.5-32.5,38.6-32.5c16.4,0,29.1,8.3,29.1,21.7c0,3.2-0.2,6.7-1.6,10.4l3,0.7c6.2-24,24.2-32.8,42-32.8   C546.5,168.3,569.6,175.2,569.6,206.4z"/><path d="M585.5,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C610.4,289.3,585.5,269.9,585.5,229z M642.5,272   c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9H642.5z"/><path d="M817,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.2,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C796.5,168.3,817,191.4,817,228.3z M795.6,216.8   c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H795.6z"/><path d="M876.6,272.2c14.3,0,25.4-6,25.4-16.9c0-9.5-6.7-14.5-20.1-17.8l-22.6-5.3c-19.6-4.6-27.5-15.5-27.5-30.7   c0-21,18.9-33.2,44.1-33.2c26.3,0,45.9,15.9,46.6,40.6h-21.5c-1.2-16.9-14.1-23.5-26.1-23.5c-13.4,0-22.2,5.8-22.2,15.5   c0,6.5,3.2,12.5,14.5,15l23.8,5.5c19.2,4.4,31.9,14.5,31.9,32.3c0,22.4-17.5,35.6-46.4,35.6c-34.6,0-49.6-22.2-49.9-42.9H848   C848.9,262,860.4,272.2,876.6,272.2z"/><path d="M988.1,267.8v17.8c-4.4,1.4-7.6,2.3-14.1,2.3c-21.7,0-28.9-14.1-28.9-35.3v-64.6h-16.6v-16.9h14.3   c6.5,0,8.5,0,17.3,2.1l0.5-2.5c-10.6-2.8-15.5-7.2-15.5-16.9v-14.1h20.5v10.6c0,13.4,1.2,20.8,15.9,20.8h4.4v16.9h-20.5v66.3   c0,8.8,2.3,15,12,15C979.8,269.2,983.7,269,988.1,267.8z"/><path d="M1050.9,191.9c-16.4,0.2-24.7,7.6-24.7,29.8v64.9h-20.3V171.1h20.3v0.5c0,9.7-3.7,18.9-8.3,29.8l2.8,0.9   c12.5-29.8,26.3-31.2,44.3-31.2h3.9l-0.2,22.6C1062.4,192.6,1055.7,191.9,1050.9,191.9z"/><path d="M1069.4,229c0-40.9,24.9-60.7,51-60.7c20.1,0,33.7,10.4,38.8,23.1l2.8-0.7c-2.1-7.4-2.5-9-2.5-15.2v-4.4h20.3   v115.4h-20.3v-3.2c0-3.9,0.7-9.7,2.5-15.5l-2.8-0.9c-5.1,12.9-18.7,22.4-38.8,22.4C1094.3,289.3,1069.4,269.9,1069.4,229z    M1126.4,272c22.6,0,34.6-17.1,34.6-42.9c0-25.9-12-43.2-34.6-43.2h-1.8c-22.6,0-33.9,17.3-33.9,43.2c0,25.9,11.3,42.9,33.9,42.9   H1126.4z"/><path d="M1221.5,171.1v1.6c0,7.8-6.5,19.4-9.9,28.6l2.8,0.9c8.5-23.1,24.7-33.9,44.6-33.9c18.9,0,40.6,6.9,40.6,39   v79.2h-20.3v-76.2c0-17.8-11.3-24.5-27.2-24.5h-0.5c-16.4,0-30.7,9.9-30.7,27.9v72.7h-20.3V171.1H1221.5z"/><path d="M1404.1,171.1v16.6l-52.9,64.2c-7.2,8.5-9.2,12-21.2,16.4l0.9,2.5c7.8-1.4,12.2-1.4,19.6-1.4l57.5-0.2v17.3   h-95.3v-16.4l49.4-60.3c9.2-11.3,18.7-21.7,23.8-27l-1.6-1.8l-1.6,1.4c-5.5,4.8-9.7,5.8-18.7,5.8l-47.3,0.5v-17.5H1404.1z"/><path d="M1519.5,228.3v5.3h-86.1v1.2c0.9,23.5,14.8,37.4,33.7,37.4h1.4c17.1,0,27.5-11.1,31.2-25.9h21.2   c-4.8,24.9-23.8,43.2-54.3,42.9c-34.2-0.2-54-24-54-60.5c0-36.9,21.7-60.5,54-60.5C1499,168.3,1519.5,191.4,1519.5,228.3z    M1498,216.8c-1.8-17.1-12.9-31.4-31.2-31.4h-1.8c-18.2,0-28.9,14.8-30.7,31.4H1498z"/></g></svg><p class="foot-tag" data-i18n="f_tag">Urban apartments nel Rione Spine Bianche, Matera. Prenota diretto, soggiorna meglio.</p></div>
     <div class="foot-col"><h4>Contatti</h4><a href="mailto:lemaestranzematera@gmail.com">lemaestranzematera@gmail.com</a><a href="https://wa.me/393517652975" target="_blank" rel="noopener">WhatsApp +39 351 765 2975</a><p>Matera, Italia</p></div>
     <div class="foot-col"><h4>Appartamenti</h4><a href="index.html#apartments">Carpentiera</a><a href="index.html#apartments">Bidello</a><a href="index.html#booking">Prenota</a></div>
   </div>
@@ -275,7 +295,7 @@ const homePopupHtml = '<div class="poi-card">'
   + '<a class="poi-btn subtle" href="https://wa.me/393517652975" target="_blank" rel="noopener">Scrivici</a>'
   + '</div></div>';
 L.marker([PROPERTY.lat, PROPERTY.lng], {icon: homeIcon, zIndexOffset: 500})
-  .addTo(map).bindPopup(homePopupHtml, { autoPan: false });
+  .addTo(map).on('click', () => openPoiPanel(homePopupHtml));
 
 function catColor(cat){ const c = CATEGORIES.find(c=>c.key===cat); return c ? c.color : '#666'; }
 function catLabel(cat){ const c = CATEGORIES.find(c=>c.key===cat); return c ? c.label : cat; }
@@ -329,16 +349,37 @@ PLACES.forEach(p => {
     iconSize: [32,32], iconAnchor: [16,16], popupAnchor: [0,-18]
   });
   const m = L.marker([p.lat, p.lng], {icon}).addTo(map);
-  m.bindPopup(() => popupHtml(p), { autoPan: false });
-  m.on('popupopen', () => {
-    m.setPopupContent(popupHtml(p));
-    const el = m.getPopup().getElement();
-    const btn = el && el.querySelector('.js-directions');
-    if (btn) btn.addEventListener('click', () => { map.closePopup(); showRoute(p.lat, p.lng, p.name); });
+  m.on('click', () => {
+    openPoiPanel(popupHtml(p));
+    const btn = poiPanelContent.querySelector('.js-directions');
+    if (btn) btn.addEventListener('click', () => { closePoiPanel(); showRoute(p.lat, p.lng, p.name); });
   });
   m.__cat = p.cat;
   markers[p.id] = m;
 });
+
+/* Pannello fisso: sempre centrato, non si sposta con la mappa. Mentre e' aperto la mappa
+   non si trascina ne' zooma; alla chiusura torni a navigare normalmente. */
+const poiOverlay = document.getElementById('poiOverlay');
+const poiPanelContent = document.getElementById('poiPanelContent');
+let mapWasDraggable = true;
+function openPoiPanel(html){
+  poiPanelContent.innerHTML = html;
+  poiOverlay.classList.add('on');
+  mapWasDraggable = map.dragging.enabled();
+  map.dragging.disable();
+  map.scrollWheelZoom.disable();
+  map.touchZoom.disable();
+}
+function closePoiPanel(){
+  poiOverlay.classList.remove('on');
+  if (mapWasDraggable) map.dragging.enable();
+  map.scrollWheelZoom.enable();
+  map.touchZoom.enable();
+}
+document.getElementById('poiClose').addEventListener('click', closePoiPanel);
+poiOverlay.addEventListener('click', (e) => { if (e.target === poiOverlay) closePoiPanel(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && poiOverlay.classList.contains('on')) closePoiPanel(); });
 
 /* Selettore a tendina categorie: righe-bottone (niente checkbox nativi), verdi quando selezionate */
 const filterBtn = document.getElementById('filterBtn');
@@ -562,6 +603,38 @@ if (isTouch){
  },{passive:true});
  (function loop(){x+=(tx-x)*0.25;y+=(ty-y)*0.25;dot.style.transform='translate('+x+'px,'+y+'px) translate(-50%,-50%)';requestAnimationFrame(loop);})();
 })();
+
+/* Lingua: stessa chiave di localStorage della home, cosi' la scelta resta coerente su tutte le pagine.
+   Qui traduco solo la cornice del sito (menu, intro, footer); i contenuti della guida (nomi dei
+   luoghi, descrizioni storiche) restano in italiano. */
+var G_I18N = {
+  en: {m_home:"Home", m_apts:"Apartments", m_place:"The neighbourhood", m_guide:"City guide", m_book:"Book", m_contact:"Contact",
+       g_eyebrow:"City guide", g_title:"Matera, as seen by locals.", g_sub:"A map of the places, flavours and services we love — for guests staying in our apartments. Filter by category, turn on your location, tap a point for details.",
+       f_tag:"Urban apartments in Rione Spine Bianche, Matera. Book direct, stay better."},
+  it: {m_home:"Home", m_apts:"Appartamenti", m_place:"Il quartiere", m_guide:"Guida della città", m_book:"Prenota", m_contact:"Contatti",
+       g_eyebrow:"Guida della città", g_title:"Matera, vista da chi ci vive.", g_sub:"Una mappa dei luoghi, sapori e servizi che amiamo — pensata per chi soggiorna nei nostri appartamenti. Filtra per categoria, attiva la tua posizione e tocca un punto per i dettagli.",
+       f_tag:"Urban apartments nel Rione Spine Bianche, Matera. Prenota diretto, soggiorna meglio."},
+  de: {m_home:"Startseite", m_apts:"Wohnungen", m_place:"Das Viertel", m_guide:"Stadtführer", m_book:"Buchen", m_contact:"Kontakt",
+       g_eyebrow:"Stadtführer", g_title:"Matera, gesehen von Einheimischen.", g_sub:"Eine Karte der Orte, Aromen und Services, die wir lieben — für Gäste unserer Apartments. Nach Kategorie filtern, Standort aktivieren, für Details antippen.",
+       f_tag:"Urban apartments im Rione Spine Bianche, Matera. Direkt buchen, besser wohnen."},
+  fr: {m_home:"Accueil", m_apts:"Appartements", m_place:"Le quartier", m_guide:"Guide de la ville", m_book:"Réserver", m_contact:"Contact",
+       g_eyebrow:"Guide de la ville", g_title:"Matera, vue par ses habitants.", g_sub:"Une carte des lieux, saveurs et services que nous aimons — pour nos voyageurs. Filtrez par catégorie, activez votre position, touchez un point pour les détails.",
+       f_tag:"Urban apartments dans le Rione Spine Bianche, Matera. Réservez en direct, séjournez mieux."}
+};
+function setLang(l){
+  var lang = G_I18N[l] ? l : 'en';
+  document.documentElement.lang = lang;
+  try { localStorage.setItem('lang', lang); } catch(e){}
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if (G_I18N[lang][key] !== undefined) el.textContent = G_I18N[lang][key];
+  });
+  ['En','It','De','Fr'].forEach(function(suf){
+    var b = document.getElementById('lang' + suf);
+    if (b) b.classList.toggle('active', suf.toLowerCase() === lang);
+  });
+}
+setLang((function(){ try { var s = localStorage.getItem('lang'); if (s) return s; } catch(e){} var t = (navigator.language||'en').slice(0,2); return ({it:'it',de:'de',fr:'fr',en:'en'})[t] || 'en'; })());
 
 /* Menu hamburger (identico al sito vetrina) */
 (function(){const btn=document.getElementById('menuBtn'),ov=document.getElementById('menuOverlay');
