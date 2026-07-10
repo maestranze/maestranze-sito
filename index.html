@@ -75,9 +75,12 @@ a{color:inherit;}
 .feat-img{margin:clamp(26px,3.5vw,46px) 0 clamp(40px,6vw,84px);aspect-ratio:16/9;width:100%;border-radius:14px;display:flex;align-items:flex-end;padding:16px;
   background:radial-gradient(120% 90% at 75% 0%,var(--accent-soft) 0%,transparent 55%),repeating-linear-gradient(180deg,#F2F2EE 0 22px,#ECECE8 22px 23px),var(--line);}
 .feat-img .tag{font-size:.64rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 9px;}
-.apt-carousel{position:relative;aspect-ratio:16/9;width:100%;border-radius:14px;overflow:hidden;margin:clamp(26px,3.5vw,46px) 0 clamp(40px,6vw,84px);background:var(--line);}
+.apt-carousel{position:relative;aspect-ratio:16/9;width:100%;border-radius:14px;overflow:hidden;margin:clamp(26px,3.5vw,46px) 0 clamp(40px,6vw,84px);
+  background-color:var(--paper);
+  background-image:radial-gradient(rgba(44,47,49,.22) 1px, transparent 1px);
+  background-size:15px 15px;}
 .apt-carousel .carousel-stage{position:absolute;inset:0;}
-.apt-carousel .shard{position:absolute;inset:0;background-size:cover;background-position:center;}
+.apt-carousel .shard{position:absolute;inset:0;background-repeat:no-repeat;}
 .apt-carousel .tag{position:absolute;left:16px;top:16px;z-index:5;font-size:.64rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 9px;}
 .car-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(251,251,249,.92);border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:6;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.12);padding:0;}
 .car-nav svg{width:18px;height:18px;}
@@ -301,7 +304,7 @@ body.lock{overflow:hidden;}
       <div class="feat-left"><h3>Maestranze Carpentiera</h3><div class="feat-meta" data-i18n="a_meta1">2 bedrooms · 2 double beds · living room with kitchen · bathroom · 65 m²</div></div>
       <div class="feat-right"><p data-i18n="a_desc1">A bright, comfortable apartment in the heart of Spine Bianche, for up to four guests. Free parking at the door, a few minutes' walk from the Sassi and the centre.</p><a class="link-u" href="#booking" data-i18n="a_cta">Check dates</a></div>
     </article>
-    <div class="apt-carousel" data-images='["carpentiera-01-living.jpg","carpentiera-02-bedroom1.jpg","carpentiera-03-bedroom2.jpg","carpentiera-04-stairs.jpg","carpentiera-05-kitchen.jpg","carpentiera-06-dining.jpg","carpentiera-07-bathroom.jpg","carpentiera-08-entrance.jpg"]'>
+    <div class="apt-carousel" data-images='[{"src": "carpentiera-01-living.jpg", "w": 1800, "h": 1012}, {"src": "carpentiera-02-bedroom1.jpg", "w": 1800, "h": 1350}, {"src": "carpentiera-03-bedroom2.jpg", "w": 1800, "h": 1350}, {"src": "carpentiera-04-stairs.jpg", "w": 1800, "h": 1350}, {"src": "carpentiera-05-kitchen.jpg", "w": 1800, "h": 1350}, {"src": "carpentiera-06-dining.jpg", "w": 1800, "h": 1350}, {"src": "carpentiera-07-bathroom.jpg", "w": 1800, "h": 1350}, {"src": "carpentiera-08-entrance.jpg", "w": 1800, "h": 1350}]'>
       <div class="carousel-stage"></div>
       <span class="tag">photo · Carpentiera</span>
       <button class="car-nav car-prev" type="button" aria-label="Foto precedente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -312,7 +315,7 @@ body.lock{overflow:hidden;}
       <div class="feat-left"><h3>Maestranze Bidello</h3><div class="feat-meta" data-i18n="a_meta2">1 bedroom · 1 double bed · living room with kitchen · bathroom · balcony · 55 m² + 10 m² balcony</div></div>
       <div class="feat-right"><p data-i18n="a_desc2">An urban retreat for two, essential and contemporary, set in the 1950s architecture of the neighbourhood. Quiet, comfortable, well connected.</p><a class="link-u" href="#booking" data-i18n="a_cta">Check dates</a></div>
     </article>
-    <div class="apt-carousel" data-images='["bidello-01-living.jpg","bidello-02-bedroom.jpg","bidello-03-bedroom-mirror.jpg","bidello-04-kitchen.jpg","bidello-05-balcony.jpg","bidello-06-bathroom.jpg","bidello-07-workstation.jpg","bidello-08-bedroom-windows.jpg"]'>
+    <div class="apt-carousel" data-images='[{"src": "bidello-01-living.jpg", "w": 1800, "h": 1012}, {"src": "bidello-02-bedroom.jpg", "w": 1800, "h": 1350}, {"src": "bidello-03-bedroom-mirror.jpg", "w": 1800, "h": 1350}, {"src": "bidello-04-kitchen.jpg", "w": 1800, "h": 1350}, {"src": "bidello-05-balcony.jpg", "w": 1800, "h": 1350}, {"src": "bidello-06-bathroom.jpg", "w": 1800, "h": 1350}, {"src": "bidello-07-workstation.jpg", "w": 1800, "h": 1350}, {"src": "bidello-08-bedroom-windows.jpg", "w": 1800, "h": 1350}]'>
       <div class="carousel-stage"></div>
       <span class="tag">photo · Bidello</span>
       <button class="car-nav car-prev" type="button" aria-label="Foto precedente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -702,16 +705,18 @@ window.__bkRerender=function(){if(state&&bModal.classList.contains('on'))render(
 
 setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(e){}var t=(navigator.language||'en').slice(0,2);return({it:'it',de:'de',fr:'fr',en:'en'})[t]||'en';})());
 
-/* Carosello "a terrazzo": le foto si frammentano in tessere irregolari (come il pavimento
-   in graniglia delle case) e si ricompongono nella foto successiva. */
+/* Carosello "a terrazzo": le foto (nella loro proporzione reale, mai ritagliate) si frammentano
+   in tessere irregolari come il pavimento in graniglia delle case, e si ricompongono nella foto
+   successiva lasciando intravedere, tra i tagli, il fondo puntinato della griglia. */
 (function(){
   function TerrazzoCarousel(el){
     this.el = el;
-    this.images = JSON.parse(el.getAttribute('data-images') || '[]');
+    try { this.images = JSON.parse(el.getAttribute('data-images') || '[]'); } catch(e){ this.images = []; }
     this.stage = el.querySelector('.carousel-stage');
     this.dotsWrap = el.querySelector('.car-dots');
     this.idx = 0;
-    this.rows = 6; this.cols = 9; this.jitter = 0.55;
+    this.rows = 6; this.cols = 8; this.jitter = 0.5;
+    this.gapScale = 0.94;
     this.animating = false;
     if (!this.images.length) return;
     this.renderDots();
@@ -732,24 +737,39 @@ setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(
     el.addEventListener('mouseenter', function(){ clearInterval(self._auto); });
     el.addEventListener('mouseleave', function(){ self._auto = setInterval(function(){ if(!self.animating) self.go(1); }, 6000); });
   }
+
+  /* "contain": calcola il rettangolo (in % del contenitore 16:9) dove la foto appare
+     per intero, nella sua proporzione reale, senza mai essere ritagliata. */
+  TerrazzoCarousel.prototype.fitRect = function(img){
+    var containerRatio = 16 / 9;
+    var imgRatio = img.w / img.h;
+    var dispW, dispH;
+    if (imgRatio > containerRatio) { dispW = 100; dispH = 100 * containerRatio / imgRatio; }
+    else { dispH = 100; dispW = 100 * imgRatio / containerRatio; }
+    return { x: (100 - dispW) / 2, y: (100 - dispH) / 2, w: dispW, h: dispH };
+  };
+
   TerrazzoCarousel.prototype.renderDots = function(){
     this.dotsWrap.innerHTML = '';
     for (var i = 0; i < this.images.length; i++){
       var d = document.createElement('span');
       if (i === this.idx) d.className = 'active';
-      (function(self, i){ d.addEventListener('click', function(){ if(!self.animating && i!==self.idx) self.transition(i, i>self.idx?1:-1); }); })(this, i);
+      (function(self, i, d){ d.addEventListener('click', function(){ if(!self.animating && i!==self.idx) self.transition(i, i>self.idx?1:-1); }); })(this, i, d);
       this.dotsWrap.appendChild(d);
     }
   };
-  TerrazzoCarousel.prototype.makeGrid = function(){
+
+  /* griglia di tessere irregolari, generata SOLO dentro il rettangolo dove la foto e' visibile */
+  TerrazzoCarousel.prototype.makeGrid = function(rect){
     var rows = this.rows, cols = this.cols, jitter = this.jitter;
     var pts = [];
     for (var r = 0; r <= rows; r++){
       var row = [];
       for (var c = 0; c <= cols; c++){
-        var x = c / cols * 100, y = r / rows * 100;
-        if (r > 0 && r < rows) y += (Math.random() - 0.5) * jitter * (100 / rows);
-        if (c > 0 && c < cols) x += (Math.random() - 0.5) * jitter * (100 / cols);
+        var x = rect.x + (c / cols) * rect.w;
+        var y = rect.y + (r / rows) * rect.h;
+        if (r > 0 && r < rows) y += (Math.random() - 0.5) * jitter * (rect.h / rows);
+        if (c > 0 && c < cols) x += (Math.random() - 0.5) * jitter * (rect.w / cols);
         row.push([x, y]);
       }
       pts.push(row);
@@ -757,55 +777,69 @@ setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(
     var cells = [];
     for (var r2 = 0; r2 < rows; r2++){
       for (var c2 = 0; c2 < cols; c2++){
-        cells.push({ r: r2, c: c2, pts: [pts[r2][c2], pts[r2][c2+1], pts[r2+1][c2+1], pts[r2+1][c2]] });
+        var p00=pts[r2][c2], p10=pts[r2][c2+1], p11=pts[r2+1][c2+1], p01=pts[r2+1][c2];
+        var cx=(p00[0]+p10[0]+p11[0]+p01[0])/4, cy=(p00[1]+p10[1]+p11[1]+p01[1])/4;
+        cells.push({ r: r2, c: c2, pts: [p00,p10,p11,p01], cx: cx, cy: cy });
       }
     }
     return cells;
   };
   TerrazzoCarousel.prototype.clipOf = function(cell){
-    var pts = cell.pts;
-    return 'polygon(' + pts[0][0] + '% ' + pts[0][1] + '%,' + pts[1][0] + '% ' + pts[1][1] + '%,' + pts[2][0] + '% ' + pts[2][1] + '%,' + pts[3][0] + '% ' + pts[3][1] + '%)';
+    var p = cell.pts;
+    return 'polygon(' + p[0][0] + '% ' + p[0][1] + '%,' + p[1][0] + '% ' + p[1][1] + '%,' + p[2][0] + '% ' + p[2][1] + '%,' + p[3][0] + '% ' + p[3][1] + '%)';
   };
+  TerrazzoCarousel.prototype.styleShard = function(d, cell, img, rect, extraTransform){
+    d.style.clipPath = this.clipOf(cell);
+    d.style.webkitClipPath = d.style.clipPath;
+    d.style.backgroundImage = 'url("' + img.src + '")';
+    d.style.backgroundSize = rect.w + '% ' + rect.h + '%';
+    d.style.backgroundPosition = rect.x + '% ' + rect.y + '%';
+    d.style.transformOrigin = cell.cx + '% ' + cell.cy + '%';
+    d.style.transform = (extraTransform || '') + ' scale(' + this.gapScale + ')';
+  };
+
   TerrazzoCarousel.prototype.renderInitial = function(){
-    var cells = this.makeGrid();
-    var frag = document.createDocumentFragment();
     var img = this.images[this.idx];
+    var rect = this.fitRect(img);
+    var cells = this.makeGrid(rect);
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < cells.length; i++){
       var d = document.createElement('div');
       d.className = 'shard';
-      d.style.clipPath = this.clipOf(cells[i]);
-      d.style.webkitClipPath = d.style.clipPath;
-      d.style.backgroundImage = 'url("' + img + '")';
+      this.styleShard(d, cells[i], img, rect, '');
       frag.appendChild(d);
     }
     this.stage.innerHTML = '';
     this.stage.appendChild(frag);
   };
+
   TerrazzoCarousel.prototype.go = function(dir){
     if (this.animating || this.images.length < 2) return;
     var next = (this.idx + dir + this.images.length) % this.images.length;
     this.transition(next, dir);
   };
+
   TerrazzoCarousel.prototype.transition = function(nextIdx, dir){
     this.animating = true;
     var cols = this.cols;
-    var outCells = this.makeGrid();
-    var inCells = this.makeGrid();
-    var outEls = [], inEls = [];
     var curImg = this.images[this.idx], nextImg = this.images[nextIdx];
+    var curRect = this.fitRect(curImg), nextRect = this.fitRect(nextImg);
+    var outCells = this.makeGrid(curRect);
+    var inCells = this.makeGrid(nextRect);
+    var outEls = [], inEls = [];
 
     for (var i = 0; i < inCells.length; i++){
       var cell = inCells[i];
       var d = document.createElement('div');
       d.className = 'shard';
-      d.style.clipPath = this.clipOf(cell);
-      d.style.webkitClipPath = d.style.clipPath;
-      d.style.backgroundImage = 'url("' + nextImg + '")';
-      var tx = dir > 0 ? 34 : -34;
+      var txIn = (dir > 0 ? 1 : -1) * (70 + Math.random() * 50);
+      var tyIn = (Math.random() - 0.5) * 70;
+      var rotIn = (dir > 0 ? 1 : -1) * (10 + Math.random() * 14);
+      this.styleShard(d, cell, nextImg, nextRect, 'translate(' + txIn + 'px,' + tyIn + 'px) rotate(' + rotIn + 'deg) ');
+      d.style.transform = d.style.transform.replace('scale(' + this.gapScale + ')', 'scale(.55)');
       d.style.opacity = '0';
-      d.style.transform = 'translate(' + tx + 'px,8px) scale(.86) rotate(' + (dir > 0 ? 5 : -5) + 'deg)';
-      var delayIn = (dir > 0 ? cell.c : (cols - 1 - cell.c)) * 16;
-      d.style.transition = 'transform .6s cubic-bezier(.22,.8,.32,1) ' + delayIn + 'ms, opacity .5s ease ' + delayIn + 'ms';
+      var delayIn = (dir > 0 ? cell.c : (cols - 1 - cell.c)) * 17 + Math.random() * 40;
+      d.style.transition = 'transform .68s cubic-bezier(.22,.85,.28,1) ' + delayIn + 'ms, opacity .55s ease ' + delayIn + 'ms';
       this.stage.appendChild(d);
       inEls.push(d);
     }
@@ -813,24 +847,26 @@ setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(
       var cell2 = outCells[j];
       var d2 = document.createElement('div');
       d2.className = 'shard';
-      d2.style.clipPath = this.clipOf(cell2);
-      d2.style.webkitClipPath = d2.style.clipPath;
-      d2.style.backgroundImage = 'url("' + curImg + '")';
-      var delayOut = (dir > 0 ? cell2.c : (cols - 1 - cell2.c)) * 16;
-      d2.style.transition = 'transform .55s cubic-bezier(.4,0,.2,1) ' + delayOut + 'ms, opacity .5s ease ' + delayOut + 'ms';
+      this.styleShard(d2, cell2, curImg, curRect, '');
+      var delayOut = (dir > 0 ? cell2.c : (cols - 1 - cell2.c)) * 17;
+      d2.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1) ' + delayOut + 'ms, opacity .5s ease ' + delayOut + 'ms';
       this.stage.appendChild(d2);
       outEls.push(d2);
     }
 
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){
-        var txOut = dir > 0 ? -34 : 34;
         for (var k = 0; k < outEls.length; k++){
-          outEls[k].style.transform = 'translate(' + txOut + 'px,-8px) scale(.86) rotate(' + (dir > 0 ? -5 : 5) + 'deg)';
+          var txOut = (dir > 0 ? -1 : 1) * (70 + Math.random() * 50);
+          var tyOut = (Math.random() - 0.5) * 70;
+          var rotOut = (dir > 0 ? -1 : 1) * (10 + Math.random() * 14);
+          outEls[k].style.transform = 'translate(' + txOut + 'px,' + tyOut + 'px) rotate(' + rotOut + 'deg) scale(.55)';
           outEls[k].style.opacity = '0';
         }
         for (var m = 0; m < inEls.length; m++){
-          inEls[m].style.transform = 'translate(0,0) scale(1) rotate(0deg)';
+          var cellM = inCells[m];
+          inEls[m].style.transformOrigin = cellM.cx + '% ' + cellM.cy + '%';
+          inEls[m].style.transform = 'translate(0,0) rotate(0deg) scale(' + 0.94 + ')';
           inEls[m].style.opacity = '1';
         }
       });
@@ -842,7 +878,7 @@ setLang((function(){try{var s=localStorage.getItem('lang');if(s)return s;}catch(
       self.idx = nextIdx;
       self.animating = false;
       self.renderDots();
-    }, 780);
+    }, 880);
   };
 
   var carousels = document.querySelectorAll('.apt-carousel');
