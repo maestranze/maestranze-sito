@@ -133,7 +133,7 @@ a{color:inherit;}
 
 /* Popup fisso: non e' piu' un popup Leaflet ancorato al marker (che si sposta panando/zoomando
    la mappa) ma un pannello sempre centrato sopra la mappa, fermo finche' non lo chiudi. */
-.poi-overlay{position:absolute;inset:0;z-index:700;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(23,25,28,.28);}
+.poi-overlay{position:absolute;inset:0;z-index:700;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(251,251,249,.68);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);}
 .poi-overlay.on{display:flex;}
 .poi-panel{
   position:relative;width:100%;max-width:320px;
