@@ -113,6 +113,7 @@ figure.shot figcaption{margin-top:9px;font-size:.82rem;color:var(--muted);line-h
 .apt-carousel::-webkit-scrollbar{display:none;}
 .apt-carousel .car-slide{flex:0 0 auto;height:clamp(260px,34vw,420px);scroll-snap-align:center;border:1px solid var(--line-2);border-radius:6px;overflow:hidden;background:var(--surface);}
 .apt-carousel .car-slide img{display:block;height:100%;width:auto;}
+.apt-carousel .car-edge{flex:0 0 auto;position:sticky;right:0;align-self:center;width:2px;height:calc(clamp(260px,34vw,420px) + 28px);background:var(--line-2);border-radius:2px;pointer-events:none;}
 
 .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
 .benefit{background:var(--surface);border:1px solid var(--line-2);border-radius:16px;padding:24px 20px;display:flex;flex-direction:column;gap:12px;}
@@ -211,6 +212,7 @@ figure.shot figcaption{margin-top:9px;font-size:.82rem;color:var(--muted);line-h
       <div class="car-slide"><img src="quartiere-ph-04.jpg" alt="" loading="lazy"/></div>
       <div class="car-slide"><img src="quartiere-ph-05.jpg" alt="" loading="lazy"/></div>
       <div class="car-slide"><img src="quartiere-ph-06.jpg" alt="" loading="lazy"/></div>
+      <div class="car-edge"></div>
     </div>
   </section>
 

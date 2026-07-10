@@ -90,6 +90,7 @@ a{color:inherit;}
 .apt-carousel::-webkit-scrollbar{display:none;}
 .apt-carousel .car-slide{flex:0 0 auto;height:clamp(260px,34vw,420px);scroll-snap-align:center;border:1px solid var(--line-2);border-radius:6px;overflow:hidden;background:var(--surface);}
 .apt-carousel .car-slide img{display:block;height:100%;width:auto;}
+.apt-carousel .car-edge{flex:0 0 auto;position:sticky;right:0;align-self:center;width:2px;height:calc(clamp(260px,34vw,420px) + 28px);background:var(--line-2);border-radius:2px;pointer-events:none;}
 @media(max-width:760px){.feat{grid-template-columns:1fr;gap:10px;}}
 
 /* Value (direct -15%) */
@@ -315,6 +316,7 @@ body.lock{overflow:hidden;}
       <div class="car-slide"><img src="carpentiera-07-bathroom.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
       <div class="car-slide"><img src="carpentiera-08-entrance.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
       <div class="car-slide"><img src="carpentiera-09-wordrobe.jpg" alt="Maestranze Carpentiera" loading="lazy"/></div>
+      <div class="car-edge"></div>
     </div>
     <div class="apt-sep"></div>
     <article class="feat" id="bidello">
@@ -330,6 +332,7 @@ body.lock{overflow:hidden;}
       <div class="car-slide"><img src="bidello-06-bathroom.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
       <div class="car-slide"><img src="bidello-07-workstation.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
       <div class="car-slide"><img src="bidello-08-bedroom-windows.jpg" alt="Maestranze Bidello" loading="lazy"/></div>
+      <div class="car-edge"></div>
     </div>
   </section>
 
