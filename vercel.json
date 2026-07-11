@@ -1,0 +1,21 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/guida",
+      "destination": "/guide",
+      "permanent": true
+    },
+    {
+      "source": "/checkin/carpentiera",
+      "destination": "https://checkin-liard.vercel.app/?apt=1",
+      "permanent": false
+    },
+    {
+      "source": "/checkin/bidello",
+      "destination": "https://checkin-liard.vercel.app/?apt=2",
+      "permanent": false
+    }
+  ]
+}
