@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- MAESTRANZE START v-3 (ticker fermo, label nome) -->
+<!-- MAESTRANZE START v-4 (fix campo data iOS) -->
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -46,6 +46,9 @@ header .brand-logo { height:58px; width:auto; display:block; }
 .field input { font-family:var(--font-body); font-size:0.92rem; color:var(--ink); background:var(--surface); border:1px solid var(--line-2); border-radius:10px; padding:12px 13px; width:100%; min-width:0; transition:border-color .15s, box-shadow .15s, background .15s; }
 .field input::placeholder { color:var(--faint); }
 .field input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); background:var(--surface); }
+.field input[type="date"] { display:block; min-height:46px; -webkit-appearance:none; appearance:none; text-align:left; }
+input::-webkit-date-and-time-value { text-align:left; }
+.field input[type="date"]::-webkit-calendar-picker-indicator { opacity:.55; }
 .cta-wrap { margin-top:24px; }
 .btn-primary { width:100%; font-family:var(--font-body); font-size:0.94rem; font-weight:600; letter-spacing:0.005em; color:var(--surface); background:var(--ink); border:none; border-radius:999px; padding:15px 18px; cursor:pointer; transition:opacity .18s, transform .06s; }
 .btn-primary:hover:not(:disabled) { opacity:0.88; }
