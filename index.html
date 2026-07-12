@@ -129,6 +129,24 @@ a{color:inherit;}
 .bk-go{font-family:var(--font);font-size:.95rem;font-weight:600;color:var(--paper);background:var(--ink);border:none;border-radius:999px;padding:13px 26px;cursor:pointer;transition:opacity .15s;}
 .bk-go:hover{opacity:.88;}
 .bk-result{display:none;width:100%;margin-top:14px;font-size:.92rem;color:var(--accent);line-height:1.5;}
+/* Calendario disponibilità */
+.cal-panel{display:none;width:100%;margin-top:18px;border:1px solid var(--line-2);background:var(--surface);border-radius:14px;padding:16px;max-width:420px;}
+.cal-panel.on{display:block;}
+.cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.cal-top .cal-m{font-weight:600;font-size:1rem;text-transform:capitalize;}
+.cal-nav{background:none;border:1px solid var(--line-2);border-radius:999px;width:34px;height:34px;font-size:1rem;color:var(--ink);cursor:pointer;line-height:1;}
+.cal-nav:disabled{opacity:.3;cursor:default;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-wd{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);text-align:center;padding:6px 0;}
+.cal-d{position:relative;aspect-ratio:1;border:none;background:none;font-family:var(--font);font-size:.9rem;color:var(--ink);border-radius:10px;cursor:pointer;}
+.cal-d:hover{background:var(--accent-soft);}
+.cal-d.dis{color:var(--faint);text-decoration:line-through;cursor:default;background:none;}
+.cal-d.mid{background:var(--accent-soft);border-radius:0;}
+.cal-d.sel{background:var(--ink);color:var(--paper);}
+.cal-d.empty{visibility:hidden;}
+.cal-leg{margin-top:10px;font-size:.78rem;color:var(--muted);}
+.cal-msg{padding:20px 0;text-align:center;color:var(--muted);font-size:.9rem;}
+
 
 /* Sections */
 .section{padding-top:clamp(54px,8vw,112px);padding-bottom:clamp(20px,3vw,40px);}
@@ -356,12 +374,13 @@ body.lock{overflow:hidden;}
 
   <!-- Booking strip -->
   <div class="booking pad" id="booking">
-    <div class="bk-field"><label data-i18n="b_in">Check-in</label><input type="date" id="bIn"/></div>
-    <div class="bk-field"><label data-i18n="b_out">Check-out</label><input type="date" id="bOut"/></div>
+    <div class="bk-field"><label data-i18n="b_in">Check-in</label><input type="text" id="bIn" readonly inputmode="none" placeholder="—"/></div>
+    <div class="bk-field"><label data-i18n="b_out">Check-out</label><input type="text" id="bOut" readonly inputmode="none" placeholder="—"/></div>
     <div class="bk-field sm"><label data-i18n="b_adults">Adults (14+)</label><select id="bAd"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
     <div class="bk-field sm"><label data-i18n="b_children">Children (3–13)</label><select id="bCh"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
     <div class="bk-field sm"><label data-i18n="b_infants">Infants (0–2)</label><select id="bInf"><option selected>0</option><option>1</option><option>2</option><option>3</option></select></div>
     <button class="bk-go" id="bGo" data-i18n="b_go">Check availability</button>
+    <div class="cal-panel" id="calPanel"><div class="cal-top"><button class="cal-nav" id="calPrev" aria-label="&#8592;">&#8592;</button><div class="cal-m" id="calMonth"></div><button class="cal-nav" id="calNext" aria-label="&#8594;">&#8594;</button></div><div class="cal-grid" id="calGrid"></div><div class="cal-leg" id="calLeg"></div></div>
     <div class="bk-result" id="bResult"></div>
   </div>
   <div class="bk-modal" id="bModal" aria-hidden="true">
@@ -461,8 +480,7 @@ function bt(k){return (BK[lang]||BK.en)[k];}
 function eur(n){return '€'+n;}
 const todayISO=new Date().toISOString().slice(0,10);
 const bIn=document.getElementById('bIn'),bOut=document.getElementById('bOut'),bResult=document.getElementById('bResult'),bStage=document.getElementById('bStage'),bModal=document.getElementById('bModal');
-bIn.min=todayISO;bOut.min=todayISO;
-bIn.addEventListener('change',()=>{if(bIn.value){const x=new Date(bIn.value);x.setDate(x.getDate()+1);bOut.min=x.toISOString().slice(0,10);if(bOut.value&&bOut.value<=bIn.value)bOut.value='';}});
+
 function nightsBetween(ci,co){return Math.round((new Date(co)-new Date(ci))/86400000);}
 function nightly(a,people){return a.base+Math.max(0,people-2)*a.extra;}
 function capacity(keys){return keys.reduce((s,k)=>s+APTS.find(x=>x.key===k).cap,0);}
@@ -477,7 +495,7 @@ function openModal(){var x=document.getElementById('bClose');if(x)x.classList.re
 function closeModal(){bModal.classList.remove('on');bModal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
 function spinClose(){var x=document.getElementById('bClose');if(x)x.classList.add('spun');setTimeout(closeModal,320);}
 async function search(){
- const ci=bIn.value,co=bOut.value,ad=+document.getElementById('bAd').value,ch=+document.getElementById('bCh').value,inf=+document.getElementById('bInf').value,P=ad+ch;
+ const ci=bIn.dataset.iso||'',co=bOut.dataset.iso||'',ad=+document.getElementById('bAd').value,ch=+document.getElementById('bCh').value,inf=+document.getElementById('bInf').value,P=ad+ch;
  if(!ci||!co||new Date(co)<=new Date(ci)){bResult.style.display='block';bResult.style.color='#b3261e';bResult.textContent=I18N[lang].res_err;return;}
  if(ad<1){bResult.style.display='block';bResult.style.color='#b3261e';bResult.textContent=bt('needadult');return;}
  if(P>MAXBEDS){bResult.style.display='block';bResult.style.color='#b3261e';bResult.textContent=bt('maxcap').replace(/\{c\}/g,MAXBEDS);return;}
@@ -528,6 +546,64 @@ function renderRecap(){
  document.getElementById('bBack').addEventListener('click',()=>{state.view='results';render();});
  document.getElementById('bPay').addEventListener('click',()=>{document.getElementById('payNote').textContent=bt('soon');}); // HOOK pagamento Stripe
 }
+
+// === Calendario visuale con date occupate ===
+const CAL_URL='https://maestranze.app.n8n.cloud/webhook/calendario';
+const CAL_LEG={en:'Struck-through dates are unavailable.',it:'Le date barrate non sono disponibili.',de:'Durchgestrichene Daten sind nicht verf\u00fcgbar.',fr:'Les dates barr\u00e9es ne sont pas disponibles.'};
+let calFull=null,calM=null,calIn=null,calOut=null;
+const calPanel=document.getElementById('calPanel'),calGrid=document.getElementById('calGrid'),calMonthEl=document.getElementById('calMonth');
+function isoOf(d){return d.toISOString().slice(0,10);}
+async function calLoad(){
+ if(calFull)return;
+ calGrid.innerHTML='<div class="cal-msg" style="grid-column:1/8">'+bt('checking')+'</div>';
+ try{
+  const [a,b]=await Promise.all([1,2].map(n=>fetch(CAL_URL+'?apt='+n).then(r=>r.json()).catch(()=>({occupied:[]}))));
+  const s2=new Set(b.occupied||[]);
+  calFull=new Set((a.occupied||[]).filter(d=>s2.has(d)));
+ }catch(e){calFull=new Set();}
+}
+function calFree(iso){return iso>=todayISO && !calFull.has(iso);}
+function calRangeOk(a,b){let d=new Date(a+'T00:00:00Z');const f=new Date(b+'T00:00:00Z');while(d<f){if(!calFree(isoOf(d)))return false;d.setUTCDate(d.getUTCDate()+1);}return true;}
+function calRender(){
+ if(!calM)calM=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+ calMonthEl.textContent=calM.toLocaleDateString(lang,{month:'long',year:'numeric'});
+ const y=calM.getFullYear(),m=calM.getMonth();
+ const first=new Date(Date.UTC(y,m,1)),days=new Date(y,m+1,0).getDate();
+ let off=(first.getUTCDay()+6)%7; // settimana da lunedì
+ let h='';
+ const monday=new Date(Date.UTC(2026,0,5)); // un lunedì
+ for(let i=0;i<7;i++){const w=new Date(monday);w.setUTCDate(w.getUTCDate()+i);h+='<div class="cal-wd">'+w.toLocaleDateString(lang,{weekday:'narrow'})+'</div>';}
+ for(let i=0;i<off;i++)h+='<button class="cal-d empty"></button>';
+ for(let d=1;d<=days;d++){
+  const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  let cls='cal-d';
+  const free=calFree(iso);
+  if(!free)cls+=' dis';
+  if(iso===calIn||iso===calOut)cls+=' sel';
+  else if(calIn&&calOut&&iso>calIn&&iso<calOut)cls+=' mid';
+  h+='<button class="'+cls+'" data-d="'+iso+'">'+d+'</button>';
+ }
+ calGrid.innerHTML=h;
+ document.getElementById('calLeg').textContent=CAL_LEG[lang]||CAL_LEG.en;
+ const now=new Date();
+ document.getElementById('calPrev').disabled=(y===now.getFullYear()&&m===now.getMonth());
+ calGrid.querySelectorAll('.cal-d[data-d]').forEach(b=>b.addEventListener('click',()=>calPick(b.getAttribute('data-d'))));
+}
+function calWrite(){
+ bIn.dataset.iso=calIn||'';bOut.dataset.iso=calOut||'';
+ bIn.value=calIn?fmtDate(calIn):'';bOut.value=calOut?fmtDate(calOut):'';
+}
+function calPick(iso){
+ if(!calIn||(calIn&&calOut)||iso<=calIn){ if(!calFree(iso))return; calIn=iso;calOut=null; }
+ else{ if(calRangeOk(calIn,iso)){calOut=iso;} else {if(!calFree(iso))return; calIn=iso;calOut=null;} }
+ calWrite();calRender();
+ if(calIn&&calOut)setTimeout(()=>calPanel.classList.remove('on'),350);
+}
+async function calOpen(){calPanel.classList.add('on');await calLoad();calRender();}
+bIn.addEventListener('click',calOpen);
+bOut.addEventListener('click',calOpen);
+document.getElementById('calPrev').addEventListener('click',()=>{calM=new Date(calM.getFullYear(),calM.getMonth()-1,1);calRender();});
+document.getElementById('calNext').addEventListener('click',()=>{calM=new Date(calM.getFullYear(),calM.getMonth()+1,1);calRender();});
 
 document.getElementById('bGo').addEventListener('click',search);
 // === Limita adulti/ragazzi a max 6 posti letto (UX dinamica) ===
