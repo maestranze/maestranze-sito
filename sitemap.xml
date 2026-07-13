@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://maestranzematera.it/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://maestranzematera.it/guide</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://maestranzematera.it/quartiere</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-  </url>
+  <url><loc>https://maestranzematera.it/</loc><priority>1.0</priority></url>
+  <url><loc>https://maestranzematera.it/quartiere</loc><priority>0.8</priority></url>
+  <url><loc>https://maestranzematera.it/guide</loc><priority>0.8</priority></url>
 </urlset>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-
+Disallow: /start
 Sitemap: https://maestranzematera.it/sitemap.xml
