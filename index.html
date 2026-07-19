@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- MAESTRANZE HOME v-CAL-13 (prezzi stagionali + confronto Booking) -->
+<!-- MAESTRANZE HOME v-CAL-15 (supplemento ospite 12) -->
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -546,17 +546,19 @@ const TAR_URL='https://maestranze.app.n8n.cloud/webhook/tariffe';
 const SITE_FACTOR=0.85, TAR_FB={1:135,2:99};
 let TAR=null, curCI='', curCO='';
 async function tarLoad(){ if(TAR)return; try{const r=await fetch(TAR_URL).then(x=>x.json());TAR=(r&&r.tariffe)||[];}catch(e){TAR=[];} }
+const EXTRA_BK=12; // supplemento Booking per ospite oltre i 2, a notte
 function pNight(apt,iso){const t=TAR&&TAR.find(t=>t.apt===apt&&t.dal<=iso&&iso<=t.al);return t?Number(t.p):(TAR_FB[apt]||100);}
-function siteNight(apt,iso){return Math.round(pNight(apt,iso)*SITE_FACTOR);}
-function stayTotals(keys,ci,co){let site=0,bk=0;let d=new Date(ci+'T00:00:00Z');const f=new Date(co+'T00:00:00Z');while(d<f){const iso=d.toISOString().slice(0,10);keys.forEach(k=>{const a=APTS.find(x=>x.key===k);site+=siteNight(a.apt,iso);bk+=pNight(a.apt,iso);});d.setUTCDate(d.getUTCDate()+1);}return {site,bk};}
-function aptAvg(k,ci,co){const t=stayTotals([k],ci,co);const n=Math.max(1,nightsBetween(ci,co));return {s:Math.round(t.site/n),b:Math.round(t.bk/n)};}
+function bkNight(a,iso,occ){return pNight(a.apt,iso)+EXTRA_BK*Math.max(0,(occ||2)-2);}
+function siteNightOcc(a,iso,occ){return Math.round(bkNight(a,iso,occ)*SITE_FACTOR);}
+function stayTotals(keys,ci,co,occMap){let site=0,bk=0;let d=new Date(ci+'T00:00:00Z');const f=new Date(co+'T00:00:00Z');while(d<f){const iso=d.toISOString().slice(0,10);keys.forEach(k=>{const a=APTS.find(x=>x.key===k);const occ=occMap&&occMap[k]!=null?occMap[k]:2;site+=siteNightOcc(a,iso,occ);bk+=bkNight(a,iso,occ);});d.setUTCDate(d.getUTCDate()+1);}return {site,bk};}
+function aptAvg(k,ci,co,occ){const t=stayTotals([k],ci,co,{[k]:occ});const n=Math.max(1,nightsBetween(ci,co));return {s:Math.round(t.site/n),b:Math.round(t.bk/n)};}
 const bIn=document.getElementById('bIn'),bOut=document.getElementById('bOut'),bResult=document.getElementById('bResult'),bStage=document.getElementById('bStage'),bModal=document.getElementById('bModal');
 
 function nightsBetween(ci,co){return Math.round((new Date(co)-new Date(ci))/86400000);}
-function nightly(a,people){return aptAvg(a.key,curCI,curCO).s;} // media/notte dal listino stagionale
+function nightly(a,people){return aptAvg(a.key,curCI,curCO,people||2).s;} // media/notte, occupazione inclusa
 function capacity(keys){return keys.reduce((s,k)=>s+APTS.find(x=>x.key===k).cap,0);}
 function splitPeople(keys,P){let rem=P,res={};['bidello','carpentiera'].forEach(k=>{if(keys.indexOf(k)>=0){const a=APTS.find(x=>x.key===k);const take=Math.max(0,Math.min(a.cap,rem));res[k]=take;rem-=take;}});return res;}
-function subsetTotal(keys,P,nights){return stayTotals(keys,curCI,curCO).site;}
+function subsetTotal(keys,P,nights){return stayTotals(keys,curCI,curCO,splitPeople(keys,P)).site;}
 function cheapest(avail,P,nights){const subs=[],n=avail.length;for(let m=1;m<(1<<n);m++){const s=[];for(let i=0;i<n;i++)if(m&(1<<i))s.push(avail[i]);if(capacity(s)>=P)subs.push(s);}subs.sort((a,b)=>subsetTotal(a,P,nights)-subsetTotal(b,P,nights)||a.length-b.length);return subs[0]||[];}
 function nlabel(n){return n+' '+(n===1?bt('night'):bt('nights'));}
 function fmtDate(d){try{return new Date(d).toLocaleDateString(lang,{day:'2-digit',month:'short',year:'numeric'});}catch(e){return d;}}
@@ -592,11 +594,11 @@ function render(){
  APTS.forEach(a=>{const isA=avail.indexOf(a.key)>=0,isS=sel.indexOf(a.key)>=0;
   html+='<div class="bk-card'+(isS?' sel':'')+(isA?'':' dis')+'" data-k="'+a.key+'"><div class="pick">'+(isS?'✓':'')+'</div>';
   html+='<h3 class="ph-link" data-ph="'+a.key+'">'+a.name+'</h3><div class="cap">'+bt('upto').replace('{c}',a.cap)+'</div>';
-  const av=aptAvg(a.key,curCI,curCO);
+  const av=aptAvg(a.key,curCI,curCO,Math.min(P,a.cap));
   html+=isA?('<div class="price"><small>'+bt('from')+' </small>'+eur(av.s)+'<small> '+bt('perNight')+'</small>'+(av.b>av.s?' <s class="bks">'+eur(av.b)+'</s>':'')+'</div>'):('<div class="na">'+bt('unavail')+'</div>');
   html+='</div>';});
  html+='</div>';
- const cap=capacity(sel),enough=cap>=P,sp=splitPeople(sel,P),tt=sel.length?stayTotals(sel,curCI,curCO):{site:0,bk:0},total=tt.site;
+ const cap=capacity(sel),enough=cap>=P,sp=splitPeople(sel,P),tt=sel.length?stayTotals(sel,curCI,curCO,splitPeople(sel,P)):{site:0,bk:0},total=tt.site;
  let lines=sel.map(k=>{const a=APTS.find(x=>x.key===k);return '<div><b>'+a.name+'</b> · '+eur(nightly(a,sp[k]||0))+' × '+nlabel(nights)+'</div>';}).join('');
  html+='<div class="bk-summary"><div class="lines"><div class="st">'+bt('sel_title')+'</div>'+lines+(enough?'':'<div class="hint">'+bt('needmore').replace('{m}',P-cap)+'</div>')+'</div>';
  html+='<div class="right"><div class="tot">'+eur(total)+(tt.bk>total?' <s class="bks">'+eur(tt.bk)+'</s>':'')+'</div><button class="bk-act" id="bBook"'+(enough?'':' disabled')+'>'+bt('book')+'</button></div></div>';
@@ -608,8 +610,8 @@ function render(){
 
 function renderRecap(){
  const {ci,co,nights,P,ad,ch,inf,sel}=state,sp=splitPeople(sel,P);let rows='',total=0;const tax=2*ad*nights;const gb=ad+' '+bt('gA')+(ch?' · '+ch+' '+bt('gC'):'')+(inf?' · '+inf+' '+bt('gN'):'');
- sel.forEach(k=>{const a=APTS.find(x=>x.key===k),st=stayTotals([k],ci,co),sub=st.site,avg=Math.round(sub/Math.max(1,nights));total+=sub;rows+='<div class="row"><span class="lbl">'+a.name+'</span><span>'+eur(avg)+' × '+nlabel(nights)+' = '+eur(sub)+'</span></div>';});
- const bkt=stayTotals(sel,ci,co).bk, sv=bkt>0?Math.round((1-total/bkt)*100):0;
+ sel.forEach(k=>{const a=APTS.find(x=>x.key===k),st=stayTotals([k],ci,co,{[k]:sp[k]||2}),sub=st.site,avg=Math.round(sub/Math.max(1,nights));total+=sub;rows+='<div class="row"><span class="lbl">'+a.name+'</span><span>'+eur(avg)+' × '+nlabel(nights)+' = '+eur(sub)+'</span></div>';});
+ const bkt=stayTotals(sel,ci,co,sp).bk, sv=bkt>0?Math.round((1-total/bkt)*100):0;
  if(bkt>total) rows+='<div class="row bkcmp">'+bt('bkcmp').replace('{b}',eur(bkt)).replace('{s}',sv)+'</div>';
  let html='<div class="bk-recap"><button class="bk-backtop" id="bBack">\u2190 '+bt('back')+'</button><h3>'+bt('recap_title')+'</h3><div class="subt">'+bt('soon')+'</div>';
  html+='<div class="row"><span class="lbl">'+bt('dates')+'</span><span>'+fmtDate(ci)+' → '+fmtDate(co)+' · '+nlabel(nights)+'</span></div>';
